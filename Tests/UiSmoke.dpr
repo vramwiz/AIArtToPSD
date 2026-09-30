@@ -6,6 +6,8 @@ uses System.Math, System.Types, System.SysUtils, System.Classes, System.IOUtils,
   HorizontalTrackBarControl in '..\Source\Lib\UI\HorizontalTrackBar\HorizontalTrackBarControl.pas',
   ArtFileHistory in '..\Source\Shell\ArtFileHistory.pas',
   VerticalScrollBarControl in '..\Source\Lib\UI\VerticalScrollBar\VerticalScrollBarControl.pas',
+  ArtParts in '..\Source\Core\ArtParts.pas',
+  DarkComboBox in '..\Source\Lib\UI\DarkComboBox\DarkComboBox.pas',
   ArtLayerName in '..\Source\Core\ArtLayerName.pas',
   ArtLayerList in '..\Source\Shell\ArtLayerList.pas',
   ArtDocument in '..\Source\Core\ArtDocument.pas',
@@ -310,6 +312,57 @@ begin
       B := Vcl.Graphics.TBitmap.Create;
       try B.SetSize(F.ClientWidth,F.ClientHeight); F.PaintTo(B.Canvas,0,0);
         B.SaveToFile(TPath.Combine(Output,'ui_png_workflow.bmp')); finally B.Free; end;
+      // Stage 12: independent exclusive families, nested expressions and preserved group insertion.
+      F.NewFromPng(TPath.Combine(Output,'素材ベース.png'));
+      F.CreateGroup('表情',False); G := F.LayerList.Selected;
+      Check((G.Kind=alkGroup) and (G.Name='表情'),'Expression container missing');
+      F.CreateGroup('通常',True); SavedLayer := F.LayerList.Selected;
+      F.ImportPngFile(TPath.Combine(Output,'追加パーツ.png'));
+      F.LayerList.Selected := G; F.CreateGroup('喜',True);
+      Check(not F.LayerList.Selected.Visible,'New alternative overlapped active expression');
+      F.ImportPngFile(TPath.Combine(Output,'置換.png'));
+      F.SelectPart(G.Children[0]);
+      Check(G.Children[0].Visible and not SavedLayer.Visible,'Expression selection not exclusive');
+      Check(G.Children[0].Children[0].Visible and SavedLayer.Children[0].Visible,'Switch mutated nested image visibility');
+      F.SelectPart(SavedLayer);
+      Check(SavedLayer.Visible and not G.Children[0].Visible,'Switch back failed');
+      F.LayerList.Selected := F.Document.Roots.Last; F.CreateGroup('手',False);
+      F.ImportPngFile(TPath.Combine(Output,'追加パーツ.png')); F.ApplySelectedLayer('*開く',True,255);
+      F.LayerList.Selected := F.Document.Roots[1];
+      F.ImportPngFile(TPath.Combine(Output,'置換.png')); F.ApplySelectedLayer('*握る',True,255);
+      Check(not F.Document.Roots[1].Children[1].Visible,'Image parts overlapped');
+      Check(SavedLayer.Visible,'Other family changed');
+      Check(F.PartGroupControl.Items.Count=2,'Part selectors missing families');
+      // Drive the same dropdown event used by the UI.
+      F.PartGroupControl.ItemIndex := 1; F.PartGroupControl.OnChange(F.PartGroupControl);
+      F.PartChoiceControl.ItemIndex := 1; F.PartChoiceControl.OnChange(F.PartChoiceControl);
+      Check(F.Document.Roots[1].Children[1].Visible and not F.Document.Roots[1].Children[0].Visible,'Dropdown did not switch');
+      F.LayerList.Selected := F.Document.Roots.Last; F.ApplySelectedLayer('!ベース',True,255);
+      Check(F.LayerList.Selected.Visible,'Unrelated base visibility changed');
+      // Invalid rendering rolls all sibling visibility back.
+      G := F.Document.Roots[1]; G.Children[0].BlendKey := 'mul '; Raised := False;
+      try F.SelectPart(G.Children[0]); except on E: EArtFormat do Raised := True; end;
+      Check(Raised and G.Children[1].Visible and not G.Children[0].Visible,'Failed switch lost previous state');
+      G.Children[0].BlendKey := 'norm';
+      F.SavePsdFile(TPath.Combine(Output,'parts_new.psd'));
+      Check(not F.Modified,'Expression save baseline');
+      Check((F.Document.Roots[0].Children.Count=2) and (F.Document.Roots[0].Children[1].Name='*通常'),'Expression hierarchy lost');
+      F.SelectPart(F.Document.Roots[0].Children[0]); F.SavePsdFile(TPath.Combine(Output,'parts_switched.psd'));
+      Check(F.Document.Roots[0].Children[0].Visible and not F.Document.Roots[0].Children[1].Visible,'Saved expression state lost');
+      F.Show; Application.ProcessMessages; B := Vcl.Graphics.TBitmap.Create;
+      try B.SetSize(F.ClientWidth,F.ClientHeight); F.PaintTo(B.Canvas,0,0); B.SaveToFile(TPath.Combine(Output,'ui_parts.bmp')); finally B.Free; end;
+      // Insert paired new group records into an imported archive, then save again.
+      F.OpenPsdFile(TPath.Combine(Sample,'aiueo.psd'));
+      F.CreateGroup('追加表情',False); F.CreateGroup('通常',True);
+      F.ImportPngFile(TPath.Combine(Output,'追加パーツ.png'));
+      F.SavePsdFile(TPath.Combine(Output,'aiueo_parts.psd'));
+      Check(F.Document.Roots[0].Children[0].Kind=alkGroup,'Imported group insertion lost');
+      Check(F.Document.Roots[0].Children[0].Children[0].Name='*通常','Imported alternative group lost');
+      F.LayerList.Selected := F.Document.Roots[0].Children[0]; F.CreateGroup('喜',True);
+      F.ImportPngFile(TPath.Combine(Output,'置換.png'));
+      F.SelectPart(F.Document.Roots[0].Children[0].Children[0]);
+      F.SavePsdFile(TPath.Combine(Output,'aiueo_parts_switched.psd'));
+      Check(F.Document.Roots[0].Children[0].Children[0].Visible and not F.Document.Roots[0].Children[0].Children[1].Visible,'Imported nested switch save failed');
       F.OpenPsdFile(TPath.Combine(Sample,'layer_test.psd'));
       Check(not F.CanEdit,'Layerless original should be view-only');
       Check(F.LayerList.RowCount=0,'Layerless tree not empty');

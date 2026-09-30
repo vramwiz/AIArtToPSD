@@ -4,7 +4,7 @@ interface
 
 uses System.Types, System.Classes, System.SysUtils, System.Generics.Collections,
   Vcl.Controls, Vcl.Forms, Vcl.StdCtrls, Vcl.ExtCtrls, 
-  Vcl.Dialogs, Vcl.Menus, Vcl.Samples.Spin, Vcl.Graphics, ArtDocument, ArtLayerList, ArtFileHistory;
+  Vcl.Dialogs, Vcl.Menus, Vcl.Samples.Spin, Vcl.Graphics, ArtDocument, ArtLayerList, ArtFileHistory, DarkComboBox;
 
 type
   TMainForm = class(TForm)
@@ -27,9 +27,16 @@ type
     FImportItem, FReplaceItem, FPositionItem: TMenuItem;
     FX,FY: TSpinEdit;
     FPositionApply: TButton;
+    FPartGroup, FPartChoice: TDarkComboBox;
+    FGroupItem: TMenuItem;
+    FUpdatingParts: Boolean;
     FDragging: Boolean;
     FDragStart: TPoint;
     FDragX,FDragY,FDragDX,FDragDY: Integer;
+    procedure UpdateParts;
+    procedure PartGroupChange(Sender: TObject);
+    procedure PartChoiceChange(Sender: TObject);
+    procedure GroupClick(Sender: TObject);
     procedure NewPngClick(Sender: TObject);
     procedure ImportPngClick(Sender: TObject);
     procedure ReplacePngClick(Sender: TObject);
@@ -60,6 +67,10 @@ type
     constructor CreateWithHistory(AOwner: TComponent; const HistoryDirectory: string);
     property FileHistory: TArtFileHistory read FHistory;
     destructor Destroy; override;
+    procedure CreateGroup(const Name: string; Exclusive: Boolean);
+    procedure SelectPart(Layer: TArtLayer);
+    property PartGroupControl: TDarkComboBox read FPartGroup;
+    property PartChoiceControl: TDarkComboBox read FPartChoice;
     procedure NewFromPng(const FileName: string);
     procedure ImportPngFile(const FileName: string);
     procedure ReplaceSelectedPng(const FileName: string);
@@ -80,7 +91,7 @@ var MainForm: TMainForm;
 
 implementation
 
-uses System.Math, System.IOUtils, System.UITypes, Winapi.Windows, ArtPsd, ArtPng, ArtLayerName;
+uses System.Math, System.IOUtils, System.UITypes, Winapi.Windows, ArtPsd, ArtPng, ArtLayerName, ArtParts;
 
 {$R *.dfm}
 type TArtPaintBoxAccess = class(TPaintBox);
@@ -88,7 +99,7 @@ type TArtPaintBoxAccess = class(TPaintBox);
 constructor TMainForm.Create(AOwner: TComponent);
 begin CreateWithHistory(AOwner,''); end;
 constructor TMainForm.CreateWithHistory(AOwner: TComponent; const HistoryDirectory: string);
-var RightPanel, StatusPanel, PositionPanel: TPanel; FileMenu, LayerMenu, Item: TMenuItem; LabelControl: TLabel;
+var RightPanel, StatusPanel, PositionPanel, PartsPanel: TPanel; FileMenu, LayerMenu, Item: TMenuItem; LabelControl: TLabel;
     Splitter: TSplitter;
 begin
   inherited Create(AOwner);
@@ -113,6 +124,7 @@ begin
   LayerMenu := TMenuItem.Create(Self); LayerMenu.Caption := 'レイヤー(&L)'; Menu.Items.Add(LayerMenu);
   FReplaceItem := TMenuItem.Create(Self); FReplaceItem.Caption := '選択画像をPNGで置換(&R)...'; FReplaceItem.OnClick := ReplacePngClick; FReplaceItem.Enabled := False; LayerMenu.Add(FReplaceItem);
   FPositionItem := TMenuItem.Create(Self); FPositionItem.Caption := '配置座標を入力(&P)'; FPositionItem.OnClick := PositionClick; FPositionItem.Enabled := False; LayerMenu.Add(FPositionItem);
+  FGroupItem := TMenuItem.Create(Self); FGroupItem.Caption := 'グループを作成(&G)...'; FGroupItem.OnClick := GroupClick; FGroupItem.Enabled := False; LayerMenu.Add(FGroupItem);
   RebuildHistory;
   StatusPanel := TPanel.Create(Self); StatusPanel.Parent := Self;
   StatusPanel.Align := alBottom; StatusPanel.Height := 75;
@@ -127,6 +139,10 @@ begin
   FY := TSpinEdit.Create(Self); FY.Parent := PositionPanel; FY.SetBounds(145,4,95,26); FY.MinValue := -30000; FY.MaxValue := 30000; FY.Enabled := False;
   FPositionApply := TButton.Create(Self); FPositionApply.Parent := PositionPanel; FPositionApply.SetBounds(250,3,95,28); FPositionApply.Caption := '配置を適用'; FPositionApply.Enabled := False; FPositionApply.OnClick := PositionClick;
   LabelControl := TLabel.Create(Self); LabelControl.Parent := PositionPanel; LabelControl.SetBounds(8,34,400,18); LabelControl.Caption := '選択画像をプレビュー上でドラッグして配置できます。';
+  PartsPanel := TPanel.Create(Self); PartsPanel.Parent := RightPanel; PartsPanel.Align := alBottom; PartsPanel.Height := 96;
+  LabelControl := TLabel.Create(Self); LabelControl.Parent := PartsPanel; LabelControl.SetBounds(8,4,360,20); LabelControl.Caption := '表情・パーツ切替（* 排他選択）';
+  FPartGroup := TDarkComboBox.Create(Self); FPartGroup.Parent := PartsPanel; FPartGroup.SetBounds(8,26,400,28); FPartGroup.Anchors := [akLeft,akTop,akRight]; FPartGroup.OnChange := PartGroupChange; FPartGroup.Enabled := False;
+  FPartChoice := TDarkComboBox.Create(Self); FPartChoice.Parent := PartsPanel; FPartChoice.SetBounds(8,59,400,28); FPartChoice.Anchors := [akLeft,akTop,akRight]; FPartChoice.OnChange := PartChoiceChange; FPartChoice.Enabled := False;
   FTree := TArtLayerList.Create(Self); FTree.Parent := RightPanel; FTree.Align := alClient;
   FTree.OnSelect := TreeChange; FTree.OnRename := LayerRename; FTree.OnAttributes := LayerAttributes;
   Splitter := TSplitter.Create(Self); Splitter.Parent := Self; Splitter.Align := alRight; Splitter.Left := ClientWidth-424;
@@ -313,6 +329,8 @@ begin
   L := FTree.Selected; CanImage := FCanEdit and (L<>nil) and (L.Kind=alkImage);
   FReplaceItem.Enabled := CanImage; FPositionItem.Enabled := CanImage; FX.Enabled := CanImage; FY.Enabled := CanImage; FPositionApply.Enabled := CanImage;
   FImportItem.Enabled := (FDocument=nil) or FCanEdit;
+  FGroupItem.Enabled := FCanEdit and (FDocument<>nil);
+  UpdateParts;
   if CanImage then begin FX.Value := L.Bounds.Left; FY.Value := L.Bounds.Top; end;
   if FPaint<>nil then begin TArtPaintBoxAccess(FPaint).MouseCapture := False; FPaint.Invalidate; end; FDragging := False;
 end;
@@ -351,17 +369,120 @@ begin
 end;
 
 procedure TMainForm.ApplySelectedLayer(const Name: string; Visible: Boolean; Opacity: Byte);
-var L: TArtLayer; OldName: string; OldVisible: Boolean; OldOpacity: Byte; Pixels: TBytes;
+var L: TArtLayer; OldName: string; OldOpacity: Byte; States: TDictionary<TArtLayer,Boolean>; Pair: TPair<TArtLayer,Boolean>; Changed: Boolean;
+  procedure Snapshot(List: TList<TArtLayer>);
+  var Item: TArtLayer;
+  begin for Item in List do begin States.Add(Item,Item.Visible); Snapshot(Item.Children); end; end;
 begin
   if not FCanEdit or (FTree.Selected=nil) then raise EArtFormat.Create('このPSDは表示・変更なし保存のみ対応しています。');
-  L := FTree.Selected; OldName := L.Name; OldVisible := L.Visible; OldOpacity := L.Opacity;
-  if (Name=OldName) and (Visible=OldVisible) and (Opacity=OldOpacity) then Exit;
-  L.Name := Name; L.Visible := Visible; L.Opacity := Opacity;
-  try Pixels := RenderEditable; SetPreview(Pixels);
-  except L.Name := OldName; L.Visible := OldVisible; L.Opacity := OldOpacity; raise; end;
-  FModified := True;
-  FTree.RefreshLayerNames;
-  UpdateStatus;
+  L := FTree.Selected; OldName := L.Name; OldOpacity := L.Opacity;
+  States := TDictionary<TArtLayer,Boolean>.Create;
+  try
+    Snapshot(FDocument.Roots); L.Name := Name; L.Visible := Visible; L.Opacity := Opacity;
+    try
+      if IsExclusive(L) and L.Visible then SelectExclusive(FDocument,L);
+      Changed := (OldName<>Name) or (OldOpacity<>Opacity);
+      for Pair in States do Changed := Changed or (Pair.Key.Visible<>Pair.Value);
+      if not Changed then Exit;
+      SetPreview(RenderEditable);
+    except
+      L.Name := OldName; L.Opacity := OldOpacity;
+      for Pair in States do Pair.Key.Visible := Pair.Value;
+      raise;
+    end;
+    FModified := True; FTree.RefreshLayerNames; UpdateParts; UpdateStatus;
+  finally States.Free; end;
+end;
+
+procedure TMainForm.SelectPart(Layer: TArtLayer);
+var Previous: TArtLayer;
+begin
+  if not FCanEdit then raise EArtFormat.Create('この文書の切替は未対応です。');
+  LayerSiblings(FDocument,Layer);
+  if not IsExclusive(Layer) then raise EArtFormat.Create('排他選択 (*) を設定してください。');
+  FTree.FinishRename(True); Previous := FTree.Selected; FTree.Selected := Layer;
+  try ApplySelectedLayer(Layer.Name,True,Layer.Opacity);
+  except FTree.Selected := Previous; raise; end;
+  FTree.RevealSelected;
+end;
+
+procedure TMainForm.UpdateParts;
+var Previous: TObject;
+  procedure Collect(List: TList<TArtLayer>; Parent: TArtLayer; const Path: string);
+  var L: TArtLayer; HasParts: Boolean; Caption: string;
+  begin
+    HasParts := False; for L in List do HasParts := HasParts or IsExclusive(L);
+    if HasParts then FPartGroup.Items.AddObject(Path,Parent);
+    for L in List do if L.Kind=alkGroup then begin
+      Caption := ParseLayerName(L.Name).DisplayName;
+      if Parent<>nil then Caption := Path+' / '+Caption;
+      Collect(L.Children,L,Caption);
+    end;
+  end;
+begin
+  if (FPartGroup=nil) or FUpdatingParts then Exit;
+  FUpdatingParts := True;
+  try
+    Previous := nil;
+    if FPartGroup.ItemIndex>=0 then Previous := FPartGroup.Items.Objects[FPartGroup.ItemIndex];
+    FPartGroup.Items.Clear;
+    if FDocument<>nil then Collect(FDocument.Roots,nil,'文書直下');
+    FPartGroup.ItemIndex := FPartGroup.Items.IndexOfObject(Previous);
+    if (FPartGroup.ItemIndex<0) and (FPartGroup.Items.Count>0) then FPartGroup.ItemIndex := 0;
+    FPartGroup.Enabled := FCanEdit and (FPartGroup.Items.Count>0);
+    PartGroupChange(Self);
+  finally FUpdatingParts := False; end;
+end;
+procedure TMainForm.PartGroupChange(Sender: TObject);
+var Parent,L: TArtLayer; List: TList<TArtLayer>; Active,VisibleCount: Integer;
+begin
+  FPartChoice.Items.Clear; Active := -1; VisibleCount := 0;
+  if (FDocument<>nil) and (FPartGroup.ItemIndex>=0) then begin
+    Parent := TArtLayer(FPartGroup.Items.Objects[FPartGroup.ItemIndex]);
+    if Parent=nil then List := FDocument.Roots else List := Parent.Children;
+    for L in List do if IsExclusive(L) then begin
+      FPartChoice.Items.AddObject(ParseLayerName(L.Name).DisplayName,L);
+      if L.Visible then begin Active := FPartChoice.Items.Count-1; Inc(VisibleCount); end;
+    end;
+  end;
+  if VisibleCount<>1 then Active := -1;
+  FPartChoice.ItemIndex := Active; FPartChoice.Enabled := FCanEdit and (FPartChoice.Items.Count>0);
+  FPartChoice.Hint := '選択すると同じ親の * パーツを1つだけ表示します。親が非表示なら目アイコンで表示してください。'; FPartChoice.ShowHint := True;
+end;
+procedure TMainForm.PartChoiceChange(Sender: TObject);
+var L: TArtLayer;
+begin
+  if FUpdatingParts or (FPartChoice.ItemIndex<0) then Exit;
+  L := TArtLayer(FPartChoice.Items.Objects[FPartChoice.ItemIndex]);
+  try SelectPart(L); except on E: Exception do begin UpdateParts; MessageDlg(E.Message,mtError,[mbOK],0); end; end;
+end;
+procedure TMainForm.CreateGroup(const Name: string; Exclusive: Boolean);
+var Parent,Selected,L: TArtLayer; List: TList<TArtLayer>; Index: Integer; GroupName: string;
+begin
+  if not FCanEdit or (FDocument=nil) then raise EArtFormat.Create('編集できる文書を開いてください。');
+  GroupName := RenameLayerDisplay('',Name); if Exclusive then GroupName := SetLayerPrefix(GroupName,'*');
+  FTree.FinishRename(True); Selected := FTree.Selected; Parent := nil; List := FDocument.Roots;
+  if Selected<>nil then begin
+    if Selected.Kind=alkGroup then begin Parent := Selected; List := Parent.Children; end
+    else List := LayerSiblings(FDocument,Selected);
+  end;
+  Index := List.IndexOf(Selected); if Index<0 then Index := 0;
+  L := FDocument.AddLayer(alkGroup,GroupName,TArtBounds.Create(0,0,0,0),Parent);
+  FDocument.Roots.Remove(L); if Parent<>nil then Parent.Children.Remove(L);
+  List.Insert(Index,L);
+  if Exclusive then begin
+    for var Sibling in List do if (Sibling<>L) and IsExclusive(Sibling) and Sibling.Visible then L.Visible := False;
+  end;
+  try SetPreview(RenderEditable); except FDocument.RemoveNewLayer(L); raise; end;
+  FModified := True; RebuildTree; FTree.Selected := L; FTree.RevealSelected; UpdateStatus;
+end;
+procedure TMainForm.GroupClick(Sender: TObject);
+var Name: string; Exclusive: Boolean; Answer: Integer;
+begin
+  Name := '表情'; if not InputQuery('グループ作成','グループ名',Name) then Exit;
+  Answer := MessageDlg('表情・パーツの差分として排他選択 (*) を設定しますか？',mtConfirmation,[mbYes,mbNo,mbCancel],0);
+  if Answer=mrCancel then Exit; Exclusive := Answer=mrYes;
+  try CreateGroup(Name,Exclusive); except on E: Exception do MessageDlg(E.Message,mtError,[mbOK],0); end;
 end;
 
 procedure TMainForm.UpdateStatus;

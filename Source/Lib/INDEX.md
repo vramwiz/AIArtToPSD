@@ -1,4 +1,4 @@
-﻿# 登録ライブラリ
+# 登録ライブラリ
 
 | 部品 | コピー元 | 用途・状態 |
 | --- | --- | --- |
@@ -8,3 +8,5 @@
 | [HorizontalTrackBar](UI/HorizontalTrackBar/README.md) | DelphiVclAppTemplate/Source/Lib/UI/HorizontalTrackBar | Control・Rendererを無変更コピー。レイヤー行の不透明度 |
 
 必要なUI等のライブラリはDelphiVclAppTemplateから積極的にコピーして利用する。レイヤー一覧は独自描画とし、指定されたSYNC_ScreenLayoutのスクロール部品を再利用する。
+
+| [DarkComboBox](UI/DarkComboBox/README.md) | DelphiVclAppTemplate/Source/Lib/UI/DarkComboBox | 1.0.1を無変更コピー。表情・パーツ切替の選択欄 |

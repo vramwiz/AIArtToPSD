@@ -1,0 +1,7 @@
+# DarkComboBox
+
+DelphiVclAppTemplate/Source/Lib/UI/DarkComboBoxのDarkComboBox.pas、版1.0.1を2026-09-30に無変更コピー。Delphi37／Win64／VCLとWindows標準に依存。コピー後は本プロジェクトで管理する。
+
+選択専用TDarkComboBox。Parent設定後にItems／ItemIndexを設定し、OnChangeで操作を受ける。ネイティブキー操作・暗色描画・DPIに応じた項目高を利用する。入力編集は対象外。Items.Objectsは非所有参照で、利用側が文書切替時に再構築する。
+
+使用例はAIArtToPSDMainFormのFPartGroup／FPartChoice。アプリとUiSmokeのWin64 Debug／Releaseビルドは警告0・エラー0。UiSmokeで差分選択イベントと合成結果を確認し、ui_parts.bmpで配置を確認。ユーザーによる高DPI操作は未確認。

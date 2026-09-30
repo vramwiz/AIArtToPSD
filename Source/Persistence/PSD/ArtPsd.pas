@@ -913,7 +913,7 @@ begin
         Header[Offset+2] := OriginalRecords[Index].Flags and $FD;
         if Dividers[I] or not L.Visible then Header[Offset+2] := Header[Offset+2] or 2;
       end else begin
-        if L.Kind<>alkImage then raise EArtFormat.Create('Only image insertion supported');
+        if (L.Kind<>alkImage) and (L.Kind<>alkGroup) then raise EArtFormat.Create('Unsupported layer insertion');
         Header := GeneratedRecords[I].Header; Extra := SetNewId(GeneratedRecords[I].Extra); Data.Bytes(NewData[I]);
       end;
       Info.Bytes(Header); Info.U32(Length(Extra)); Info.Bytes(Extra);
