@@ -1,0 +1,30 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{C80B2D2B-0268-473E-850A-27F3A7A3B031}</ProjectGuid>
+    <ProjectVersion>20.4</ProjectVersion>
+    <MainSource>ExchangeSmoke.dpr</MainSource>
+    <AppType>Console</AppType>
+    <Config Condition="'$(Config)'==''">Debug</Config>
+    <Platform>Win64</Platform>
+    <DCC_Namespace>System;Winapi</DCC_Namespace>
+    <DCC_UnitSearchPath>..\Source\Core;..\Source\Persistence\PSD;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+    <DCC_DcuOutput>Win64\$(Config)</DCC_DcuOutput>
+    <DCC_ExeOutput>Win64\$(Config)</DCC_ExeOutput>
+    <DCC_RangeChecking>true</DCC_RangeChecking>
+    <DCC_OverflowChecking>true</DCC_OverflowChecking>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Config)'=='Debug'">
+    <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
+    <DCC_Optimize>false</DCC_Optimize>
+    <DCC_DebugInformation>1</DCC_DebugInformation>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Config)'=='Release'">
+    <DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
+    <DCC_Optimize>true</DCC_Optimize>
+    <DCC_DebugInformation>0</DCC_DebugInformation>
+  </PropertyGroup>
+  <ItemGroup><DelphiCompile Include="$(MainSource)"><MainSource>MainSource</MainSource></DelphiCompile></ItemGroup>
+  <Import Project="$(BDS)\Bin\CodeGear.Delphi.Targets"/>
+  <Target Name="CreateOutput" BeforeTargets="CoreCompile"><MakeDir Directories="Win64\$(Config)"/></Target>
+</Project>
+

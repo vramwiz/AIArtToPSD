@@ -6,6 +6,10 @@ uses System.Math, System.Types, System.SysUtils, System.Classes, System.IOUtils,
   HorizontalTrackBarControl in '..\Source\Lib\UI\HorizontalTrackBar\HorizontalTrackBarControl.pas',
   ArtFileHistory in '..\Source\Shell\ArtFileHistory.pas',
   VerticalScrollBarControl in '..\Source\Lib\UI\VerticalScrollBar\VerticalScrollBarControl.pas',
+  PipeServerTThread in '..\Source\Lib\Pipe\PipeServerTThread.pas',
+  ArtUndo in '..\Source\Editor\ArtUndo.pas',
+  ArtPipeBridge in '..\Source\Integrations\Pipe\ArtPipeBridge.pas',
+  ArtPipeProtocol in '..\Source\Integrations\Pipe\ArtPipeProtocol.pas',
   ArtExchange in '..\Source\Integrations\AIExchange\ArtExchange.pas',
   ArtParts in '..\Source\Core\ArtParts.pas',
   DarkComboBox in '..\Source\Lib\UI\DarkComboBox\DarkComboBox.pas',
@@ -55,7 +59,7 @@ var F: TMainForm; D,Before: TArtDocument; B: Vcl.Graphics.TBitmap; Input,Output,
     PngImage: TArtPngData; LayerCount: Integer; SavedLayer: TArtLayer; DragScale: Double;
     Capture: TDialogCapture; A,C: TBytes; Count: Integer; Raised: Boolean;
 procedure Check(Value: Boolean; const Msg: string);
-begin Inc(Count); if not Value then raise Exception.Create(Msg); end;
+begin Inc(Count); if ParamStr(3)='--trace' then Writeln(Count,': ',Msg); if not Value then raise Exception.Create(Msg); end;
 procedure TestLayerNames;
 const Prefixes: array[0..2] of string = ('','*','!');
   Suffixes: array[0..3] of string = ('',':flipx',':flipy',':flipxy');
@@ -78,7 +82,7 @@ begin
 end;
 begin
   try
-    if ParamCount<>2 then raise Exception.Create('Usage: UiSmoke OUTPUT_DIRECTORY SAMPLE_DIRECTORY');
+    if (ParamCount<2) or (ParamCount>3) then raise Exception.Create('Usage: UiSmoke OUTPUT_DIRECTORY SAMPLE_DIRECTORY [--trace]');
     Output := TPath.GetFullPath(ParamStr(1)); Sample := TPath.GetFullPath(ParamStr(2));
     TestLayerNames;
     ForceDirectories(TPath.Combine(Output,'history_migration'));
@@ -98,7 +102,7 @@ begin
     F := TMainForm.CreateWithHistory(nil,TPath.Combine(Output,'history_ui'));
     try
       Input := TPath.Combine(Output,'nested.psd'); F.OpenPsdFile(Input);
-      Check(F.Menu.Items[0].Count=9,'File menu operations missing');
+      Check(F.Menu.Items[0].Count=10,'File menu operations missing');
       Check(F.LayerList.Parent.Left>F.ClientWidth div 2,'Layer panel not on right');
       Check(F.Document<>nil,'No document'); Check(F.LayerList.RowCount=7,'Wrong tree count');
       Check(F.CanEdit,'Generated PSD cannot edit'); Check(not F.Modified,'Loaded document dirty');
@@ -144,6 +148,10 @@ begin
       F.LayerList.SliderAt(0).Position := 127;
       Check(F.Document.Roots[0].Opacity=127,'Row slider did not change opacity');
       Check(not F.LayerList.SliderAt(1).Enabled,'Group opacity must remain unsupported');
+      // The AI panel reduces the viewport; reveal virtual rows before using their controls.
+      F.LayerList.Selected := F.LayerList.LayerAt(3); F.LayerList.RevealSelected;
+      Check(F.LayerList.SliderAt(3)<>nil,'Revealed row slider absent');
+      F.LayerList.Selected := F.LayerList.LayerAt(0);
       F.LayerList.SliderAt(3).Position := 64;
       Check(F.LayerList.Selected=F.LayerList.LayerAt(3),'Slider did not select target layer');
       Check(F.LayerList.LayerAt(3).Opacity=64,'Nonselected row slider lost its new value');
@@ -218,6 +226,8 @@ begin
       Check(F.LayerList.SliderAt(1).Enabled,'Normal group opacity remains disabled');
       F.LayerList.SliderAt(1).Position := 128;
       Check(F.LayerList.LayerAt(1).Opacity=128,'Normal group opacity did not change');
+      F.LayerList.Selected := F.LayerList.LayerAt(2); F.LayerList.RevealSelected;
+      Check(F.LayerList.SliderAt(2)<>nil,'Revealed real-image slider absent');
       F.LayerList.SliderAt(2).Position := 160;
       Check(F.LayerList.LayerAt(2).Opacity=160,'Real image opacity did not change');
       F.SavePsdFile(TPath.Combine(Output,'aiueo_ui_edited.psd'));

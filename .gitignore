@@ -17,3 +17,15 @@ Win32/
 Win64/
 
 .DS_Store
+
+# Local exchange smoke-test resources and generated jobs/outputs
+/Tests/ExchangeSmoke.res
+/Tests/ExchangeUiSmoke.res
+/Tests/output/recovery_debug/
+/Tests/output/recovery_release/
+/Tests/output/stage13*/
+/Tests/Stage14Smoke.res
+/Tests/output/stage14*/
+/Exchange/
+
+/Tests/ViewerSmoke.res

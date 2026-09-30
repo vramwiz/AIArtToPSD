@@ -3,17 +3,25 @@
 interface
 
 uses System.Types, System.Classes, System.SysUtils, System.Generics.Collections,
-  Vcl.Controls, Vcl.Forms, Vcl.StdCtrls, Vcl.ExtCtrls, 
-  Vcl.Dialogs, Vcl.Menus, Vcl.Samples.Spin, Vcl.Graphics, ArtDocument, ArtLayerList, ArtFileHistory, DarkComboBox, ArtExchange;
+  Vcl.Controls, Vcl.Forms, Vcl.StdCtrls, Vcl.ExtCtrls,
+  Vcl.Dialogs, Vcl.Menus, Vcl.Samples.Spin, Vcl.Graphics, ArtDocument, ArtLayerList, ArtFileHistory, DarkComboBox, ArtExchange, ArtUndo, ArtPipeBridge, ArtPipeProtocol, System.JSON;
 
 type
   TMainForm = class(TForm)
   private
     FExchange: TArtExchange;
+    FUndo: TArtUndo;
+    FPipe: TArtPipeBridge;
+    FProtocol: TArtPipeProtocol;
+    FCurrentJobId,FOperation: string;
+    FBusy: Boolean;
+    FActivity: TLabel;
+    FCancelAi: TButton;
+    FUndoItem,FRedoItem: TMenuItem;
     FPrompt: TMemo;
     FJobPath: TEdit;
     FExportAi, FImportAi: TButton;
-    FResultDialog: TOpenDialog;
+    FResultDialog,FRecoveryDialog: TOpenDialog;
     FDocument: TArtDocument;
     FFileName: string;
     FModified: Boolean;
@@ -35,9 +43,23 @@ type
     FPartGroup, FPartChoice: TDarkComboBox;
     FGroupItem: TMenuItem;
     FUpdatingParts: Boolean;
+    FZoom, FPanX, FPanY: Double;
     FDragging: Boolean;
     FDragStart: TPoint;
-    FDragX,FDragY,FDragDX,FDragDY: Integer;
+    procedure PreviewWheel(Sender: TObject; Shift: TShiftState; WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
+    function DispatchCommand(const Command: string; Args: TJSONObject): TJSONObject;
+    function JobJson(Job: TArtExchangeJob): TJSONObject;
+    procedure UpdateActivity;
+    procedure BeginOperation(const Name: string);
+    procedure EndOperation;
+    procedure BeginEdit;
+    procedure CommitEdit;
+    procedure RestoreEdit(Redo: Boolean);
+    procedure UndoClick(Sender: TObject);
+    procedure RedoClick(Sender: TObject);
+    procedure CancelAiClick(Sender: TObject);
+    procedure RecoverAiClick(Sender: TObject);
+    procedure ResetAiJobs;
     procedure ExportAiClick(Sender: TObject);
     procedure ImportAiClick(Sender: TObject);
     procedure UpdateParts;
@@ -75,8 +97,18 @@ type
     property FileHistory: TArtFileHistory read FHistory;
     destructor Destroy; override;
     function ExportAiJob(const Prompt,Root: string): string;
+    function PipeName: string;
+    function CanUndo: Boolean;
+    function CanRedo: Boolean;
+    procedure Undo;
+    procedure Redo;
+    procedure CancelAiJob(const Id: string);
+    property Busy: Boolean read FBusy;
+    property ActivityControl: TLabel read FActivity;
     procedure ImportAiResult(const FileName: string);
+    procedure RecoverAiJob(const Directory: string);
     property PromptControl: TMemo read FPrompt;
+    property AiJobPathControl: TEdit read FJobPath;
     procedure CreateGroup(const Name: string; Exclusive: Boolean);
     procedure SelectPart(Layer: TArtLayer);
     property PartGroupControl: TDarkComboBox read FPartGroup;
@@ -93,6 +125,7 @@ type
     property Document: TArtDocument read FDocument;
     property LayerList: TArtLayerList read FTree;
     property PreviewControl: TPaintBox read FPaint;
+    property PreviewBounds: TRect read PreviewRect;
     property Modified: Boolean read FModified;
     property CanEdit: Boolean read FCanEdit;
   end;
@@ -104,17 +137,162 @@ implementation
 uses System.Math, System.IOUtils, System.UITypes, Winapi.Windows, ArtPsd, ArtPng, ArtLayerName, ArtParts;
 
 {$R *.dfm}
-type TArtPaintBoxAccess = class(TPaintBox);
+type
+  TArtPaintBoxAccess = class(TPaintBox);
+  TArtPreviewPaintBox = class(TPaintBox)
+  public
+    constructor Create(AOwner: TComponent); override;
+  end;
 
+constructor TArtPreviewPaintBox.Create(AOwner: TComponent);
+begin
+  inherited;
+  // PaintPreview covers every pixel; avoid erasing the background before it.
+  ControlStyle := ControlStyle+[csOpaque];
+end;
+
+function TMainForm.PipeName: string;
+begin if FPipe=nil then Result := '' else Result := FPipe.Name; end;
+function TMainForm.CanUndo: Boolean;
+begin Result := not FBusy and FCanEdit and FUndo.CanUndo; end;
+function TMainForm.CanRedo: Boolean;
+begin Result := not FBusy and FCanEdit and FUndo.CanRedo; end;
+procedure TMainForm.BeginEdit;
+var Id: string;
+begin
+  Id := ''; if FTree.Selected<>nil then Id := FTree.Selected.Id;
+  FUndo.BeginEdit(FDocument,Id,FModified);
+end;
+procedure TMainForm.CommitEdit;
+begin FUndo.CommitEdit; end;
+procedure TMainForm.RestoreEdit(Redo: Boolean);
+var Target,Current: TArtEditState; Candidate,Old: TArtDocument; Pixels: TBytes; L: TArtLayer; Selection: string;
+begin
+  if FBusy or not FCanEdit then raise EArtFormat.Create('今は元に戻せません。');
+  FTree.FinishRename(True); Target := FUndo.Peek(Redo);
+  Candidate := Target.Document.Clone; Current := nil;
+  try
+    // Restoring old content must never reuse an old revision number.
+    Candidate.Revision := FDocument.Revision; Candidate.Changed;
+    Pixels := RenderPsdLayers(Candidate); Selection := '';
+    if FTree.Selected<>nil then Selection := FTree.Selected.Id;
+    Current := TArtEditState.Create(FDocument,Selection,FModified);
+  except Candidate.Free; Current.Free; raise; end;
+  Old := FDocument; FDocument := Candidate;
+  try SetPreview(Pixels); except FDocument := Old; Candidate.Free; Current.Free; raise; end;
+  FTree.SetRoots(nil); Old.Free; FModified := Target.Modified; Selection := Target.SelectedId;
+  FUndo.CommitRestore(Current,Redo); ResetAiJobs; RebuildTree;
+  L := FDocument.FindLayer(Selection); if L<>nil then begin FTree.Selected := L; FTree.RevealSelected; end;
+  UpdateStatus;
+end;
+procedure TMainForm.Undo;
+begin RestoreEdit(False); end;
+procedure TMainForm.Redo;
+begin RestoreEdit(True); end;
+procedure TMainForm.UndoClick(Sender: TObject);
+begin try Undo; except on E: Exception do MessageDlg(E.Message,mtError,[mbOK],0); end; end;
+procedure TMainForm.RedoClick(Sender: TObject);
+begin try Redo; except on E: Exception do MessageDlg(E.Message,mtError,[mbOK],0); end; end;
+procedure TMainForm.BeginOperation(const Name: string);
+begin
+  if FBusy then raise EArtFormat.Create('別の処理を実行中です。');
+  FBusy := True; FOperation := Name; Screen.Cursor := crHourGlass;
+  UpdateActivity; FActivity.Update;
+end;
+procedure TMainForm.EndOperation;
+begin FBusy := False; FOperation := ''; Screen.Cursor := crDefault; UpdateActivity; end;
+procedure TMainForm.UpdateActivity;
+var Job: TArtExchangeJob; StateText: string;
+begin
+  if FActivity=nil then Exit;
+  StateText := '待機中';
+  if FBusy then StateText := FOperation
+  else if FCurrentJobId<>'' then begin
+    Job := FExchange.FindJob(FCurrentJobId);
+    if Job.State='queued' then StateText := 'AI生成待ち'
+    else if Job.State='running' then StateText := 'AI生成中'
+    else if Job.State='ready' then StateText := '生成完了・取込待ち'
+    else if Job.State='failed' then StateText := 'AI処理失敗'
+    else if Job.State='cancelled' then StateText := 'AI処理を中止しました'
+    else StateText := '取込完了';
+    if (Job.State<>'completed') and (Job.State<>'cancelled') and (FDocument<>nil) and (FDocument.Revision<>Job.Revision) then StateText := '文書が変更されています・新しいAIジョブを書き出してください';
+    StateText := StateText+Format(' (%d%%) %s',[Job.Progress,Job.MessageText]);
+  end;
+  if (FPrompt<>nil) and (FActivity.Caption<>StateText) then FPrompt.Lines.Add('AI: '+StateText);
+  FActivity.Caption := StateText;
+  FActivity.Hint := '接続先: \\.\pipe\'+PipeName; FActivity.ShowHint := True;
+  if FUndoItem<>nil then FUndoItem.Enabled := CanUndo;
+  if FRedoItem<>nil then FRedoItem.Enabled := CanRedo;
+  if FCancelAi<>nil then begin
+    FCancelAi.Enabled := not FBusy and (FCurrentJobId<>'');
+    if FCancelAi.Enabled then begin
+      Job := FExchange.FindJob(FCurrentJobId);
+      FCancelAi.Enabled := (Job.State<>'completed') and (Job.State<>'cancelled');
+    end;
+  end;
+end;
+procedure TMainForm.CancelAiJob(const Id: string);
+var Job: TArtExchangeJob;
+begin
+  if FBusy then raise EArtFormat.Create('処理中です。');
+  Job := FExchange.FindJob(Id);
+  // Cancellation also works after local edits have made the result stale.
+  if Job.State='completed' then raise EArtFormat.Create('取り込み済みです。Undoで戻してください。');
+  FExchange.CancelJob(Id); UpdateActivity;
+end;
+procedure TMainForm.CancelAiClick(Sender: TObject);
+begin try CancelAiJob(FCurrentJobId); except on E: Exception do MessageDlg(E.Message,mtError,[mbOK],0); end; end;
+function TMainForm.JobJson(Job: TArtExchangeJob): TJSONObject;
+begin
+  Result := TJSONObject.Create;
+  Result.AddPair('jobId',Job.Id); Result.AddPair('directory',Job.Directory); Result.AddPair('state',Job.State);
+  Result.AddPair('progress',TJSONNumber.Create(Job.Progress)); Result.AddPair('message',Job.MessageText);
+  Result.AddPair('documentId',Job.DocumentId); Result.AddPair('ifRevision',UIntToStr(Job.Revision));
+  Result.AddPair('stale',TJSONBool.Create((Job.State<>'completed') and ((FDocument=nil) or (FDocument.SessionId<>Job.DocumentId) or (FDocument.Revision<>Job.Revision))));
+end;
+function TMainForm.DispatchCommand(const Command: string; Args: TJSONObject): TJSONObject;
+var Id,Path: string; Job: TArtExchangeJob;
+begin
+  if FBusy then raise EArtFormat.Create('Application is busy');
+  if Command='status' then begin
+    Result := TJSONObject.Create;
+    Result.AddPair('pipeName',PipeName); Result.AddPair('busy',TJSONBool.Create(FBusy));
+    Result.AddPair('canUndo',TJSONBool.Create(CanUndo)); Result.AddPair('canRedo',TJSONBool.Create(CanRedo));
+    Result.AddPair('modified',TJSONBool.Create(FModified)); Result.AddPair('canEdit',TJSONBool.Create(FCanEdit));
+    if FDocument<>nil then begin Result.AddPair('documentId',FDocument.SessionId); Result.AddPair('revision',UIntToStr(FDocument.Revision)); end;
+    Id := FCurrentJobId; if Args.GetValue('jobId')<>nil then Id := CommandString(Args,'jobId');
+    if Id<>'' then begin
+      try Result.AddPair('job',JobJson(FExchange.FindJob(Id)));
+      except Result.Free; raise; end;
+    end;
+    Exit;
+  end;
+  if Command='export' then begin
+    Path := ExportAiJob(CommandString(Args,'prompt'),TPath.Combine(ExtractFilePath(ParamStr(0)),'Exchange'));
+    Exit(JobJson(FExchange.FindJob(ExtractFileName(Path))));
+  end;
+  if Command='recover' then begin
+    if FModified then raise EArtFormat.Create('Save or discard the current document before recovery');
+    RecoverAiJob(CommandString(Args,'directory')); Exit(JobJson(FExchange.FindJob(FCurrentJobId)));
+  end;
+  if Command='undo' then begin Undo; Exit(TJSONObject.Create); end;
+  if Command='redo' then begin Redo; Exit(TJSONObject.Create); end;
+  Id := CommandString(Args,'jobId'); Job := FExchange.FindJob(Id);
+  if Command='import' then ImportAiResult(TPath.Combine(Job.Directory,'result.json'))
+  else if Command='progress' then FExchange.NotifyJob(FDocument,Id,CommandString(Args,'state'),CommandString(Args,'message'),CommandInteger(Args,'progress'))
+  else if Command='cancel' then CancelAiJob(Id)
+  else raise EArtFormat.Create('Unknown command: '+Command);
+  UpdateActivity; Result := JobJson(Job);
+end;
 constructor TMainForm.Create(AOwner: TComponent);
 begin CreateWithHistory(AOwner,''); end;
 constructor TMainForm.CreateWithHistory(AOwner: TComponent; const HistoryDirectory: string);
-var RightPanel, StatusPanel, PositionPanel, PartsPanel, AiPanel, AiButtons: TPanel; FileMenu, LayerMenu, Item: TMenuItem; LabelControl: TLabel;
-    Splitter: TSplitter;
+var RightPanel, StatusPanel, PositionPanel, PartsPanel, AiPanel, AiButtons, PreviewPanel: TPanel; FileMenu, LayerMenu, Item: TMenuItem; LabelControl: TLabel;
+    Splitter: TSplitter; EditMenu: TMenuItem;
 begin
   inherited Create(AOwner);
   FHistory := TArtFileHistory.Create(HistoryDirectory);
-  FExchange := TArtExchange.Create;
+  FExchange := TArtExchange.Create; FUndo := TArtUndo.Create;
   FBitmap := Vcl.Graphics.TBitmap.Create;
   Menu := TMainMenu.Create(Self);
   FileMenu := TMenuItem.Create(Self); FileMenu.Caption := 'ファイル(&F)'; Menu.Items.Add(FileMenu);
@@ -130,55 +308,73 @@ begin
   Item := TMenuItem.Create(Self); Item.Caption := '-'; FileMenu.Add(Item);
   Item := TMenuItem.Create(Self); Item.Caption := '終了(&X)'; Item.OnClick := ExitClick; FileMenu.Add(Item);
   FHistoryMenu := TMenuItem.Create(Self); FHistoryMenu.Caption := '履歴(&H)'; FileMenu.Insert(4,FHistoryMenu);
-  Item := TMenuItem.Create(Self); Item.Caption := 'PNGから新規作成(&N)...'; Item.ShortCut := TextToShortCut('Ctrl+N'); Item.OnClick := NewPngClick; FileMenu.Insert(1,Item);
-  FImportItem := TMenuItem.Create(Self); FImportItem.Caption := 'PNGをレイヤーとして追加(&I)...'; FImportItem.ShortCut := TextToShortCut('Ctrl+I'); FImportItem.OnClick := ImportPngClick; FileMenu.Insert(2,FImportItem);
-  LayerMenu := TMenuItem.Create(Self); LayerMenu.Caption := 'レイヤー(&L)'; Menu.Items.Add(LayerMenu);
+  Item := TMenuItem.Create(Self); Item.Caption := 'PNGから新規作成(&N)...'; Item.ShortCut := TextToShortCut('Ctrl+N'); Item.OnClick := NewPngClick;
+  FImportItem := TMenuItem.Create(Self); FImportItem.Caption := 'PNGをレイヤーとして追加(&I)...'; FImportItem.ShortCut := TextToShortCut('Ctrl+I'); FImportItem.OnClick := ImportPngClick;
+  LayerMenu := TMenuItem.Create(Self); LayerMenu.Caption := 'レイヤー(&L)';
   FReplaceItem := TMenuItem.Create(Self); FReplaceItem.Caption := '選択画像をPNGで置換(&R)...'; FReplaceItem.OnClick := ReplacePngClick; FReplaceItem.Enabled := False; LayerMenu.Add(FReplaceItem);
   FPositionItem := TMenuItem.Create(Self); FPositionItem.Caption := '配置座標を入力(&P)'; FPositionItem.OnClick := PositionClick; FPositionItem.Enabled := False; LayerMenu.Add(FPositionItem);
   FGroupItem := TMenuItem.Create(Self); FGroupItem.Caption := 'グループを作成(&G)...'; FGroupItem.OnClick := GroupClick; FGroupItem.Enabled := False; LayerMenu.Add(FGroupItem);
+  EditMenu := TMenuItem.Create(Self); EditMenu.Caption := '編集(&E)';
+  FUndoItem := TMenuItem.Create(Self); FUndoItem.Caption := '元に戻す(&U)'; FUndoItem.ShortCut := TextToShortCut('Ctrl+Z'); FUndoItem.OnClick := UndoClick; FUndoItem.Enabled := False; EditMenu.Add(FUndoItem);
+  FRedoItem := TMenuItem.Create(Self); FRedoItem.Caption := 'やり直す(&R)'; FRedoItem.ShortCut := TextToShortCut('Ctrl+Y'); FRedoItem.OnClick := RedoClick; FRedoItem.Enabled := False; EditMenu.Add(FRedoItem);
+  Item := TMenuItem.Create(Self); Item.Caption := 'AIジョブを再開...'; Item.OnClick := RecoverAiClick;
   RebuildHistory;
-  StatusPanel := TPanel.Create(Self); StatusPanel.Parent := Self;
-  StatusPanel.Align := alBottom; StatusPanel.Height := 75;
+  // Keep legacy API control objects for existing integration callers; hide their panels.
+  // The visible UI consists only of preview, read-only layers and the AI transcript.
+  StatusPanel := TPanel.Create(Self); StatusPanel.Parent := Self; StatusPanel.Visible := False;
+  StatusPanel.Align := alNone; StatusPanel.Height := 75;
   FStatus := TLabel.Create(Self); FStatus.Parent := StatusPanel;
   FStatus.Align := alClient; FStatus.WordWrap := True; FStatus.Layout := tlCenter;
   FStatus.Caption := 'PSDを開くと、レイヤー階層と画像を表示します。';
-  AiPanel := TPanel.Create(Self); AiPanel.Parent := Self; AiPanel.Align := alBottom; AiPanel.Height := 112;
-  FJobPath := TEdit.Create(Self); FJobPath.Parent := AiPanel; FJobPath.Align := alBottom; FJobPath.ReadOnly := True; FJobPath.Text := 'AIジョブのフォルダーがここに表示されます。';
-  LabelControl := TLabel.Create(Self); LabelControl.Parent := AiPanel; LabelControl.Align := alTop; LabelControl.Caption := 'AIへの指示（書き出したフォルダーをCodexへ渡してください）';
-  AiButtons := TPanel.Create(Self); AiButtons.Parent := AiPanel; AiButtons.Align := alRight; AiButtons.Width := 194;
+  FActivity := TLabel.Create(Self); FActivity.Parent := StatusPanel; FActivity.Align := alBottom; FActivity.Height := 20;
+  AiPanel := TPanel.Create(Self); AiPanel.Parent := Self; AiPanel.Align := alBottom; AiPanel.Height := 148;
+  FJobPath := TEdit.Create(Self);  FJobPath.Align := alBottom; FJobPath.ReadOnly := True; FJobPath.Text := 'AIジョブのフォルダーがここに表示されます。';
+  LabelControl := TLabel.Create(Self); LabelControl.Parent := AiPanel; LabelControl.Align := alTop; LabelControl.Caption := 'AIとのやりとり';
+  AiButtons := TPanel.Create(Self); AiButtons.Parent := Self; AiButtons.Visible := False;  AiButtons.Align := alNone; AiButtons.Width := 194;
   FExportAi := TButton.Create(Self); FExportAi.Parent := AiButtons; FExportAi.SetBounds(8,6,176,28); FExportAi.Caption := 'AI向けに書き出す'; FExportAi.OnClick := ExportAiClick; FExportAi.Enabled := False;
   FImportAi := TButton.Create(Self); FImportAi.Parent := AiButtons; FImportAi.SetBounds(8,40,176,28); FImportAi.Caption := '生成結果を取り込む'; FImportAi.OnClick := ImportAiClick; FImportAi.Enabled := False;
+  FCancelAi := TButton.Create(Self); FCancelAi.Parent := AiButtons; FCancelAi.SetBounds(8,74,176,28); FCancelAi.Caption := 'AI処理を中止'; FCancelAi.OnClick := CancelAiClick; FCancelAi.Enabled := False;
   FPrompt := TMemo.Create(Self); FPrompt.Parent := AiPanel; FPrompt.Align := alClient; FPrompt.ScrollBars := ssVertical; FPrompt.MaxLength := 16000;
-  FPrompt.Text := '元の構図を維持して、表情やパーツの差分を作成してください。';
+  FPrompt.ReadOnly := True; FPrompt.Text := 'Codexからの指示を待っています。';
   RightPanel := TPanel.Create(Self); RightPanel.Parent := Self; RightPanel.Align := alRight; RightPanel.Left := ClientWidth-420; RightPanel.Width := 420;
-  PositionPanel := TPanel.Create(Self); PositionPanel.Parent := RightPanel; PositionPanel.Align := alBottom; PositionPanel.Height := 58;
+  PositionPanel := TPanel.Create(Self); PositionPanel.Parent := Self; PositionPanel.Visible := False;  PositionPanel.Align := alNone; PositionPanel.Height := 58;
   LabelControl := TLabel.Create(Self); LabelControl.Parent := PositionPanel; LabelControl.SetBounds(8,7,30,18); LabelControl.Caption := 'X';
   FX := TSpinEdit.Create(Self); FX.Parent := PositionPanel; FX.SetBounds(25,4,95,26); FX.MinValue := -30000; FX.MaxValue := 30000; FX.Enabled := False;
   LabelControl := TLabel.Create(Self); LabelControl.Parent := PositionPanel; LabelControl.SetBounds(128,7,25,18); LabelControl.Caption := 'Y';
   FY := TSpinEdit.Create(Self); FY.Parent := PositionPanel; FY.SetBounds(145,4,95,26); FY.MinValue := -30000; FY.MaxValue := 30000; FY.Enabled := False;
   FPositionApply := TButton.Create(Self); FPositionApply.Parent := PositionPanel; FPositionApply.SetBounds(250,3,95,28); FPositionApply.Caption := '配置を適用'; FPositionApply.Enabled := False; FPositionApply.OnClick := PositionClick;
   LabelControl := TLabel.Create(Self); LabelControl.Parent := PositionPanel; LabelControl.SetBounds(8,34,400,18); LabelControl.Caption := '選択画像をプレビュー上でドラッグして配置できます。';
-  PartsPanel := TPanel.Create(Self); PartsPanel.Parent := RightPanel; PartsPanel.Align := alBottom; PartsPanel.Height := 96;
+  PartsPanel := TPanel.Create(Self); PartsPanel.Parent := Self; PartsPanel.Visible := False;  PartsPanel.Align := alNone; PartsPanel.Height := 96;
   LabelControl := TLabel.Create(Self); LabelControl.Parent := PartsPanel; LabelControl.SetBounds(8,4,360,20); LabelControl.Caption := '表情・パーツ切替（* 排他選択）';
   FPartGroup := TDarkComboBox.Create(Self); FPartGroup.Parent := PartsPanel; FPartGroup.SetBounds(8,26,400,28); FPartGroup.Anchors := [akLeft,akTop,akRight]; FPartGroup.OnChange := PartGroupChange; FPartGroup.Enabled := False;
   FPartChoice := TDarkComboBox.Create(Self); FPartChoice.Parent := PartsPanel; FPartChoice.SetBounds(8,59,400,28); FPartChoice.Anchors := [akLeft,akTop,akRight]; FPartChoice.OnChange := PartChoiceChange; FPartChoice.Enabled := False;
   FTree := TArtLayerList.Create(Self); FTree.Parent := RightPanel; FTree.Align := alClient;
   FTree.OnSelect := TreeChange; FTree.OnRename := LayerRename; FTree.OnAttributes := LayerAttributes;
   Splitter := TSplitter.Create(Self); Splitter.Parent := Self; Splitter.Align := alRight; Splitter.Left := ClientWidth-424;
-  FPaint := TPaintBox.Create(Self); FPaint.Parent := Self; FPaint.Align := alClient;
+  // Buffer only the viewer so background and scaled image appear in one frame.
+  PreviewPanel := TPanel.Create(Self); PreviewPanel.Parent := Self;
+  PreviewPanel.Align := alClient; PreviewPanel.BevelOuter := bvNone;
+  PreviewPanel.ParentBackground := False; PreviewPanel.Color := clGray;
+  PreviewPanel.DoubleBuffered := True;
+  FPaint := TArtPreviewPaintBox.Create(Self); FPaint.Parent := PreviewPanel; FPaint.Align := alClient;
   FPaint.OnPaint := PaintPreview; FPaint.OnMouseDown := PreviewMouseDown; FPaint.OnMouseMove := PreviewMouseMove; FPaint.OnMouseUp := PreviewMouseUp;
-  FOpenDialog := TOpenDialog.Create(Self); FOpenDialog.Filter := 'Photoshop PSD (*.psd)|*.psd';
+  FOpenDialog := TOpenDialog.Create(Self); FOpenDialog.Filter := 'PSD・PNG (*.psd;*.png)|*.psd;*.png';
   FOpenDialog.Options := [ofFileMustExist,ofPathMustExist,ofEnableSizing,ofNoChangeDir];
-  FSaveDialog := TSaveDialog.Create(Self); FSaveDialog.Filter := FOpenDialog.Filter;
+  FSaveDialog := TSaveDialog.Create(Self); FSaveDialog.Filter := 'Photoshop PSD (*.psd)|*.psd';
   FSaveDialog.DefaultExt := 'psd'; FSaveDialog.Options := [ofOverwritePrompt,ofPathMustExist,ofEnableSizing,ofNoChangeDir];
   FPngDialog := TOpenDialog.Create(Self); FPngDialog.Filter := 'PNG画像 (*.png)|*.png'; FPngDialog.Options := [ofFileMustExist,ofPathMustExist,ofEnableSizing,ofNoChangeDir];
   FPngDialog.InitialDir := TPath.Combine(ExtractFilePath(ParamStr(0)),'Sample');
   FResultDialog := TOpenDialog.Create(Self); FResultDialog.Filter := 'AI生成結果 (result.json)|result.json'; FResultDialog.Options := [ofFileMustExist,ofPathMustExist,ofEnableSizing,ofNoChangeDir];
+  FRecoveryDialog := TOpenDialog.Create(Self); FRecoveryDialog.Filter := 'AI再開情報 (recovery.json)|recovery.json'; FRecoveryDialog.Options := [ofFileMustExist,ofPathMustExist,ofEnableSizing,ofNoChangeDir];
+  FZoom := 1; OnMouseWheel := PreviewWheel;
   OnCloseQuery := CheckClose;
+  FProtocol := TArtPipeProtocol.Create(DispatchCommand); FPipe := TArtPipeBridge.Create(FProtocol.Handle);
+  FExchange.PipeName := FPipe.Name; UpdateActivity;
 end;
 
 destructor TMainForm.Destroy;
 begin
+  FPipe.Free; FProtocol.Free; FUndo.Free;
   if FTree<>nil then begin FTree.OnSelect := nil; FTree.SetRoots(nil); end;
   FDocument.Free; FBitmap.Free; FHistory.Free; FExchange.Free;
   inherited;
@@ -222,6 +418,7 @@ end;
 procedure TMainForm.NewFromPng(const FileName: string);
 var Image: TArtPngData; NewDoc,Old: TArtDocument; L: TArtLayer; RGBA: TBytes;
 begin
+  FZoom := 1; FPanX := 0; FPanY := 0;
   Image := ReadPng(FileName); NewDoc := TArtDocument.Create;
   try
     NewDoc.Width := Image.Width; NewDoc.Height := Image.Height;
@@ -230,7 +427,7 @@ begin
   except NewDoc.Free; raise; end;
   Old := FDocument; FDocument := NewDoc;
   try SetPreview(RGBA); except FDocument := Old; NewDoc.Free; raise; end;
-  FTree.SetRoots(nil); Old.Free; FFileName := ''; FDocument.Changed; FModified := True; FCanEdit := True;
+  FUndo.Clear; ResetAiJobs; FTree.SetRoots(nil); Old.Free; FFileName := ''; FDocument.Changed; FModified := True; FCanEdit := True;
   FSave.Enabled := True; FSaveAs.Enabled := True; FClose.Enabled := True; RebuildTree; UpdateStatus;
 end;
 procedure TMainForm.ImportPngFile(const FileName: string);
@@ -253,11 +450,11 @@ begin
   end;
   if Parent=nil then List := FDocument.Roots else List := Parent.Children;
   Index := List.IndexOf(Selected); if Index<0 then Index := 0;
-  L := FDocument.AddLayer(alkImage,ChangeFileExt(ExtractFileName(FileName),''),TArtBounds.Create(0,0,Image.Width,Image.Height),Parent);
+  BeginEdit; L := FDocument.AddLayer(alkImage,ChangeFileExt(ExtractFileName(FileName),''),TArtBounds.Create(0,0,Image.Width,Image.Height),Parent);
   L.Pixels := Image.Pixels; List.Remove(L); List.Insert(Index,L);
   try SetPreview(RenderEditable);
   except FDocument.RemoveNewLayer(L); raise; end;
-  FDocument.Changed; FModified := True; RebuildTree; FTree.Selected := L; FTree.RevealSelected; UpdateStatus;
+  FDocument.Changed; CommitEdit; FModified := True; RebuildTree; FTree.Selected := L; FTree.RevealSelected; UpdateStatus;
 end;
 procedure TMainForm.ReplaceSelectedPng(const FileName: string);
 var Image: TArtPngData; L: TArtLayer; OldPixels: TBytes; OldBounds,NewBounds: TArtBounds;
@@ -266,10 +463,10 @@ begin
   FTree.FinishRename(True); Image := ReadPng(FileName); L := FTree.Selected;
   OldPixels := L.Pixels; OldBounds := L.Bounds;
   NewBounds := TArtBounds.Create(OldBounds.Left,OldBounds.Top,OldBounds.Left+Image.Width,OldBounds.Top+Image.Height);
-  L.Pixels := Image.Pixels; L.Bounds := NewBounds;
+  BeginEdit; L.Pixels := Image.Pixels; L.Bounds := NewBounds;
   try SetPreview(RenderEditable);
   except L.Pixels := OldPixels; L.Bounds := OldBounds; raise; end;
-  FDocument.Changed; FModified := True; FTree.RefreshImages; TreeChange(Self); UpdateStatus;
+  FDocument.Changed; CommitEdit; FModified := True; FTree.RefreshImages; TreeChange(Self); UpdateStatus;
 end;
 procedure TMainForm.MoveSelectedLayer(X,Y: Integer);
 var L: TArtLayer; OldBounds,OldMask,NewBounds,NewMask: TArtBounds; DX,DY: Integer;
@@ -281,10 +478,10 @@ begin
   DX := X-OldBounds.Left; DY := Y-OldBounds.Top;
   NewBounds := TArtBounds.Create(X,Y,X+OldBounds.Width,Y+OldBounds.Height); NewMask := OldMask;
   if L.HasMask then NewMask := TArtBounds.Create(OldMask.Left+DX,OldMask.Top+DY,OldMask.Right+DX,OldMask.Bottom+DY);
-  L.Bounds := NewBounds; L.MaskBounds := NewMask;
+  BeginEdit; L.Bounds := NewBounds; L.MaskBounds := NewMask;
   try SetPreview(RenderEditable);
   except L.Bounds := OldBounds; L.MaskBounds := OldMask; raise; end;
-  FDocument.Changed; FModified := True; TreeChange(Self); UpdateStatus;
+  FDocument.Changed; CommitEdit; FModified := True; TreeChange(Self); UpdateStatus;
 end;
 procedure TMainForm.NewPngClick(Sender: TObject);
 begin
@@ -331,10 +528,11 @@ begin
       SetPreview(RGBA);
     except FDocument := OldDoc; NewDoc.Free; raise; end;
     // Nodes hold document pointers: clear them before releasing the previous document.
-    FTree.SetRoots(nil); OldDoc.Free; FFileName := TPath.GetFullPath(FileName);
+    FUndo.Clear; ResetAiJobs; FTree.SetRoots(nil); OldDoc.Free; FFileName := TPath.GetFullPath(FileName);
     FCanEdit := NewCanEdit; FModified := False; FSave.Enabled := True; FSaveAs.Enabled := True; FClose.Enabled := True;
     RebuildTree; UpdateStatus;
     if not FLoadingSaved then begin
+      FZoom := 1; FPanX := 0; FPanY := 0; FPaint.Invalidate;
       try FHistory.AddFile(FFileName); except on E: Exception do FStatus.Caption := FStatus.Caption+sLineBreak+'履歴保存失敗: '+E.Message; end;
       RebuildHistory;
     end;
@@ -342,7 +540,7 @@ begin
 end;
 
 procedure TMainForm.RebuildTree;
-begin FTree.EditEnabled := FCanEdit; FTree.SetRoots(FDocument.Roots); end;
+begin FTree.EditEnabled := False; FTree.SetRoots(FDocument.Roots); end;
 
 procedure TMainForm.TreeChange(Sender: TObject);
 var L: TArtLayer; CanImage: Boolean;
@@ -352,9 +550,9 @@ begin
   FImportItem.Enabled := (FDocument=nil) or FCanEdit;
   FGroupItem.Enabled := FCanEdit and (FDocument<>nil);
   FExportAi.Enabled := FCanEdit and (FDocument<>nil); FImportAi.Enabled := FExportAi.Enabled;
-  UpdateParts;
+  UpdateParts; UpdateActivity;
   if CanImage then begin FX.Value := L.Bounds.Left; FY.Value := L.Bounds.Top; end;
-  if FPaint<>nil then begin TArtPaintBoxAccess(FPaint).MouseCapture := False; FPaint.Invalidate; end; FDragging := False;
+  if FPaint<>nil then begin TArtPaintBoxAccess(FPaint).MouseCapture := False; FPaint.Cursor := crDefault; FPaint.Invalidate; end; FDragging := False;
 end;
 procedure TMainForm.LayerAttributes(Sender: TObject; Layer: TArtLayer; Visible: Boolean; Opacity: Byte);
 begin
@@ -400,7 +598,7 @@ begin
   L := FTree.Selected; OldName := L.Name; OldOpacity := L.Opacity;
   States := TDictionary<TArtLayer,Boolean>.Create;
   try
-    Snapshot(FDocument.Roots); L.Name := Name; L.Visible := Visible; L.Opacity := Opacity;
+    Snapshot(FDocument.Roots); BeginEdit; L.Name := Name; L.Visible := Visible; L.Opacity := Opacity;
     try
       if IsExclusive(L) and L.Visible then SelectExclusive(FDocument,L);
       Changed := (OldName<>Name) or (OldOpacity<>Opacity);
@@ -412,7 +610,7 @@ begin
       for Pair in States do Pair.Key.Visible := Pair.Value;
       raise;
     end;
-    FDocument.Changed; FModified := True; FTree.RefreshLayerNames; UpdateParts; UpdateStatus;
+    FDocument.Changed; CommitEdit; FModified := True; FTree.RefreshLayerNames; UpdateParts; UpdateStatus;
   finally States.Free; end;
 end;
 
@@ -428,26 +626,65 @@ begin
   FTree.RevealSelected;
 end;
 
+procedure TMainForm.RecoverAiClick(Sender: TObject);
+begin
+  if not ConfirmDiscard then Exit;
+  FRecoveryDialog.FileName := 'recovery.json';
+  if FRecoveryDialog.Execute then
+    try RecoverAiJob(ExtractFilePath(FRecoveryDialog.FileName));
+    except on E: Exception do MessageDlg('AIジョブを再開できませんでした。'+sLineBreak+E.Message,mtError,[mbOK],0); end;
+end;
+procedure TMainForm.RecoverAiJob(const Directory: string);
+var Candidate,Old: TArtDocument; Job: TArtExchangeJob; Pixels: TBytes;
+begin
+  BeginOperation('AIジョブの再開中');
+  try
+    Candidate := FExchange.LoadRecovery(ExcludeTrailingPathDelimiter(Directory),Job);
+    try Pixels := RenderPsdLayers(Candidate); FExchange.WriteJobConnection(Job); except Candidate.Free; Job.Free; raise; end;
+    Old := FDocument; FDocument := Candidate;
+    try SetPreview(Pixels); except FDocument := Old; Candidate.Free; Job.Free; raise; end;
+    FUndo.Clear; ResetAiJobs; FTree.SetRoots(nil); Old.Free;
+    FZoom := 1; FPanX := 0; FPanY := 0; FPaint.Invalidate;
+    FExchange.RegisterRecovered(Job); FCurrentJobId := Job.Id; FJobPath.Text := Job.Directory;
+    FJobPath.Hint := Job.Directory; FJobPath.ShowHint := True;
+    FPrompt.Lines.Add('Codex: '+Job.PromptText); FFileName := ''; FModified := True; FCanEdit := True;
+    FSave.Enabled := True; FSaveAs.Enabled := True; FClose.Enabled := True;
+    RebuildTree; UpdateStatus;
+  finally EndOperation; end;
+end;
+procedure TMainForm.ResetAiJobs;
+begin
+  FCurrentJobId := ''; FExchange.ClearJobs; FJobPath.Text := 'AIジョブのフォルダーがここに表示されます。';
+  FJobPath.Hint := ''; FJobPath.ShowHint := False; UpdateActivity;
+end;
+
 function TMainForm.ExportAiJob(const Prompt,Root: string): string;
 begin
   if not FCanEdit then raise EArtFormat.Create('編集対応文書を開いてください。');
-  FTree.FinishRename(True); Result := FExchange.ExportJob(FDocument,Prompt,Root);
+  FPrompt.Lines.Add('Codex: '+Prompt);
+  FTree.FinishRename(True); BeginOperation('AI向け書出し中');
+  try Result := FExchange.ExportJob(FDocument,Prompt,Root); FCurrentJobId := ExtractFileName(Result);
+  finally EndOperation; end;
   FJobPath.Text := Result; FJobPath.Hint := Result; FJobPath.ShowHint := True;
 end;
 procedure TMainForm.ImportAiResult(const FileName: string);
 var Candidate,Old: TArtDocument; Job: TArtExchangeJob; Digest,SelectedId: string; L: TArtLayer; Pixels: TBytes;
 begin
   if not FCanEdit then raise EArtFormat.Create('編集対応文書を開いてください。');
-  FTree.FinishRename(True); Candidate := FExchange.PrepareResult(FDocument,FileName,Job,Digest);
-  if Candidate=nil then begin FJobPath.Text := 'この生成結果は既に取り込み済みです。'; Exit; end;
+  FTree.FinishRename(True); BeginOperation('生成結果の検証・取込中');
+  try
+  Candidate := FExchange.PrepareResult(FDocument,FileName,Job,Digest);
+  if Candidate=nil then begin UpdateStatus; FStatus.Caption := FStatus.Caption+sLineBreak+'この生成結果は既に取り込み済みです。'; Exit; end;
   SelectedId := ''; if FTree.Selected<>nil then SelectedId := FTree.Selected.Id;
   try Pixels := RenderPsdLayers(Candidate); except Candidate.Free; raise; end;
+  try BeginEdit; except Candidate.Free; raise; end;
   Old := FDocument; FDocument := Candidate;
   try SetPreview(Pixels); except FDocument := Old; Candidate.Free; raise; end;
-  FTree.SetRoots(nil); Old.Free; FModified := True;
+  FTree.SetRoots(nil); Old.Free; CommitEdit; FModified := True;
   FExchange.CommitResult(Job,Digest); RebuildTree;
   L := FDocument.FindLayer(SelectedId); if L<>nil then begin FTree.Selected := L; FTree.RevealSelected; end;
-  UpdateStatus; FJobPath.Text := '生成結果を取り込みました。PSDを保存して確定してください。';
+  UpdateStatus; FStatus.Caption := FStatus.Caption+sLineBreak+'生成結果を取り込みました。PSDを保存して確定してください。';
+  finally EndOperation; end;
 end;
 procedure TMainForm.ExportAiClick(Sender: TObject);
 begin
@@ -524,14 +761,14 @@ begin
     else List := LayerSiblings(FDocument,Selected);
   end;
   Index := List.IndexOf(Selected); if Index<0 then Index := 0;
-  L := FDocument.AddLayer(alkGroup,GroupName,TArtBounds.Create(0,0,0,0),Parent);
+  BeginEdit; L := FDocument.AddLayer(alkGroup,GroupName,TArtBounds.Create(0,0,0,0),Parent);
   FDocument.Roots.Remove(L); if Parent<>nil then Parent.Children.Remove(L);
   List.Insert(Index,L);
   if Exclusive then begin
     for var Sibling in List do if (Sibling<>L) and IsExclusive(Sibling) and Sibling.Visible then L.Visible := False;
   end;
   try SetPreview(RenderEditable); except FDocument.RemoveNewLayer(L); raise; end;
-  FDocument.Changed; FModified := True; RebuildTree; FTree.Selected := L; FTree.RevealSelected; UpdateStatus;
+  FDocument.Changed; CommitEdit; FModified := True; RebuildTree; FTree.Selected := L; FTree.RevealSelected; UpdateStatus;
 end;
 procedure TMainForm.GroupClick(Sender: TObject);
 var Name: string; Exclusive: Boolean; Answer: Integer;
@@ -551,7 +788,7 @@ begin
   if FCanEdit then Mode := '編集プレビュー：PNG追加・置換、画像の配置、名前・表示・不透明度を変更できます。'
   else Mode := '元の合成画像：編集非対応。変更なしの別名保存ができます。 '+FDocument.Unsupported.Text;
   FStatus.Caption := Format('%d × %d  /  %dレイヤー  %s',[FDocument.Width,FDocument.Height,FTree.RowCount,Mode]);
-  FStatus.Hint := FStatus.Caption; FStatus.ShowHint := True;
+  FStatus.Hint := FStatus.Caption; FStatus.ShowHint := True; UpdateActivity;
 end;
 
 procedure TMainForm.SavePsdFile(const FileName: string);
@@ -595,7 +832,7 @@ procedure TMainForm.OpenClick(Sender: TObject);
 begin
   if not ConfirmDiscard then Exit;
   if FOpenDialog.Execute then
-    try OpenPsdFile(FOpenDialog.FileName); except on E: Exception do MessageDlg('PSDを開けませんでした。'+sLineBreak+E.Message,mtError,[mbOK],0); end;
+    try if SameText(ExtractFileExt(FOpenDialog.FileName),'.png') then NewFromPng(FOpenDialog.FileName) else OpenPsdFile(FOpenDialog.FileName); except on E: Exception do MessageDlg('PSDを開けませんでした。'+sLineBreak+E.Message,mtError,[mbOK],0); end;
 end;
 
 procedure TMainForm.SaveClick(Sender: TObject);
@@ -609,7 +846,7 @@ end;
 procedure TMainForm.CloseClick(Sender: TObject);
 begin
   if not ConfirmDiscard then Exit;
-  FCanEdit := False; FTree.SetRoots(nil); FreeAndNil(FDocument);
+  FUndo.Clear; ResetAiJobs; FCanEdit := False; FTree.SetRoots(nil); FreeAndNil(FDocument);
   FBitmap.SetSize(0,0); FPaint.Invalidate; FFileName := ''; FModified := False;
   FSave.Enabled := False; FSaveAs.Enabled := False; FClose.Enabled := False;
   TreeChange(Self); Caption := 'AI立ち絵メーカー';
@@ -628,51 +865,47 @@ begin
 end;
 
 function TMainForm.PreviewRect: TRect;
-var Scale: Double; W,H: Integer;
+var Scale: Double; W,H,X,Y: Integer;
 begin
   Result := Rect(0,0,0,0); if FBitmap.Empty then Exit;
-  Scale := Min(FPaint.Width/FBitmap.Width,FPaint.Height/FBitmap.Height);
+  Scale := Min(FPaint.Width/FBitmap.Width,FPaint.Height/FBitmap.Height)*FZoom;
   W := Max(1,Round(FBitmap.Width*Scale)); H := Max(1,Round(FBitmap.Height*Scale));
-  Result := Rect((FPaint.Width-W) div 2,(FPaint.Height-H) div 2,(FPaint.Width+W) div 2,(FPaint.Height+H) div 2);
+  X := Round((FPaint.Width-W)/2+FPanX); Y := Round((FPaint.Height-H)/2+FPanY);
+  Result := Rect(X,Y,X+W,Y+H);
+end;
+procedure TMainForm.PreviewWheel(Sender: TObject; Shift: TShiftState; WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
+var P: TPoint; Ratio,NewZoom: Double;
+begin
+  P := FPaint.ScreenToClient(MousePos);
+  if FBitmap.Empty or not PtInRect(FPaint.ClientRect,P) then Exit;
+  NewZoom := EnsureRange(FZoom*Power(1.15,WheelDelta/120),0.05,32.0);
+  Ratio := NewZoom/FZoom;
+  FPanX := P.X-FPaint.Width/2+(FPaint.Width/2+FPanX-P.X)*Ratio;
+  FPanY := P.Y-FPaint.Height/2+(FPaint.Height/2+FPanY-P.Y)*Ratio;
+  FZoom := NewZoom; Handled := True; FPaint.Invalidate;
 end;
 procedure TMainForm.PreviewMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X,Y: Integer);
-var L: TArtLayer; R: TRect;
 begin
-  L := FTree.Selected; if (Button<>mbLeft) or not FCanEdit or (L=nil) or (L.Kind<>alkImage) then Exit;
-  R := PreviewRect; if not PtInRect(R,Point(X,Y)) then Exit;
-  FTree.FinishRename(True); FDragStart := Point(X,Y); FDragX := L.Bounds.Left; FDragY := L.Bounds.Top;
-  FDragDX := 0; FDragDY := 0; FDragging := True; TArtPaintBoxAccess(FPaint).MouseCapture := True;
+  if (Button<>mbLeft) or FBitmap.Empty then Exit;
+  FDragStart := Point(X,Y); FDragging := True;
+  TArtPaintBoxAccess(FPaint).MouseCapture := True; FPaint.Cursor := crSizeAll;
 end;
 procedure TMainForm.PreviewMouseMove(Sender: TObject; Shift: TShiftState; X,Y: Integer);
-var R: TRect;
 begin
-  if not FDragging then Exit; R := PreviewRect; if (R.Width<=0) or (R.Height<=0) then Exit;
-  FDragDX := Round((X-FDragStart.X)*FDocument.Width/R.Width); FDragDY := Round((Y-FDragStart.Y)*FDocument.Height/R.Height); FPaint.Invalidate;
+  if not FDragging then Exit;
+  FPanX := FPanX+X-FDragStart.X; FPanY := FPanY+Y-FDragStart.Y;
+  FDragStart := Point(X,Y); FPaint.Invalidate;
 end;
 procedure TMainForm.PreviewMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X,Y: Integer);
 begin
   if (Button<>mbLeft) or not FDragging then Exit;
-  PreviewMouseMove(Sender,Shift,X,Y); FDragging := False; TArtPaintBoxAccess(FPaint).MouseCapture := False;
-  try MoveSelectedLayer(EnsureRange(FDragX+FDragDX,-30000,30000),EnsureRange(FDragY+FDragDY,-30000,30000));
-  except on E: Exception do MessageDlg(E.Message,mtError,[mbOK],0); end;
-  FPaint.Invalidate;
+  PreviewMouseMove(Sender,Shift,X,Y); FDragging := False;
+  TArtPaintBoxAccess(FPaint).MouseCapture := False; FPaint.Cursor := crDefault;
 end;
-
 procedure TMainForm.PaintPreview(Sender: TObject);
-var Scale: Double; W,H,X,Y,DX,DY: Integer; L: TArtLayer; R: TRect;
 begin
   FPaint.Canvas.Brush.Color := clGray; FPaint.Canvas.FillRect(FPaint.ClientRect);
-  if FBitmap.Empty then Exit;
-  Scale := Min(FPaint.Width/FBitmap.Width,FPaint.Height/FBitmap.Height);
-  W := Max(1,Round(FBitmap.Width*Scale)); H := Max(1,Round(FBitmap.Height*Scale));
-  X := (FPaint.Width-W) div 2; Y := (FPaint.Height-H) div 2;
-  FPaint.Canvas.StretchDraw(Rect(X,Y,X+W,Y+H),FBitmap);
-  L := FTree.Selected;
-  if FCanEdit and (L<>nil) and (L.Kind=alkImage) then begin
-    DX := 0; DY := 0; if FDragging then begin DX := FDragDX; DY := FDragDY; end;
-    R := Rect(X+Round((L.Bounds.Left+DX)*Scale),Y+Round((L.Bounds.Top+DY)*Scale),X+Round((L.Bounds.Right+DX)*Scale),Y+Round((L.Bounds.Bottom+DY)*Scale));
-    FPaint.Canvas.Brush.Style := bsClear; FPaint.Canvas.Pen.Color := $FFD080; FPaint.Canvas.Pen.Style := psDash; FPaint.Canvas.Rectangle(R); FPaint.Canvas.Pen.Style := psSolid; FPaint.Canvas.Brush.Style := bsSolid;
-  end;
+  if not FBitmap.Empty then FPaint.Canvas.StretchDraw(PreviewRect,FBitmap);
 end;
 
 end.

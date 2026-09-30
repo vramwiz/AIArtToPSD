@@ -196,7 +196,7 @@ begin
     if FCollapsed.ContainsKey(L) then FCollapsed.Remove(L) else FCollapsed.Add(L,True);
     RefreshRows;
   end;
-  if Button=mbRight then begin
+  if (Button=mbRight) and FEditEnabled then begin
     FinishRename(True); P := ClientToScreen(Point(X,Y)); FPopup.Popup(P.X,P.Y);
   end;
 end;
@@ -286,6 +286,7 @@ procedure TArtLayerList.SyncSliders;
 var I,Y,N: Integer; R: TRect; Slider: THorizontalTrackBarControl;
 begin
   if FSliders=nil then Exit;
+  if not FEditEnabled then begin for Slider in FSliders do Slider.Visible := False; Exit; end;
   FSyncing := True;
   try
     N := 0;

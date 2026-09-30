@@ -7,13 +7,24 @@ type
   public
     Id, Directory, DocumentId, AppliedHash: string;
     Revision: UInt64;
+    State,MessageText,PromptText: string;
+    Progress: Integer;
   end;
   TArtExchange = class
   private
     FJobs: TObjectDictionary<string,TArtExchangeJob>;
+    FPipeName: string;
   public
     constructor Create;
     destructor Destroy; override;
+    property PipeName: string read FPipeName write FPipeName;
+    procedure ClearJobs;
+    function LoadRecovery(const Directory: string; out Job: TArtExchangeJob): TArtDocument;
+    procedure RegisterRecovered(Job: TArtExchangeJob);
+    procedure WriteJobConnection(Job: TArtExchangeJob);
+    procedure CancelJob(const Id: string);
+    function FindJob(const Id: string): TArtExchangeJob;
+    procedure NotifyJob(Document: TArtDocument; const Id,State,MessageText: string; Progress: Integer);
     function ExportJob(Document: TArtDocument; const Prompt,Root: string): string;
     function PrepareResult(Document: TArtDocument; const FileName: string;
       out Job: TArtExchangeJob; out Digest: string): TArtDocument;
@@ -129,13 +140,129 @@ begin
   end;
 end;
 
+function ReadExchangeJson(const FileName: string): TJSONValue;
+var S: TFileStream; B: TBytes;
+begin
+  RejectLinks(FileName); S := TFileStream.Create(FileName,fmOpenRead or fmShareDenyWrite);
+  try
+    if (S.Size<2) or (S.Size>MAX_JSON) then raise EArtFormat.Create('Recovery JSON size limit');
+    SetLength(B,Integer(S.Size)); S.ReadBuffer(B[0],Length(B));
+    Result := TJSONObject.ParseJSONValue(TEncoding.UTF8.GetString(B));
+    try CheckUniqueKeys(Result,0); Obj(Result); except Result.Free; raise; end;
+  finally S.Free; end;
+end;
+procedure TArtExchange.WriteJobConnection(Job: TArtExchangeJob);
+var Info: TJSONObject; Path: string;
+begin
+  if FPipeName='' then Exit;
+  Info := TJSONObject.Create;
+  try
+    AddNum(Info,'schemaVersion',1); Info.AddPair('pipeName',FPipeName); Info.AddPair('jobId',Job.Id);
+    Path := TPath.Combine(Job.Directory,'connection.json');
+    TFile.WriteAllText(Path+'.tmp',Info.ToJSON,TEncoding.UTF8);
+    if not MoveFileEx(PChar(Path+'.tmp'),PChar(Path),MOVEFILE_REPLACE_EXISTING or MOVEFILE_WRITE_THROUGH) then RaiseLastOSError;
+  finally Info.Free; end;
+end;
+procedure TArtExchange.RegisterRecovered(Job: TArtExchangeJob);
+begin FJobs.Add(Job.Id,Job); end;
+procedure TArtExchange.CancelJob(const Id: string);
+var Job: TArtExchangeJob;
+begin
+  Job := FindJob(Id);
+  if Job.State='completed' then raise EArtFormat.Create('Result already applied; use Undo');
+  // Persist cancellation before accepting it so restart cannot revive the result.
+  TFile.WriteAllText(TPath.Combine(Job.Directory,'cancelled.tmp'),Job.Id,TEncoding.UTF8);
+  if not FileExists(TPath.Combine(Job.Directory,'cancelled')) then
+    TFile.Move(TPath.Combine(Job.Directory,'cancelled.tmp'),TPath.Combine(Job.Directory,'cancelled'));
+  Job.State := 'cancelled'; Job.MessageText := '以後の結果取込を停止';
+end;
+function TArtExchange.LoadRecovery(const Directory: string; out Job: TArtExchangeJob): TArtDocument;
+var RecoveryValue,RequestValue: TJSONValue; Recovery,Request,Meta: TJSONObject;
+    Layers: TJSONArray; Index: Integer; Path,Base: string; Version: UInt64; Lock: TFileStream;
+    Ids: TDictionary<string,Boolean>;
+  procedure RestoreIds(List: TList<TArtLayer>; const Parent: string; Depth: Integer);
+  var Id: string;
+  begin
+    if Depth>128 then raise EArtFormat.Create('Recovery layer depth');
+    for var L in List do begin
+      if Index>=Layers.Count then raise EArtFormat.Create('Recovery layer count');
+      Meta := Obj(Layers[Index]); Inc(Index); Id := Str(Meta,'layerId');
+      if (Id='') or Ids.ContainsKey(Id) then raise EArtFormat.Create('Recovery duplicate layer ID');
+      Ids.Add(Id,True);
+      if (Str(Meta,'parentId')<>Parent) or (Str(Meta,'name')<>L.Name) or
+        (Bool(Meta,'visible')<>L.Visible) or (Num(Meta,'opacity',0,255)<>L.Opacity) then
+        raise EArtFormat.Create('Recovery layer metadata mismatch');
+      if ((L.Kind=alkGroup) and (Str(Meta,'kind')<>'group')) or
+        ((L.Kind=alkImage) and (Str(Meta,'kind')<>'image')) then raise EArtFormat.Create('Recovery layer kind');
+      if L.Kind=alkImage then begin
+        var Bounds := ReadBounds(Obj(Field(Meta,'bounds')));
+        if (Bounds.Left<>L.Bounds.Left) or (Bounds.Top<>L.Bounds.Top) or
+          (Bounds.Right<>L.Bounds.Right) or (Bounds.Bottom<>L.Bounds.Bottom) then raise EArtFormat.Create('Recovery bounds');
+      end;
+      L.Id := Id; RestoreIds(L.Children,Id,Depth+1);
+    end;
+  end;
+begin
+  Result := nil; Job := nil; RecoveryValue := nil; RequestValue := nil;
+  Base := TPath.GetFullPath(Directory); RejectLinks(Base); Ids := TDictionary<string,Boolean>.Create;
+  try
+    try
+    RecoveryValue := ReadExchangeJson(TPath.Combine(Base,'recovery.json')); Recovery := Obj(RecoveryValue);
+    if Num(Recovery,'schemaVersion',1,1)<>1 then raise EArtFormat.Create('Recovery schema');
+    Path := TPath.Combine(Base,'request.json');
+    if FileHash(Path)<>Str(Recovery,'requestSha256') then raise EArtFormat.Create('Recovery request hash mismatch');
+    RequestValue := ReadExchangeJson(Path); Request := Obj(RequestValue);
+    if Num(Request,'schemaVersion',1,1)<>1 then raise EArtFormat.Create('Request schema');
+    if Str(Request,'requestId')<>Str(Request,'jobId') then raise EArtFormat.Create('Recovery request ID');
+    Path := TPath.Combine(Base,'snapshot.psd'); RejectLinks(Path);
+    Lock := TFileStream.Create(Path,fmOpenRead or fmShareDenyWrite);
+    try
+      if Lock.Size>ART_MAX_BYTES then raise EArtFormat.Create('Recovery PSD size limit');
+      if LowerCase(THashSHA2.GetHashString(Lock))<>Str(Recovery,'snapshotSha256') then raise EArtFormat.Create('Recovery snapshot hash mismatch');
+      Result := ReadPsd(Path);
+    finally Lock.Free; end;
+    Meta := Obj(Field(Request,'canvas'));
+    if (Result.Width<>Num(Meta,'width',1,30000)) or (Result.Height<>Num(Meta,'height',1,30000)) then raise EArtFormat.Create('Recovery canvas');
+    Layers := Arr(Request,'layers'); Index := 0; RestoreIds(Result.Roots,'',0);
+    if Index<>Layers.Count then raise EArtFormat.Create('Recovery layer count');
+    if not TryStrToUInt64(Str(Request,'ifRevision'),Version) or (Version=High(UInt64)) then raise EArtFormat.Create('Recovery revision');
+    Result.SessionId := Str(Request,'documentId'); if Result.SessionId='' then raise EArtFormat.Create('Recovery document ID');
+    Result.Revision := Version; RenderPsdLayers(Result);
+    Job := TArtExchangeJob.Create; Job.Id := Str(Request,'jobId'); Job.Directory := Base;
+    if Job.Id<>ExtractFileName(Base) then raise EArtFormat.Create('Recovery directory ID mismatch');
+    Job.PromptText := Str(Request,'prompt'); Job.DocumentId := Result.SessionId; Job.Revision := Result.Revision; Job.State := 'queued';
+    if FileExists(TPath.Combine(Base,'result.json')) then Job.State := 'ready';
+    if FileExists(TPath.Combine(Base,'cancelled')) then Job.State := 'cancelled';
+    except Result.Free; Job.Free; Job := nil; raise; end;
+  finally Ids.Free; RecoveryValue.Free; RequestValue.Free; end;
+end;
 constructor TArtExchange.Create;
 begin inherited; FJobs := TObjectDictionary<string,TArtExchangeJob>.Create([doOwnsValues]); end;
 destructor TArtExchange.Destroy;
 begin FJobs.Free; inherited; end;
 
+procedure TArtExchange.ClearJobs;
+begin FJobs.Clear; end;
+
+function TArtExchange.FindJob(const Id: string): TArtExchangeJob;
+begin
+  if not FJobs.TryGetValue(Id,Result) then raise EArtFormat.Create('Unknown or expired jobId');
+end;
+procedure TArtExchange.NotifyJob(Document: TArtDocument; const Id,State,MessageText: string; Progress: Integer);
+var Job: TArtExchangeJob;
+begin
+  Job := FindJob(Id);
+  if (Document=nil) or (Document.SessionId<>Job.DocumentId) or (Document.Revision<>Job.Revision) then
+    raise EArtFormat.Create('Job document has changed');
+  if (Job.State='completed') or (Job.State='cancelled') then raise EArtFormat.Create('Job already finished');
+  if (State<>'running') and (State<>'ready') and (State<>'failed') and (State<>'cancelled') then
+    raise EArtFormat.Create('Invalid job state');
+  if (Progress<0) or (Progress>100) or (Length(MessageText)>1000) then raise EArtFormat.Create('Invalid job progress');
+  if State='cancelled' then begin CancelJob(Id); Exit; end;
+  Job.State := State; Job.Progress := Progress; Job.MessageText := MessageText;
+end;
 function TArtExchange.ExportJob(Document: TArtDocument; const Prompt,Root: string): string;
-var Job: TArtExchangeJob; Request,Canvas,LayerJson,Asset: TJSONObject;
+var Job: TArtExchangeJob; Request,Canvas,LayerJson,Asset,Recovery: TJSONObject;
     Layers,Assets,Supported: TJSONArray; ImageDirectory,ImagePath,SelectedId: string;
     Pixels: TBytes; Counter: Integer; Ready: Boolean;
   procedure ExportLayers(List: TList<TArtLayer>; const ParentId: string; Depth: Integer);
@@ -172,10 +299,12 @@ begin
   Pixels := RenderPsdLayers(Document);
   Job := TArtExchangeJob.Create; Request := TJSONObject.Create; Ready := False;
   try
+    Job.State := 'queued'; Job.Progress := 0; Job.PromptText := Prompt;
     Job.Id := NewId; Job.DocumentId := Document.SessionId; Job.Revision := Document.Revision;
     Job.Directory := TPath.GetFullPath(TPath.Combine(Root,Job.Id)); RejectLinks(Job.Directory);
     ForceDirectories(Job.Directory); ImageDirectory := TPath.Combine(Job.Directory,'input'); ForceDirectories(ImageDirectory);
     ForceDirectories(TPath.Combine(Job.Directory,'images'));
+    if FPipeName<>'' then Request.AddPair('pipeName',FPipeName);
     AddNum(Request,'schemaVersion',1); Request.AddPair('jobId',Job.Id); Request.AddPair('requestId',Job.Id);
     Request.AddPair('documentId',Job.DocumentId); Request.AddPair('ifRevision',UIntToStr(Job.Revision)); Request.AddPair('prompt',Prompt);
     Canvas := TJSONObject.Create; Request.AddPair('canvas',Canvas); AddNum(Canvas,'width',Document.Width); AddNum(Canvas,'height',Document.Height);
@@ -185,8 +314,8 @@ begin
     Layers := TJSONArray.Create; Request.AddPair('layers',Layers); Assets := TJSONArray.Create; Request.AddPair('assets',Assets);
     Counter := 0; ExportLayers(Document.Roots,'',0);
     WriteRgbaPng(TPath.Combine(Job.Directory,'preview.png'),Document.Width,Document.Height,Pixels);
+    if Length(TEncoding.UTF8.GetBytes(Request.ToJSON))>MAX_JSON then raise EArtFormat.Create('Request metadata exceeds recovery limit');
     TFile.WriteAllText(TPath.Combine(Job.Directory,'request.json.tmp'),Request.ToJSON,TEncoding.UTF8);
-    TFile.Move(TPath.Combine(Job.Directory,'request.json.tmp'),TPath.Combine(Job.Directory,'request.json'));
     TFile.WriteAllText(TPath.Combine(Job.Directory,'instructions.txt'),
       'Read request.json and preview.png. Write generated 8-bit RGBA PNGs into images/. '+
       'Use stable layer IDs; preserve framing. Write schemaVersion=1, requestId, jobId, documentId and ifRevision exactly as issued. '+
@@ -194,7 +323,27 @@ begin
       'Supported operations: add_group (layerId,name,parentId,beforeLayerId,visible,opacity); add_layer (same + assetId,bounds); '+
       'replace_layer (layerId,assetId,bounds); rename_layer (layerId,name); set_attributes (layerId,visible,opacity); select_part (layerId). '+
       'Use empty parentId/beforeLayerId for root/append. Finish all PNGs first, write result.json.tmp then rename to result.json. '+
+      'Read connection.json for the current pipeName (read it again after reconnect/restart). If pipeName is present, send message-mode UTF-8 JSON commands: schemaVersion=1, requestId, command, args. '+
+      'Commands: status (args {} or jobId); progress (jobId,state=running/ready/failed,progress=0..100,message); import (jobId); cancel (jobId). '+
+      'Poll status before publishing/importing: cancelled or an expired job must not be applied. '+
       'This is file exchange; no cloud API is invoked by the application.',TEncoding.UTF8);
+    // Save the complete pre-AI document for explicit restart recovery.
+    ImagePath := TPath.Combine(Job.Directory,'snapshot.psd');
+    if Length(Document.SourceBytes)=0 then WriteNewPsd(Document,ImagePath,pcRle)
+    else begin
+      try SaveLayerPropertiesPsd(Document,ImagePath);
+      except on E: EArtFormat do SaveImageCompositionPsd(Document,ImagePath); end;
+    end;
+    Recovery := TJSONObject.Create;
+    try
+      AddNum(Recovery,'schemaVersion',1); Recovery.AddPair('snapshotSha256',FileHash(ImagePath));
+      Recovery.AddPair('requestSha256',FileHash(TPath.Combine(Job.Directory,'request.json.tmp')));
+      TFile.WriteAllText(TPath.Combine(Job.Directory,'recovery.json.tmp'),Recovery.ToJSON,TEncoding.UTF8);
+      TFile.Move(TPath.Combine(Job.Directory,'recovery.json.tmp'),TPath.Combine(Job.Directory,'recovery.json'));
+    finally Recovery.Free; end;
+    WriteJobConnection(Job);
+    // request.json is the ready marker: publish only after every input is complete.
+    TFile.Move(TPath.Combine(Job.Directory,'request.json.tmp'),TPath.Combine(Job.Directory,'request.json'));
     Result := Job.Directory; FJobs.Add(Job.Id,Job); Ready := True;
   finally
     Request.Free; if not Ready then Job.Free;
@@ -248,6 +397,7 @@ begin
       if Job.AppliedHash<>Digest then raise EArtFormat.Create('Same requestId with different result content');
       Exit(nil); // Successful repeat is a read-only acknowledgement, never a second mutation.
     end;
+    if Job.State='cancelled' then raise EArtFormat.Create('Job was cancelled');
     if Document.Revision<>Job.Revision then raise EArtFormat.Create('文書が変更されています。新しいAIジョブを書き出してください。');
     Assets := Arr(Manifest,'assets'); Operations := Arr(Manifest,'operations');
     if (Assets.Count>MAX_ASSETS) or (Operations.Count<1) or (Operations.Count>MAX_OPERATIONS) then raise EArtFormat.Create('AI batch item limit');
@@ -300,5 +450,5 @@ begin
   finally Current.Free; Data.Free; Value.Free; end;
 end;
 procedure TArtExchange.CommitResult(Job: TArtExchangeJob; const Digest: string);
-begin Job.AppliedHash := Digest; end;
+begin Job.AppliedHash := Digest; Job.State := 'completed'; Job.Progress := 100; Job.MessageText := ''; end;
 end.
