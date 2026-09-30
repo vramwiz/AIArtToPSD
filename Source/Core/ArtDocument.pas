@@ -38,6 +38,8 @@ type
   private
     FOwnedLayers: TObjectList<TArtLayer>;
   public
+    SessionId: string;
+    Revision: UInt64;
     Width, Height: Integer;
     Roots: TList<TArtLayer>; // Non-owning, topmost first.
     SourceBytes: TBytes; // Owned archive; independent of original file lifetime.
@@ -51,6 +53,9 @@ type
       const ABounds: TArtBounds; Parent: TArtLayer = nil): TArtLayer;
     function NewUnattachedLayer: TArtLayer;
     procedure RemoveNewLayer(Layer: TArtLayer);
+    function Clone: TArtDocument;
+    function FindLayer(const LayerId: string): TArtLayer;
+    procedure Changed;
     procedure ValidateForNewSave;
     function RenderRGBA: TBytes;
   end;
@@ -114,8 +119,10 @@ begin
 end;
 
 constructor TArtDocument.Create;
+var G: TGUID;
 begin
   inherited;
+  CreateGUID(G); SessionId := GUIDToString(G); Revision := 0;
   FOwnedLayers := TObjectList<TArtLayer>.Create(True);
   Roots := TList<TArtLayer>.Create;
   Unsupported := TStringList.Create;
@@ -154,6 +161,41 @@ procedure TArtDocument.RemoveNewLayer(Layer: TArtLayer);
 begin
   if (Layer=nil) or (Layer.SourceIndex<>-1) or (Layer.Children.Count<>0) then raise EArtFormat.Create('Only new leaf rollback supported');
   Detach(Roots); FOwnedLayers.Remove(Layer);
+end;
+
+procedure TArtDocument.Changed;
+begin
+  if Revision=High(UInt64) then raise EArtFormat.Create('Document revision exhausted');
+  Inc(Revision);
+end;
+function TArtDocument.FindLayer(const LayerId: string): TArtLayer;
+var L: TArtLayer;
+begin
+  Result := nil;
+  for L in FOwnedLayers do if L.Id=LayerId then Exit(L);
+end;
+function TArtDocument.Clone: TArtDocument;
+  procedure CopyTree(List: TList<TArtLayer>; Parent: TArtLayer);
+  var L,N: TArtLayer;
+  begin
+    for L in List do begin
+      N := Result.AddLayer(L.Kind,L.Name,L.Bounds,Parent);
+      N.Id := L.Id; N.Visible := L.Visible; N.Opacity := L.Opacity;
+      N.BlendKey := L.BlendKey; N.Clipping := L.Clipping; N.SectionType := L.SectionType; N.SourceIndex := L.SourceIndex;
+      // Pixel arrays are immutable assets: replacements assign a new array.
+      N.Pixels := L.Pixels; N.HasMask := L.HasMask; N.MaskBounds := L.MaskBounds;
+      N.MaskDefault := L.MaskDefault; N.MaskDisabled := L.MaskDisabled; N.MaskInvert := L.MaskInvert; N.MaskPixels := L.MaskPixels;
+      CopyTree(L.Children,N);
+    end;
+  end;
+begin
+  Result := TArtDocument.Create;
+  try
+    Result.SessionId := SessionId; Result.Revision := Revision; Result.Width := Width; Result.Height := Height;
+    Result.SourceBytes := SourceBytes; Result.SourceRecordCount := SourceRecordCount;
+    Result.MergedPlanes := MergedPlanes; Result.MergedHasTransparency := MergedHasTransparency;
+    Result.Unsupported.Assign(Unsupported); CopyTree(Roots,nil);
+  except Result.Free; raise; end;
 end;
 
 procedure TArtDocument.ValidateForNewSave;

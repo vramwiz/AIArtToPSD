@@ -4,11 +4,16 @@ interface
 
 uses System.Types, System.Classes, System.SysUtils, System.Generics.Collections,
   Vcl.Controls, Vcl.Forms, Vcl.StdCtrls, Vcl.ExtCtrls, 
-  Vcl.Dialogs, Vcl.Menus, Vcl.Samples.Spin, Vcl.Graphics, ArtDocument, ArtLayerList, ArtFileHistory, DarkComboBox;
+  Vcl.Dialogs, Vcl.Menus, Vcl.Samples.Spin, Vcl.Graphics, ArtDocument, ArtLayerList, ArtFileHistory, DarkComboBox, ArtExchange;
 
 type
   TMainForm = class(TForm)
   private
+    FExchange: TArtExchange;
+    FPrompt: TMemo;
+    FJobPath: TEdit;
+    FExportAi, FImportAi: TButton;
+    FResultDialog: TOpenDialog;
     FDocument: TArtDocument;
     FFileName: string;
     FModified: Boolean;
@@ -33,6 +38,8 @@ type
     FDragging: Boolean;
     FDragStart: TPoint;
     FDragX,FDragY,FDragDX,FDragDY: Integer;
+    procedure ExportAiClick(Sender: TObject);
+    procedure ImportAiClick(Sender: TObject);
     procedure UpdateParts;
     procedure PartGroupChange(Sender: TObject);
     procedure PartChoiceChange(Sender: TObject);
@@ -67,6 +74,9 @@ type
     constructor CreateWithHistory(AOwner: TComponent; const HistoryDirectory: string);
     property FileHistory: TArtFileHistory read FHistory;
     destructor Destroy; override;
+    function ExportAiJob(const Prompt,Root: string): string;
+    procedure ImportAiResult(const FileName: string);
+    property PromptControl: TMemo read FPrompt;
     procedure CreateGroup(const Name: string; Exclusive: Boolean);
     procedure SelectPart(Layer: TArtLayer);
     property PartGroupControl: TDarkComboBox read FPartGroup;
@@ -99,11 +109,12 @@ type TArtPaintBoxAccess = class(TPaintBox);
 constructor TMainForm.Create(AOwner: TComponent);
 begin CreateWithHistory(AOwner,''); end;
 constructor TMainForm.CreateWithHistory(AOwner: TComponent; const HistoryDirectory: string);
-var RightPanel, StatusPanel, PositionPanel, PartsPanel: TPanel; FileMenu, LayerMenu, Item: TMenuItem; LabelControl: TLabel;
+var RightPanel, StatusPanel, PositionPanel, PartsPanel, AiPanel, AiButtons: TPanel; FileMenu, LayerMenu, Item: TMenuItem; LabelControl: TLabel;
     Splitter: TSplitter;
 begin
   inherited Create(AOwner);
   FHistory := TArtFileHistory.Create(HistoryDirectory);
+  FExchange := TArtExchange.Create;
   FBitmap := Vcl.Graphics.TBitmap.Create;
   Menu := TMainMenu.Create(Self);
   FileMenu := TMenuItem.Create(Self); FileMenu.Caption := 'ファイル(&F)'; Menu.Items.Add(FileMenu);
@@ -131,6 +142,14 @@ begin
   FStatus := TLabel.Create(Self); FStatus.Parent := StatusPanel;
   FStatus.Align := alClient; FStatus.WordWrap := True; FStatus.Layout := tlCenter;
   FStatus.Caption := 'PSDを開くと、レイヤー階層と画像を表示します。';
+  AiPanel := TPanel.Create(Self); AiPanel.Parent := Self; AiPanel.Align := alBottom; AiPanel.Height := 112;
+  FJobPath := TEdit.Create(Self); FJobPath.Parent := AiPanel; FJobPath.Align := alBottom; FJobPath.ReadOnly := True; FJobPath.Text := 'AIジョブのフォルダーがここに表示されます。';
+  LabelControl := TLabel.Create(Self); LabelControl.Parent := AiPanel; LabelControl.Align := alTop; LabelControl.Caption := 'AIへの指示（書き出したフォルダーをCodexへ渡してください）';
+  AiButtons := TPanel.Create(Self); AiButtons.Parent := AiPanel; AiButtons.Align := alRight; AiButtons.Width := 194;
+  FExportAi := TButton.Create(Self); FExportAi.Parent := AiButtons; FExportAi.SetBounds(8,6,176,28); FExportAi.Caption := 'AI向けに書き出す'; FExportAi.OnClick := ExportAiClick; FExportAi.Enabled := False;
+  FImportAi := TButton.Create(Self); FImportAi.Parent := AiButtons; FImportAi.SetBounds(8,40,176,28); FImportAi.Caption := '生成結果を取り込む'; FImportAi.OnClick := ImportAiClick; FImportAi.Enabled := False;
+  FPrompt := TMemo.Create(Self); FPrompt.Parent := AiPanel; FPrompt.Align := alClient; FPrompt.ScrollBars := ssVertical; FPrompt.MaxLength := 16000;
+  FPrompt.Text := '元の構図を維持して、表情やパーツの差分を作成してください。';
   RightPanel := TPanel.Create(Self); RightPanel.Parent := Self; RightPanel.Align := alRight; RightPanel.Left := ClientWidth-420; RightPanel.Width := 420;
   PositionPanel := TPanel.Create(Self); PositionPanel.Parent := RightPanel; PositionPanel.Align := alBottom; PositionPanel.Height := 58;
   LabelControl := TLabel.Create(Self); LabelControl.Parent := PositionPanel; LabelControl.SetBounds(8,7,30,18); LabelControl.Caption := 'X';
@@ -153,13 +172,15 @@ begin
   FSaveDialog := TSaveDialog.Create(Self); FSaveDialog.Filter := FOpenDialog.Filter;
   FSaveDialog.DefaultExt := 'psd'; FSaveDialog.Options := [ofOverwritePrompt,ofPathMustExist,ofEnableSizing,ofNoChangeDir];
   FPngDialog := TOpenDialog.Create(Self); FPngDialog.Filter := 'PNG画像 (*.png)|*.png'; FPngDialog.Options := [ofFileMustExist,ofPathMustExist,ofEnableSizing,ofNoChangeDir];
+  FPngDialog.InitialDir := TPath.Combine(ExtractFilePath(ParamStr(0)),'Sample');
+  FResultDialog := TOpenDialog.Create(Self); FResultDialog.Filter := 'AI生成結果 (result.json)|result.json'; FResultDialog.Options := [ofFileMustExist,ofPathMustExist,ofEnableSizing,ofNoChangeDir];
   OnCloseQuery := CheckClose;
 end;
 
 destructor TMainForm.Destroy;
 begin
   if FTree<>nil then begin FTree.OnSelect := nil; FTree.SetRoots(nil); end;
-  FDocument.Free; FBitmap.Free; FHistory.Free;
+  FDocument.Free; FBitmap.Free; FHistory.Free; FExchange.Free;
   inherited;
 end;
 
@@ -209,7 +230,7 @@ begin
   except NewDoc.Free; raise; end;
   Old := FDocument; FDocument := NewDoc;
   try SetPreview(RGBA); except FDocument := Old; NewDoc.Free; raise; end;
-  FTree.SetRoots(nil); Old.Free; FFileName := ''; FModified := True; FCanEdit := True;
+  FTree.SetRoots(nil); Old.Free; FFileName := ''; FDocument.Changed; FModified := True; FCanEdit := True;
   FSave.Enabled := True; FSaveAs.Enabled := True; FClose.Enabled := True; RebuildTree; UpdateStatus;
 end;
 procedure TMainForm.ImportPngFile(const FileName: string);
@@ -236,7 +257,7 @@ begin
   L.Pixels := Image.Pixels; List.Remove(L); List.Insert(Index,L);
   try SetPreview(RenderEditable);
   except FDocument.RemoveNewLayer(L); raise; end;
-  FModified := True; RebuildTree; FTree.Selected := L; FTree.RevealSelected; UpdateStatus;
+  FDocument.Changed; FModified := True; RebuildTree; FTree.Selected := L; FTree.RevealSelected; UpdateStatus;
 end;
 procedure TMainForm.ReplaceSelectedPng(const FileName: string);
 var Image: TArtPngData; L: TArtLayer; OldPixels: TBytes; OldBounds,NewBounds: TArtBounds;
@@ -248,7 +269,7 @@ begin
   L.Pixels := Image.Pixels; L.Bounds := NewBounds;
   try SetPreview(RenderEditable);
   except L.Pixels := OldPixels; L.Bounds := OldBounds; raise; end;
-  FModified := True; FTree.RefreshImages; TreeChange(Self); UpdateStatus;
+  FDocument.Changed; FModified := True; FTree.RefreshImages; TreeChange(Self); UpdateStatus;
 end;
 procedure TMainForm.MoveSelectedLayer(X,Y: Integer);
 var L: TArtLayer; OldBounds,OldMask,NewBounds,NewMask: TArtBounds; DX,DY: Integer;
@@ -263,7 +284,7 @@ begin
   L.Bounds := NewBounds; L.MaskBounds := NewMask;
   try SetPreview(RenderEditable);
   except L.Bounds := OldBounds; L.MaskBounds := OldMask; raise; end;
-  FModified := True; TreeChange(Self); UpdateStatus;
+  FDocument.Changed; FModified := True; TreeChange(Self); UpdateStatus;
 end;
 procedure TMainForm.NewPngClick(Sender: TObject);
 begin
@@ -330,6 +351,7 @@ begin
   FReplaceItem.Enabled := CanImage; FPositionItem.Enabled := CanImage; FX.Enabled := CanImage; FY.Enabled := CanImage; FPositionApply.Enabled := CanImage;
   FImportItem.Enabled := (FDocument=nil) or FCanEdit;
   FGroupItem.Enabled := FCanEdit and (FDocument<>nil);
+  FExportAi.Enabled := FCanEdit and (FDocument<>nil); FImportAi.Enabled := FExportAi.Enabled;
   UpdateParts;
   if CanImage then begin FX.Value := L.Bounds.Left; FY.Value := L.Bounds.Top; end;
   if FPaint<>nil then begin TArtPaintBoxAccess(FPaint).MouseCapture := False; FPaint.Invalidate; end; FDragging := False;
@@ -390,7 +412,7 @@ begin
       for Pair in States do Pair.Key.Visible := Pair.Value;
       raise;
     end;
-    FModified := True; FTree.RefreshLayerNames; UpdateParts; UpdateStatus;
+    FDocument.Changed; FModified := True; FTree.RefreshLayerNames; UpdateParts; UpdateStatus;
   finally States.Free; end;
 end;
 
@@ -404,6 +426,41 @@ begin
   try ApplySelectedLayer(Layer.Name,True,Layer.Opacity);
   except FTree.Selected := Previous; raise; end;
   FTree.RevealSelected;
+end;
+
+function TMainForm.ExportAiJob(const Prompt,Root: string): string;
+begin
+  if not FCanEdit then raise EArtFormat.Create('編集対応文書を開いてください。');
+  FTree.FinishRename(True); Result := FExchange.ExportJob(FDocument,Prompt,Root);
+  FJobPath.Text := Result; FJobPath.Hint := Result; FJobPath.ShowHint := True;
+end;
+procedure TMainForm.ImportAiResult(const FileName: string);
+var Candidate,Old: TArtDocument; Job: TArtExchangeJob; Digest,SelectedId: string; L: TArtLayer; Pixels: TBytes;
+begin
+  if not FCanEdit then raise EArtFormat.Create('編集対応文書を開いてください。');
+  FTree.FinishRename(True); Candidate := FExchange.PrepareResult(FDocument,FileName,Job,Digest);
+  if Candidate=nil then begin FJobPath.Text := 'この生成結果は既に取り込み済みです。'; Exit; end;
+  SelectedId := ''; if FTree.Selected<>nil then SelectedId := FTree.Selected.Id;
+  try Pixels := RenderPsdLayers(Candidate); except Candidate.Free; raise; end;
+  Old := FDocument; FDocument := Candidate;
+  try SetPreview(Pixels); except FDocument := Old; Candidate.Free; raise; end;
+  FTree.SetRoots(nil); Old.Free; FModified := True;
+  FExchange.CommitResult(Job,Digest); RebuildTree;
+  L := FDocument.FindLayer(SelectedId); if L<>nil then begin FTree.Selected := L; FTree.RevealSelected; end;
+  UpdateStatus; FJobPath.Text := '生成結果を取り込みました。PSDを保存して確定してください。';
+end;
+procedure TMainForm.ExportAiClick(Sender: TObject);
+begin
+  try ExportAiJob(FPrompt.Text,TPath.Combine(ExtractFilePath(ParamStr(0)),'Exchange'));
+  except on E: Exception do MessageDlg('AI向けの書き出しに失敗しました。'+sLineBreak+E.Message,mtError,[mbOK],0); end;
+end;
+procedure TMainForm.ImportAiClick(Sender: TObject);
+begin
+  if DirectoryExists(FJobPath.Text) then FResultDialog.InitialDir := FJobPath.Text;
+  FResultDialog.FileName := 'result.json';
+  if FResultDialog.Execute then
+    try ImportAiResult(FResultDialog.FileName);
+    except on E: Exception do MessageDlg('生成結果を取り込めませんでした。'+sLineBreak+E.Message,mtError,[mbOK],0); end;
 end;
 
 procedure TMainForm.UpdateParts;
@@ -474,7 +531,7 @@ begin
     for var Sibling in List do if (Sibling<>L) and IsExclusive(Sibling) and Sibling.Visible then L.Visible := False;
   end;
   try SetPreview(RenderEditable); except FDocument.RemoveNewLayer(L); raise; end;
-  FModified := True; RebuildTree; FTree.Selected := L; FTree.RevealSelected; UpdateStatus;
+  FDocument.Changed; FModified := True; RebuildTree; FTree.Selected := L; FTree.RevealSelected; UpdateStatus;
 end;
 procedure TMainForm.GroupClick(Sender: TObject);
 var Name: string; Exclusive: Boolean; Answer: Integer;

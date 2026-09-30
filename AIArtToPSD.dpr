@@ -11,6 +11,7 @@ uses
   HorizontalTrackBarControl in 'Source\Lib\UI\HorizontalTrackBar\HorizontalTrackBarControl.pas',
   ArtFileHistory in 'Source\Shell\ArtFileHistory.pas',
   VerticalScrollBarControl in 'Source\Lib\UI\VerticalScrollBar\VerticalScrollBarControl.pas',
+  ArtExchange in 'Source\Integrations\AIExchange\ArtExchange.pas',
   ArtParts in 'Source\Core\ArtParts.pas',
   DarkComboBox in 'Source\Lib\UI\DarkComboBox\DarkComboBox.pas',
   ArtLayerName in 'Source\Core\ArtLayerName.pas',

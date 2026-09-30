@@ -3,6 +3,7 @@ interface
 uses System.SysUtils;
 type TArtPngData = record Width,Height: Integer; Pixels: TBytes; end;
 function ReadPng(const FileName: string): TArtPngData;
+procedure WriteRgbaPng(const FileName: string; Width,Height: Integer; const Pixels: TBytes);
 implementation
 uses System.Classes, Winapi.Windows, Vcl.Imaging.pngimage, ArtDocument;
 function ReadPng(const FileName: string): TArtPngData;
@@ -46,5 +47,20 @@ begin
       end;
     finally Png.Free; end;
   finally Stream.Free; end;
+end;
+procedure WriteRgbaPng(const FileName: string; Width,Height: Integer; const Pixels: TBytes);
+var Png: TPngImage; X,Y,P: Integer; Row,Alpha: PByte;
+begin
+  if (Width<1) or (Height<1) or (Length(Pixels)<>PixelByteCount(Width,Height,4)) then raise EArtFormat.Create('Invalid PNG export image');
+  Png := TPngImage.CreateBlank(COLOR_RGBALPHA,8,Width,Height);
+  try
+    for Y := 0 to Height-1 do begin
+      Row := Png.Scanline[Y]; Alpha := PByte(Png.AlphaScanline[Y]);
+      for X := 0 to Width-1 do begin
+        P := (Y*Width+X)*4; Row[X*3] := Pixels[P+2]; Row[X*3+1] := Pixels[P+1]; Row[X*3+2] := Pixels[P]; Alpha[X] := Pixels[P+3];
+      end;
+    end;
+    Png.SaveToFile(FileName);
+  finally Png.Free; end;
 end;
 end.

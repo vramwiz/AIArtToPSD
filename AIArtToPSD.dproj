@@ -99,6 +99,7 @@
         <DCCReference Include="Source\Lib\UI\VerticalScrollBar\VerticalScrollBarControl.pas"/>
         <DCCReference Include="Source\Core\ArtLayerName.pas"/>
         <DCCReference Include="Source\Core\ArtParts.pas"/>
+        <DCCReference Include="Source\Integrations\AIExchange\ArtExchange.pas"/>
         <DCCReference Include="Source\Lib\UI\DarkComboBox\DarkComboBox.pas"/>
         <DCCReference Include="Source\Shell\ArtLayerList.pas"/>
         <DCCReference Include="Source\Core\ArtDocument.pas"/>

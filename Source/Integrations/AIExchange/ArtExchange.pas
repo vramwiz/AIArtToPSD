@@ -1,0 +1,304 @@
+﻿unit ArtExchange;
+
+interface
+uses System.SysUtils, System.Generics.Collections, ArtDocument;
+type
+  TArtExchangeJob = class
+  public
+    Id, Directory, DocumentId, AppliedHash: string;
+    Revision: UInt64;
+  end;
+  TArtExchange = class
+  private
+    FJobs: TObjectDictionary<string,TArtExchangeJob>;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    function ExportJob(Document: TArtDocument; const Prompt,Root: string): string;
+    function PrepareResult(Document: TArtDocument; const FileName: string;
+      out Job: TArtExchangeJob; out Digest: string): TArtDocument;
+    procedure CommitResult(Job: TArtExchangeJob; const Digest: string);
+  end;
+
+implementation
+uses System.Classes, System.IOUtils, System.JSON, System.Hash, Winapi.Windows,
+  ArtPng, ArtPsd, ArtParts, ArtLayerName;
+const MAX_JSON = 1048576; MAX_ASSETS = 128; MAX_OPERATIONS = 256;
+  MAX_ASSET_BYTES = 134217728;
+
+function NewId: string;
+var G: TGUID;
+begin CreateGUID(G); Result := GUIDToString(G); end;
+function Obj(Value: TJSONValue): TJSONObject;
+begin
+  if not (Value is TJSONObject) then raise EArtFormat.Create('JSON object expected');
+  Result := TJSONObject(Value);
+end;
+function Field(O: TJSONObject; const Name: string): TJSONValue;
+begin
+  Result := O.GetValue(Name);
+  if Result=nil then raise EArtFormat.Create('Missing JSON field: '+Name);
+end;
+function Str(O: TJSONObject; const Name: string): string;
+var V: TJSONValue;
+begin
+  V := Field(O,Name);
+  if not (V is TJSONString) then raise EArtFormat.Create('JSON string expected: '+Name);
+  Result := V.Value;
+end;
+function Num(O: TJSONObject; const Name: string; LowValue,HighValue: Integer): Integer;
+var V: TJSONValue;
+begin
+  V := Field(O,Name);
+  if not (V is TJSONNumber) or not TryStrToInt(V.Value,Result) or
+    (Result<LowValue) or (Result>HighValue) then raise EArtFormat.Create('Invalid integer: '+Name);
+end;
+function Bool(O: TJSONObject; const Name: string): Boolean;
+var V: TJSONValue;
+begin
+  V := Field(O,Name);
+  if not (V is TJSONBool) then raise EArtFormat.Create('JSON boolean expected: '+Name);
+  Result := TJSONBool(V).AsBoolean;
+end;
+function Arr(O: TJSONObject; const Name: string): TJSONArray;
+var V: TJSONValue;
+begin
+  V := Field(O,Name);
+  if not (V is TJSONArray) then raise EArtFormat.Create('JSON array expected: '+Name);
+  Result := TJSONArray(V);
+end;
+procedure AddNum(O: TJSONObject; const Name: string; Value: Integer);
+begin O.AddPair(Name,TJSONNumber.Create(Value)); end;
+procedure AddBool(O: TJSONObject; const Name: string; Value: Boolean);
+begin O.AddPair(Name,TJSONBool.Create(Value)); end;
+function BoundsJson(const Bounds: TArtBounds): TJSONObject;
+begin
+  Result := TJSONObject.Create;
+  AddNum(Result,'left',Bounds.Left); AddNum(Result,'top',Bounds.Top);
+  AddNum(Result,'right',Bounds.Right); AddNum(Result,'bottom',Bounds.Bottom);
+end;
+function ReadBounds(O: TJSONObject): TArtBounds;
+begin
+  Result := TArtBounds.Create(Num(O,'left',-30000,30000),Num(O,'top',-30000,30000),
+    Num(O,'right',-30000,60000),Num(O,'bottom',-30000,60000));
+  PixelByteCount(Result.Width,Result.Height,4);
+end;
+procedure RejectLinks(const Path: string);
+var Current,Parent: string; Attributes: Cardinal;
+begin
+  Current := TPath.GetFullPath(Path);
+  repeat
+    Attributes := GetFileAttributes(PChar(Current));
+    if (Attributes<>INVALID_FILE_ATTRIBUTES) and ((Attributes and FILE_ATTRIBUTE_REPARSE_POINT)<>0) then
+      raise EArtFormat.Create('Links and junctions are not allowed in AI exchange paths');
+    Parent := ExtractFileDir(Current);
+    if (Parent='') or SameText(Parent,Current) then Break;
+    Current := Parent;
+  until False;
+end;
+function AssetPath(const Directory,Relative: string): string;
+var Base: string;
+begin
+  if (Relative='') or TPath.IsPathRooted(Relative) or (Pos(':',Relative)>0) then raise EArtFormat.Create('Relative asset path required');
+  Base := IncludeTrailingPathDelimiter(TPath.GetFullPath(Directory));
+  Result := TPath.GetFullPath(TPath.Combine(Base,Relative));
+  if not SameText(Copy(Result,1,Length(Base)),Base) then raise EArtFormat.Create('Asset path escapes job directory');
+  if not SameText(TPath.GetExtension(Result),'.png') then raise EArtFormat.Create('PNG asset required');
+  RejectLinks(Result);
+end;
+function FileHash(const FileName: string): string;
+var Stream: TFileStream;
+begin
+  Stream := TFileStream.Create(FileName,fmOpenRead or fmShareDenyWrite);
+  try Result := LowerCase(THashSHA2.GetHashString(Stream)); finally Stream.Free; end;
+end;
+procedure CheckUniqueKeys(Value: TJSONValue; Depth: Integer);
+var O: TJSONObject; A: TJSONArray; Keys: TDictionary<string,Boolean>; Pair: TJSONPair;
+begin
+  if Depth>64 then raise EArtFormat.Create('JSON nesting limit exceeded');
+  if Value is TJSONObject then begin
+    O := TJSONObject(Value); Keys := TDictionary<string,Boolean>.Create;
+    try
+      for Pair in O do begin
+        if Keys.ContainsKey(Pair.JsonString.Value) then raise EArtFormat.Create('Duplicate JSON field');
+        Keys.Add(Pair.JsonString.Value,True); CheckUniqueKeys(Pair.JsonValue,Depth+1);
+      end;
+    finally Keys.Free; end;
+  end else if Value is TJSONArray then begin
+    A := TJSONArray(Value); for var V in A do CheckUniqueKeys(V,Depth+1);
+  end;
+end;
+
+constructor TArtExchange.Create;
+begin inherited; FJobs := TObjectDictionary<string,TArtExchangeJob>.Create([doOwnsValues]); end;
+destructor TArtExchange.Destroy;
+begin FJobs.Free; inherited; end;
+
+function TArtExchange.ExportJob(Document: TArtDocument; const Prompt,Root: string): string;
+var Job: TArtExchangeJob; Request,Canvas,LayerJson,Asset: TJSONObject;
+    Layers,Assets,Supported: TJSONArray; ImageDirectory,ImagePath,SelectedId: string;
+    Pixels: TBytes; Counter: Integer; Ready: Boolean;
+  procedure ExportLayers(List: TList<TArtLayer>; const ParentId: string; Depth: Integer);
+  var L: TArtLayer; Parts: TArtLayerNameParts;
+  begin
+    if Depth>128 then raise EArtFormat.Create('Layer depth limit');
+    for L in List do begin
+      LayerJson := TJSONObject.Create; Layers.AddElement(LayerJson);
+      LayerJson.AddPair('layerId',L.Id); LayerJson.AddPair('parentId',ParentId);
+      LayerJson.AddPair('name',L.Name); Parts := ParseLayerName(L.Name);
+      LayerJson.AddPair('displayName',Parts.DisplayName); LayerJson.AddPair('prefix',Parts.Prefix); LayerJson.AddPair('flip',Parts.Suffix);
+      AddBool(LayerJson,'visible',L.Visible); AddNum(LayerJson,'opacity',L.Opacity);
+      LayerJson.AddPair('bounds',BoundsJson(L.Bounds)); AddBool(LayerJson,'hasMask',L.HasMask);
+      if L.Kind=alkGroup then LayerJson.AddPair('kind','group')
+      else begin
+        LayerJson.AddPair('kind','image'); Inc(Counter);
+        SelectedId := 'source-'+IntToStr(Counter); ImagePath := TPath.Combine(ImageDirectory,SelectedId+'.png');
+        // Empty layers have no PNG; they remain in the metadata.
+        if (L.Bounds.Width>0) and (L.Bounds.Height>0) then begin
+          WriteRgbaPng(ImagePath,L.Bounds.Width,L.Bounds.Height,L.Pixels);
+          Asset := TJSONObject.Create; Assets.AddElement(Asset); Asset.AddPair('assetId',SelectedId);
+          Asset.AddPair('path','input/'+SelectedId+'.png'); Asset.AddPair('sha256',FileHash(ImagePath));
+          AddNum(Asset,'width',L.Bounds.Width); AddNum(Asset,'height',L.Bounds.Height);
+          Asset.AddPair('pixelFormat','RGBA8'); Asset.AddPair('colorSpace','sRGB'); LayerJson.AddPair('assetId',SelectedId);
+        end;
+      end;
+      ExportLayers(L.Children,L.Id,Depth+1);
+    end;
+  end;
+begin
+  if Document=nil then raise EArtFormat.Create('文書を開いてください。');
+  if Trim(Prompt)='' then raise EArtFormat.Create('AIへの指示を入力してください。');
+  if Length(Prompt)>16000 then raise EArtFormat.Create('AI指示が長すぎます。');
+  Pixels := RenderPsdLayers(Document);
+  Job := TArtExchangeJob.Create; Request := TJSONObject.Create; Ready := False;
+  try
+    Job.Id := NewId; Job.DocumentId := Document.SessionId; Job.Revision := Document.Revision;
+    Job.Directory := TPath.GetFullPath(TPath.Combine(Root,Job.Id)); RejectLinks(Job.Directory);
+    ForceDirectories(Job.Directory); ImageDirectory := TPath.Combine(Job.Directory,'input'); ForceDirectories(ImageDirectory);
+    ForceDirectories(TPath.Combine(Job.Directory,'images'));
+    AddNum(Request,'schemaVersion',1); Request.AddPair('jobId',Job.Id); Request.AddPair('requestId',Job.Id);
+    Request.AddPair('documentId',Job.DocumentId); Request.AddPair('ifRevision',UIntToStr(Job.Revision)); Request.AddPair('prompt',Prompt);
+    Canvas := TJSONObject.Create; Request.AddPair('canvas',Canvas); AddNum(Canvas,'width',Document.Width); AddNum(Canvas,'height',Document.Height);
+    Request.AddPair('layerOrder','topmost-first'); Request.AddPair('preview','preview.png');
+    Supported := TJSONArray.Create; Request.AddPair('supportedOperations',Supported);
+    for var Operation in ['add_group','add_layer','replace_layer','rename_layer','set_attributes','select_part'] do Supported.Add(Operation);
+    Layers := TJSONArray.Create; Request.AddPair('layers',Layers); Assets := TJSONArray.Create; Request.AddPair('assets',Assets);
+    Counter := 0; ExportLayers(Document.Roots,'',0);
+    WriteRgbaPng(TPath.Combine(Job.Directory,'preview.png'),Document.Width,Document.Height,Pixels);
+    TFile.WriteAllText(TPath.Combine(Job.Directory,'request.json.tmp'),Request.ToJSON,TEncoding.UTF8);
+    TFile.Move(TPath.Combine(Job.Directory,'request.json.tmp'),TPath.Combine(Job.Directory,'request.json'));
+    TFile.WriteAllText(TPath.Combine(Job.Directory,'instructions.txt'),
+      'Read request.json and preview.png. Write generated 8-bit RGBA PNGs into images/. '+
+      'Use stable layer IDs; preserve framing. Write schemaVersion=1, requestId, jobId, documentId and ifRevision exactly as issued. '+
+      'result.json must contain assets and operations arrays. Each asset needs assetId, relative path, SHA-256, width, height, pixelFormat=RGBA8, colorSpace=sRGB. '+
+      'Supported operations: add_group (layerId,name,parentId,beforeLayerId,visible,opacity); add_layer (same + assetId,bounds); '+
+      'replace_layer (layerId,assetId,bounds); rename_layer (layerId,name); set_attributes (layerId,visible,opacity); select_part (layerId). '+
+      'Use empty parentId/beforeLayerId for root/append. Finish all PNGs first, write result.json.tmp then rename to result.json. '+
+      'This is file exchange; no cloud API is invoked by the application.',TEncoding.UTF8);
+    Result := Job.Directory; FJobs.Add(Job.Id,Job); Ready := True;
+  finally
+    Request.Free; if not Ready then Job.Free;
+  end;
+end;
+
+function TArtExchange.PrepareResult(Document: TArtDocument; const FileName: string;
+  out Job: TArtExchangeJob; out Digest: string): TArtDocument;
+var Stream: TFileStream; Bytes: TBytes; Value: TJSONValue; Manifest,A,O,B: TJSONObject;
+    Assets,Operations: TJSONArray; Data: TDictionary<string,TArtPngData>;
+    Image: TArtPngData; AssetId,Path,Op,Id,ParentId,BeforeId,Name: string;
+    L,Parent,Before: TArtLayer; List: TList<TArtLayer>; Bounds: TArtBounds;
+    Total: Int64; Current: TArtDocument; Version: UInt64; Applied: Boolean;
+  function Target(const Id: string): TArtLayer;
+  begin
+    Result := Current.FindLayer(Id); if Result=nil then raise EArtFormat.Create('Unknown layerId: '+Id);
+  end;
+  function ImageFor(const Id: string): TArtPngData;
+  begin if not Data.TryGetValue(Id,Result) then raise EArtFormat.Create('Unknown assetId: '+Id); end;
+  procedure SetImage(Layer: TArtLayer; const Img: TArtPngData; const R: TArtBounds);
+  var DX,DY: Integer;
+  begin
+    if (Layer.Kind<>alkImage) or (R.Width<>Img.Width) or (R.Height<>Img.Height) then raise EArtFormat.Create('Image bounds do not match PNG');
+    DX := R.Left-Layer.Bounds.Left; DY := R.Top-Layer.Bounds.Top;
+    if Layer.HasMask then begin
+      Inc(Layer.MaskBounds.Left,DX); Inc(Layer.MaskBounds.Right,DX); Inc(Layer.MaskBounds.Top,DY); Inc(Layer.MaskBounds.Bottom,DY);
+    end;
+    Layer.Pixels := Img.Pixels; Layer.Bounds := R;
+  end;
+begin
+  Result := nil; Job := nil; Digest := ''; Current := nil; Value := nil;
+  if Document=nil then raise EArtFormat.Create('文書を開いてください。');
+  RejectLinks(FileName);
+  Stream := TFileStream.Create(FileName,fmOpenRead or fmShareDenyWrite);
+  try
+    if (Stream.Size<2) or (Stream.Size>MAX_JSON) then raise EArtFormat.Create('Result JSON size limit');
+    Digest := LowerCase(THashSHA2.GetHashString(Stream)); Stream.Position := 0;
+    SetLength(Bytes,Integer(Stream.Size)); Stream.ReadBuffer(Bytes[0],Length(Bytes));
+  finally Stream.Free; end;
+  Data := TDictionary<string,TArtPngData>.Create;
+  try
+    Value := TJSONObject.ParseJSONValue(TEncoding.UTF8.GetString(Bytes)); CheckUniqueKeys(Value,0); Manifest := Obj(Value);
+    if Num(Manifest,'schemaVersion',1,1)<>1 then raise EArtFormat.Create('Unsupported schema version');
+    if not FJobs.TryGetValue(Str(Manifest,'jobId'),Job) then raise EArtFormat.Create('Unknown or expired jobId');
+    if not SameText(TPath.GetFullPath(FileName),TPath.Combine(Job.Directory,'result.json')) then raise EArtFormat.Create('Result must be the issued job result.json');
+    if (Str(Manifest,'requestId')<>Job.Id) or (Str(Manifest,'documentId')<>Job.DocumentId) or (Document.SessionId<>Job.DocumentId) then
+      raise EArtFormat.Create('Document or request does not match this job');
+    if not TryStrToUInt64(Str(Manifest,'ifRevision'),Version) or (Version<>Job.Revision) then raise EArtFormat.Create('Invalid job revision');
+    Applied := Job.AppliedHash<>'';
+    if Applied then begin
+      if Job.AppliedHash<>Digest then raise EArtFormat.Create('Same requestId with different result content');
+      Exit(nil); // Successful repeat is a read-only acknowledgement, never a second mutation.
+    end;
+    if Document.Revision<>Job.Revision then raise EArtFormat.Create('文書が変更されています。新しいAIジョブを書き出してください。');
+    Assets := Arr(Manifest,'assets'); Operations := Arr(Manifest,'operations');
+    if (Assets.Count>MAX_ASSETS) or (Operations.Count<1) or (Operations.Count>MAX_OPERATIONS) then raise EArtFormat.Create('AI batch item limit');
+    Total := 0;
+    for var Item in Assets do begin
+      A := Obj(Item); AssetId := Str(A,'assetId'); if (AssetId='') or Data.ContainsKey(AssetId) then raise EArtFormat.Create('Duplicate or empty assetId');
+      if (Str(A,'pixelFormat')<>'RGBA8') or (Str(A,'colorSpace')<>'sRGB') then raise EArtFormat.Create('Unsupported asset format');
+      Inc(Total,PixelByteCount(Num(A,'width',1,30000),Num(A,'height',1,30000),4));
+      if Total>MAX_ASSET_BYTES then raise EArtFormat.Create('AI image memory limit');
+      Path := AssetPath(Job.Directory,Str(A,'path'));
+      Stream := TFileStream.Create(Path,fmOpenRead or fmShareDenyWrite);
+      try
+        if Stream.Size>MAX_ASSET_BYTES then raise EArtFormat.Create('AI PNG file limit');
+        if LowerCase(THashSHA2.GetHashString(Stream))<>LowerCase(Str(A,'sha256')) then raise EArtFormat.Create('PNG hash mismatch');
+        Image := ReadPng(Path);
+      finally Stream.Free; end;
+      if (Image.Width<>Num(A,'width',1,30000)) or (Image.Height<>Num(A,'height',1,30000)) then raise EArtFormat.Create('PNG dimensions mismatch');
+      Data.Add(AssetId,Image);
+    end;
+    Current := Document.Clone;
+    for var Item in Operations do begin
+      O := Obj(Item); Op := Str(O,'op'); Id := Str(O,'layerId');
+      if (Id='') or (Length(Id)>128) then raise EArtFormat.Create('Invalid layerId');
+      if (Op='add_group') or (Op='add_layer') then begin
+        if Current.FindLayer(Id)<>nil then raise EArtFormat.Create('Duplicate layerId');
+        Name := Str(O,'name'); if (Trim(Name)='') or (Length(Name)>255) then raise EArtFormat.Create('Invalid layer name');
+        ParentId := Str(O,'parentId'); BeforeId := Str(O,'beforeLayerId'); Parent := nil;
+        if ParentId<>'' then Parent := Target(ParentId);
+        if (Parent<>nil) and (Parent.Kind<>alkGroup) then raise EArtFormat.Create('Parent must be a group');
+        if Parent=nil then List := Current.Roots else List := Parent.Children;
+        Before := nil; if BeforeId<>'' then begin Before := Target(BeforeId); if not List.Contains(Before) then raise EArtFormat.Create('beforeLayerId has different parent'); end;
+        if Op='add_group' then L := Current.AddLayer(alkGroup,Name,TArtBounds.Create(0,0,0,0),Parent)
+        else begin
+          Image := ImageFor(Str(O,'assetId')); B := Obj(Field(O,'bounds')); Bounds := ReadBounds(B);
+          L := Current.AddLayer(alkImage,Name,Bounds,Parent); SetImage(L,Image,Bounds);
+        end;
+        L.Id := Id; L.Visible := Bool(O,'visible'); L.Opacity := Num(O,'opacity',0,255);
+        if Before<>nil then begin List.Remove(L); List.Insert(List.IndexOf(Before),L); end;
+      end else if Op='replace_layer' then begin
+        L := Target(Id); Image := ImageFor(Str(O,'assetId')); SetImage(L,Image,ReadBounds(Obj(Field(O,'bounds'))));
+      end else if Op='rename_layer' then begin
+        L := Target(Id); Name := Str(O,'name'); if (Trim(Name)='') or (Length(Name)>255) then raise EArtFormat.Create('Invalid layer name'); L.Name := Name;
+      end else if Op='set_attributes' then begin
+        L := Target(Id); L.Visible := Bool(O,'visible'); L.Opacity := Num(O,'opacity',0,255);
+      end else if Op='select_part' then SelectExclusive(Current,Target(Id))
+      else raise EArtFormat.Create('Unsupported operation: '+Op);
+    end;
+    RenderPsdLayers(Current); Current.Changed;
+    Result := Current; Current := nil;
+  finally Current.Free; Data.Free; Value.Free; end;
+end;
+procedure TArtExchange.CommitResult(Job: TArtExchangeJob; const Digest: string);
+begin Job.AppliedHash := Digest; end;
+end.
