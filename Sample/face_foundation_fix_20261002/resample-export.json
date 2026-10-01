@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "data": {
+    "jobId": "{D2FC42FE-7C8C-441A-9724-E750CA4CE8D4}",
+    "directory": "D:\\DelphiProg\\test\\AIArtToPSD\\Exchange\\{D2FC42FE-7C8C-441A-9724-E750CA4CE8D4}",
+    "state": "queued",
+    "progress": 0,
+    "message": "",
+    "documentId": "{FA0C1F5E-4FDB-414C-83F1-CC41B4064553}",
+    "ifRevision": "16",
+    "stale": false
+  },
+  "requestId": "b515f212-8d15-434c-9746-f3399bccccdf"
+}

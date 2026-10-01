@@ -1,0 +1,65 @@
+{
+  "date": "2026-10-02",
+  "status": "imported_verified_awaiting_user_visual_review",
+  "user_request": "起動済みアプリのキャラの髪を分離し、後ろ髪の見えない部分を補完してレイヤー追加。致命的な問題が発生したら中断。",
+  "fatal_issue": false,
+  "method": "元画素を前髪・横髪、顔・首、見えていた後ろ髪に分離。内蔵image_genで1回生成した後ろ髪を遮蔽領域へ制限し、アプリで縮小・配置して別の背面レイヤーへ追加。",
+  "source": {
+    "size": [
+      272,
+      255
+    ],
+    "position": [
+      366,
+      19
+    ],
+    "visible_pixels": 47671
+  },
+  "generation": {
+    "tool": "built-in image_gen",
+    "calls": 1,
+    "internal_model": "unknown",
+    "size": [
+      1295,
+      1214
+    ],
+    "prompt": "prompt.json",
+    "raw": "rear_hair_generated.png"
+  },
+  "result": {
+    "added_images": 4,
+    "added_groups": 2,
+    "total_images": 44,
+    "total_groups": 9,
+    "original_images_preserved": 40,
+    "original_pixel_mismatches": 0,
+    "original_pixel_overlap": 0,
+    "original_pixels_missing": 0,
+    "completed_rear_core_min_alpha": 251,
+    "composite_changes_outside_head": 0
+  },
+  "visibility": "新規分離グループを表示、元頭部を非表示。他の既存表示は保持。",
+  "limitations": [
+    "隠れた後ろ髪の形状は推定であり、見た目と接続はユーザー確認待ち。",
+    "前髪の下の額や頭皮は今回補完していない。",
+    "元頭部の半透明画素を保持したため、後ろ髪追加後の合成は元画像と完全一致ではない。",
+    "原画専用のマスク・境界・色判定。汎用自動分離ではない。",
+    "確認用PSDはexportの別名コピー。通常保存は未実施。"
+  ],
+  "references": {
+    "psd": "hair_separation_review.psd",
+    "parts": "hair_review.png",
+    "rear_only": "rear_completed_app.png",
+    "app_comparison": "app_comparison.png",
+    "verification": "verification.json",
+    "composite_verification": "composite_verification.json"
+  },
+  "followup": {
+    "resolution": "額・頭部まで連続した肌素体と前髪境界の修正をユーザーが理想通りと確認し採用",
+    "psd": "../face_foundation_fix_20261002/face_foundation_review.psd",
+    "scope": "初回の欠けた肌を採用済みと扱わず、修正版を使用する。後ろ髪単独の採用判断とは区別する。",
+    "date": "2026-10-02",
+    "issue": "肌素体が前髪の形に欠けていた",
+    "record": "../face_foundation_fix_20261002/learning_record.json"
+  }
+}

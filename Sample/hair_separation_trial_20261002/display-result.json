@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "requestId": "{D40F6855-0087-4D1A-9B02-2ADDAA6A28BD}",
+  "operations": [
+    {
+      "layerId": "{261a63a4-b46f-4e1e-acb2-797da2a14119}",
+      "op": "set_attributes",
+      "opacity": 255,
+      "visible": true
+    },
+    {
+      "layerId": "{351B5F40-44CF-44F7-BDE8-9B95C24D8BB8}",
+      "op": "set_attributes",
+      "opacity": 255,
+      "visible": false
+    }
+  ],
+  "ifRevision": "1",
+  "jobId": "{D40F6855-0087-4D1A-9B02-2ADDAA6A28BD}",
+  "assets": [],
+  "documentId": "{FA0C1F5E-4FDB-414C-83F1-CC41B4064553}"
+}

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "data": {
+    "jobId": "{5F96F900-6048-489A-80BF-5AC7A6EAD710}",
+    "directory": "D:\\DelphiProg\\test\\AIArtToPSD\\Exchange\\{5F96F900-6048-489A-80BF-5AC7A6EAD710}",
+    "state": "cancelled",
+    "progress": 0,
+    "message": "以後の結果取込を停止",
+    "documentId": "{FA0C1F5E-4FDB-414C-83F1-CC41B4064553}",
+    "ifRevision": "2",
+    "stale": false
+  },
+  "requestId": "f792daaf-6285-4a00-9188-4a578d7340a4"
+}

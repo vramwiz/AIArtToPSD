@@ -1,0 +1,19 @@
+{
+  "status": "imported_verified_awaiting_user_visual_review",
+  "date": "2026-10-02",
+  "images": 44,
+  "pixelVerification": {
+    "originalPixelMismatches": 0,
+    "originalPixelOverlap": 0,
+    "originalPixelsMissing": 0,
+    "copiedOriginalPixels": 47671,
+    "completedRearCoreMinAlpha": 251,
+    "fillPixelsOutsideOriginalAlpha": 0
+  },
+  "originalAttributes": "Only original head visibility changed to false",
+  "documentId": "{FA0C1F5E-4FDB-414C-83F1-CC41B4064553}",
+  "revision": "2",
+  "psdSha256": "7f8adc0be693cda6e5ae9259cc9e052fd3a2b475e8c72e6a3c39666148d4ee43",
+  "originalImagesUnchanged": 40,
+  "groups": 9
+}

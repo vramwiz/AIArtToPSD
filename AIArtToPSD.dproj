@@ -97,6 +97,7 @@
     <DCCReference Include="Source\Shell\ArtFileHistory.pas"/>
     <DCCReference Include="Source\Lib\Pipe\PipeServerTThread.pas"/>
         <DCCReference Include="Source\Lib\UI\VerticalScrollBar\VerticalScrollBarControl.pas"/>
+        <DCCReference Include="Source\Lib\DropFile\DropFile.pas"/>
         <DCCReference Include="Source\Core\ArtLayerName.pas"/>
         <DCCReference Include="Source\Core\ArtParts.pas"/>
         <DCCReference Include="Source\Editor\ArtUndo.pas"/>

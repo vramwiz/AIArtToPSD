@@ -10,3 +10,5 @@
 必要なUI等のライブラリはDelphiVclAppTemplateから積極的にコピーして利用する。レイヤー一覧は独自描画とし、指定されたSYNC_ScreenLayoutのスクロール部品を再利用する。
 
 | [DarkComboBox](UI/DarkComboBox/README.md) | DelphiVclAppTemplate/Source/Lib/UI/DarkComboBox | 1.0.1を無変更コピー。表情・パーツ切替の選択欄 |
+
+| [DropFile](DropFile/DropFile.pas) | ユーザー配置 | PSDドロップを既存の読込・履歴処理へ接続。ロジックは無変更、文字コードをCP932からUTF-8 BOMへ変換 |

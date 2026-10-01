@@ -1,0 +1,42 @@
+[
+  {
+    "asset": {
+      "assetId": "source-29",
+      "path": "input/source-29.png",
+      "sha256": "3fd4968d96dcb8a80451218b75ed96672d93b33ceedd0b980a4e302535938491",
+      "width": 157,
+      "height": 209,
+      "pixelFormat": "RGBA8",
+      "colorSpace": "sRGB"
+    },
+    "bounds": {
+      "left": 435,
+      "top": 65,
+      "right": 592,
+      "bottom": 274
+    },
+    "key": "skin",
+    "name": "顔・耳・首（額・頭部補完済み）",
+    "layerId": "{7e4e4146-86e0-43a0-bca6-f6e9a4eb2b42}"
+  },
+  {
+    "asset": {
+      "assetId": "source-28",
+      "path": "input/source-28.png",
+      "sha256": "abdad5475d30643a909326bc4e25e4e1a6d3f4a333061ce894d18570e8b94e7d",
+      "width": 271,
+      "height": 234,
+      "pixelFormat": "RGBA8",
+      "colorSpace": "sRGB"
+    },
+    "bounds": {
+      "left": 366,
+      "top": 19,
+      "right": 637,
+      "bottom": 253
+    },
+    "key": "front",
+    "name": "前髪・横髪（肌境界補正）",
+    "layerId": "{b60ca77e-a1b5-4bee-bfa0-8bedd54c54a3}"
+  }
+]

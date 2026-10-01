@@ -36,3 +36,5 @@ Win64/
 /Tests/output/visibility*/
 /Tests/TransformSmoke.res
 /Tests/output/transform*/
+/Tests/DropFileSmoke.res
+/Tests/output/drop*/

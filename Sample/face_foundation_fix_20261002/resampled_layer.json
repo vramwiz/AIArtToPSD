@@ -1,0 +1,19 @@
+{
+  "layerId": "{7e4e4146-86e0-43a0-bca6-f6e9a4eb2b42}",
+  "parentId": "{261a63a4-b46f-4e1e-acb2-797da2a14119}",
+  "name": "顔・耳・首（髪を除去・元画素）",
+  "displayName": "顔・耳・首（髪を除去・元画素）",
+  "prefix": "",
+  "flip": "",
+  "visible": false,
+  "opacity": 255,
+  "bounds": {
+    "left": 435,
+    "top": 65,
+    "right": 592,
+    "bottom": 279
+  },
+  "hasMask": false,
+  "kind": "image",
+  "assetId": "source-29"
+}

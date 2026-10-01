@@ -1,0 +1,54 @@
+[
+  {
+    "height": 222,
+    "bounds": {
+      "left": 380,
+      "top": 46,
+      "right": 625,
+      "bottom": 268
+    },
+    "width": 245,
+    "file": "rear-fill_app.png",
+    "sha256": "aec60c6cac04af80b85dad8c75f8e733cc28bcad12c74363ab13fc3a334597aa",
+    "key": "rear-fill"
+  },
+  {
+    "height": 168,
+    "bounds": {
+      "left": 440,
+      "top": 106,
+      "right": 590,
+      "bottom": 274
+    },
+    "width": 150,
+    "file": "face_app.png",
+    "sha256": "a32a838e85b506e13c4314d9602a5a403a44f550a649a595b4eb9e32653da40f",
+    "key": "face"
+  },
+  {
+    "height": 234,
+    "bounds": {
+      "left": 366,
+      "top": 19,
+      "right": 637,
+      "bottom": 253
+    },
+    "width": 271,
+    "file": "front_app.png",
+    "sha256": "185d540b78be0eb563e2b62758e5839d5e656c583037021377d207ec4cd8f49d",
+    "key": "front"
+  },
+  {
+    "height": 114,
+    "bounds": {
+      "left": 388,
+      "top": 158,
+      "right": 638,
+      "bottom": 272
+    },
+    "width": 250,
+    "file": "rear-visible_app.png",
+    "sha256": "150546fe397d0353cdac79b3c119337a6cf42ff320d19e45044be05001160f2e",
+    "key": "rear-visible"
+  }
+]

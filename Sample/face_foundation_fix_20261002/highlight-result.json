@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "documentId": "{FA0C1F5E-4FDB-414C-83F1-CC41B4064553}",
+  "requestId": "{37EE214C-A551-4A73-B489-6D52CE4F8176}",
+  "operations": [
+    {
+      "op": "replace_layer",
+      "bounds": {
+        "bottom": 274,
+        "right": 638,
+        "top": 19,
+        "left": 366
+      },
+      "layerId": "{7e4e4146-86e0-43a0-bca6-f6e9a4eb2b42}",
+      "trimTransparent": true,
+      "assetId": "skin-chin-highlight-fixed"
+    }
+  ],
+  "ifRevision": "17",
+  "assets": [
+    {
+      "sha256": "850a5d858b63eb48fd90a692a1d84331b6ef8dbda7ed1f942a28dadba32f3226",
+      "path": "images/face_completed.png",
+      "height": 255,
+      "pixelFormat": "RGBA8",
+      "colorSpace": "sRGB",
+      "width": 272,
+      "assetId": "skin-chin-highlight-fixed"
+    }
+  ],
+  "jobId": "{37EE214C-A551-4A73-B489-6D52CE4F8176}"
+}

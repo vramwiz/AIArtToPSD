@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-02",
+  "status": "user_accepted_success",
+  "user_feedback": {
+    "date": "2026-10-02",
+    "quote": "理想通りです",
+    "request": "成功や学習したことを記録し再利用出来るようにして",
+    "accepted_scope": "今回修正した額・頭部まで連続した肌素体と、前髪の境界補正を含む重ね合わせ結果。",
+    "scope_limit": "別原画・任意の変形への汎用性や、同じPSD内に残る別試験のポーズ等の採用を意味しない。"
+  },
+  "user_correction": "見える肌だけを切り抜いた素体では前髪を動かすと透明な欠けが出る。顔・頭部の輪郭を持つ肌色の素体を作り、前髪を重ねて正しい表示にする。",
+  "reusable_rule": "髪を独立させる場合は、後ろ髪だけでなく前髪に隠れた額・頭部も補完する。素体単独と前髪移動時を確認する。",
+  "method": "内蔵image_genを1回使用。アプリで縮小と位置合わせ。生成肌上部と既存下顔を接続し、元の鼻と顎・首を再利用。前髪の肌境界を限定補正。",
+  "generation_internal_model": "unknown",
+  "preservation": {"unchanged_other_images":42,"total_images":44,"total_groups":9,"skin_output_pixel_mismatches":0,"front_output_pixel_mismatches":0,"enclosed_transparent_skin_pixels":0,"restored_original_chin_highlight_pixels":2},
+  "front_edge": {"changed_pixels":1921,"recovered_pixels":790,"source_specific":true},
+  "visibility": "修正肌素体を表示。他の表示・属性は現在文書から保持。",
+  "lessons": [
+    "見えている肌の切抜きだけでは独立した顔素体にならない。前髪に隠れた額・頭部も肌色で埋め、閉じた頭部輪郭を作る。",
+    "通常の重ね合わせだけで成功判定しない。肌単独、髪単独、元位置合成、髪を動かした合成を確認する。",
+    "肌に髪の境界画素を残して外観を合わせると、髪を動かしたときに髪跡が残る。必要な境界画素を髪側へ戻し、肌背景の混色とアルファを限定補正する。",
+    "暖色判定だけでは白い肌ハイライトを取りこぼす。閉じた透明穴も検査し、元画像を見て肌のハイライトを復元する。",
+    "鼻・顎・首など維持できる部分を再利用し、生成結果の大きさ・位置は実測してアプリで合わせる。",
+    "画素の同一性はGDI+再描画を介さず、取込後PNGのRGBAを直接比較する。"
+  ],
+  "reuse_sequence": [
+    "現在のstatusと新規exportから対象レイヤー・座標・表示・マスクを特定し、元素材とPSDを保持する。",
+    "髪付き頭部と既存肌を参照に、連続した肌色の頭部・顔・耳・首を生成する。目・眉・口など独立パーツは生成対象から除外する。",
+    "実際の出力寸法と基準点を測り、アプリで拡縮・配置する。元絵の下顔・鼻・首を必要に応じて接続する。",
+    "肌の髪跡、髪の肌混入、額の欠け、内部の透明穴を点検し、境界だけを必要に応じて補正する。",
+    "素体単独・通常合成・前髪移動を比較し、新しいrevisionを確認して対象レイヤーだけ差し替える。",
+    "再exportで非対象画像・座標・属性・表示の保持と出力RGBAを検証し、ユーザー確認後に採用結果とPSDを記録する。"
+  ],
+  "limitations": ["今回の補完部の形状・色・前髪や耳との接続はユーザー確認・採用済み。別原画への適用は未検証。","肌全体は元画素と同一ではない。","診断の前髪移動は20pxの平行移動のみ。","PSDは最終exportの別名コピーで通常保存の実施状況を更新するものではない。","座標・倍率・肌色判定・境界補正範囲・鼻の位置・ハイライト座標はこの画像専用。過去のIDとスクリプトをそのまま再送しない。"],
+  "references": {"psd":"face_foundation_review.psd","review":"foundation_review.png","prompt":"prompt.json","verification":"verification.json","pixels":"app_pixel_verification.json"}
+}

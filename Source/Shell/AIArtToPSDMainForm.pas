@@ -3,7 +3,7 @@
 interface
 
 uses System.Types, System.Classes, System.SysUtils, System.Generics.Collections,
-  Vcl.Controls, Vcl.Forms, Vcl.StdCtrls, Vcl.ExtCtrls,
+  Vcl.Controls, Vcl.Forms, Vcl.StdCtrls, Vcl.ExtCtrls, DropFile,
   Vcl.Dialogs, Vcl.Menus, Vcl.Samples.Spin, Vcl.Graphics, ArtDocument, ArtLayerList, ArtFileHistory, DarkComboBox, ArtExchange, ArtUndo, ArtPipeBridge, ArtPipeProtocol, System.JSON;
 
 type
@@ -15,6 +15,8 @@ type
     FProtocol: TArtPipeProtocol;
     FCurrentJobId,FOperation: string;
     FBusy: Boolean;
+    FDropFile: TDropFile;
+    FOpeningDrop: Boolean;
     FActivity: TLabel;
     FCancelAi: TButton;
     FUndoItem,FRedoItem: TMenuItem;
@@ -78,6 +80,7 @@ type
     procedure RebuildHistory;
     procedure LayerAttributes(Sender: TObject; Layer: TArtLayer; Visible: Boolean; Opacity: Byte);
     procedure OpenClick(Sender: TObject);
+    procedure DropFiles(Control: TWinControl; const FileNames: TArray<string>);
     procedure SaveClick(Sender: TObject);
     procedure SaveAsClick(Sender: TObject);
     procedure CloseClick(Sender: TObject);
@@ -374,10 +377,18 @@ begin
   OnCloseQuery := CheckClose;
   FProtocol := TArtPipeProtocol.Create(DispatchCommand); FPipe := TArtPipeBridge.Create(FProtocol.Handle);
   FExchange.PipeName := FPipe.Name; UpdateActivity;
+  FDropFile := TDropFile.Create;
+  FDropFile.Attach(Self,DropFiles);
+  FDropFile.Attach(PreviewPanel,DropFiles);
+  FDropFile.Attach(RightPanel,DropFiles);
+  FDropFile.Attach(FTree,DropFiles);
+  FDropFile.Attach(AiPanel,DropFiles);
+  FDropFile.Attach(FPrompt,DropFiles);
 end;
 
 destructor TMainForm.Destroy;
 begin
+  FDropFile.Free;
   FPipe.Free; FProtocol.Free; FUndo.Free;
   if FTree<>nil then begin FTree.OnSelect := nil; FTree.SetRoots(nil); end;
   FDocument.Free; FBitmap.Free; FHistory.Free; FExchange.Free;
@@ -830,6 +841,25 @@ begin
   if Selected<>nil then begin FTree.Selected := Selected; FTree.RevealSelected; end;
   try FHistory.AddFile(FFileName); except on E: Exception do FStatus.Caption := FStatus.Caption+sLineBreak+'履歴保存失敗: '+E.Message; end;
   RebuildHistory;
+end;
+
+procedure TMainForm.DropFiles(Control: TWinControl; const FileNames: TArray<string>);
+var FileName: string;
+begin
+  if FBusy or FOpeningDrop or (Application.ModalLevel>0) then Exit;
+  FOpeningDrop := True;
+  try
+    for FileName in FileNames do
+      if SameText(ExtractFileExt(FileName),'.psd') then
+      begin
+        if not ConfirmDiscard then Exit;
+        try OpenPsdFile(FileName);
+        except on E: Exception do
+          MessageDlg('PSDを開けませんでした。'+sLineBreak+E.Message,mtError,[mbOK],0);
+        end;
+        Exit;
+      end;
+  finally FOpeningDrop := False; end;
 end;
 
 procedure TMainForm.OpenClick(Sender: TObject);

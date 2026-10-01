@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "data": {
+    "pipeName": "AIArtToPSD.39440.{4CCD7028-E87E-4749-80CF-60A4136B50DC}",
+    "busy": false,
+    "canUndo": true,
+    "canRedo": false,
+    "modified": true,
+    "canEdit": true,
+    "documentId": "{FA0C1F5E-4FDB-414C-83F1-CC41B4064553}",
+    "revision": "2",
+    "job": {
+      "jobId": "{5F96F900-6048-489A-80BF-5AC7A6EAD710}",
+      "directory": "D:\\DelphiProg\\test\\AIArtToPSD\\Exchange\\{5F96F900-6048-489A-80BF-5AC7A6EAD710}",
+      "state": "cancelled",
+      "progress": 0,
+      "message": "以後の結果取込を停止",
+      "documentId": "{FA0C1F5E-4FDB-414C-83F1-CC41B4064553}",
+      "ifRevision": "2",
+      "stale": false
+    }
+  },
+  "requestId": "53d1a188-cbaf-4325-b639-6ee11fe98783"
+}

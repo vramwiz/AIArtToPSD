@@ -1,0 +1,28 @@
+{
+  "revision": "18",
+  "totalImages": 44,
+  "edge": {
+    "changedBoundaryPixels": 1921,
+    "recoveredHairEdgePixels": 790,
+    "scope": "Only skin/front boundary within head-local x=65..227, y=75..184"
+  },
+  "preflight": {
+    "lowerFaceStartCanvasY": 219,
+    "lowerFaceRGBAMismatchesBeforeHighlightRestoration": 0,
+    "restoredOriginalChinHighlightPixels": 2,
+    "addedOpaqueSkinPixels": 10100,
+    "centralScalpFaceLowAlphaPixels": 0
+  },
+  "unchangedOtherImages": 42,
+  "date": "2026-10-02",
+  "skinVisible": true,
+  "documentId": "{FA0C1F5E-4FDB-414C-83F1-CC41B4064553}",
+  "status": "user_accepted_success",
+  "totalGroups": 9,
+  "psdSha256": "588b9b8a3faefe9ab56eacfcd9c54d79d155cdfcdecbed6625beab75a2972957",
+  "userAcceptance": {
+    "quote": "理想通りです",
+    "scope": "額・頭部まで補完した肌素体と前髪境界の修正結果",
+    "date": "2026-10-02"
+  }
+}

@@ -6,6 +6,7 @@ uses
   Vcl.Dialogs,
   Vcl.Themes,
   Vcl.Styles,
+  DropFile in 'Source\Lib\DropFile\DropFile.pas',
   PipeServerTThread in 'Source\Lib\Pipe\PipeServerTThread.pas',
   HorizontalTrackBarRenderer in 'Source\Lib\UI\HorizontalTrackBar\HorizontalTrackBarRenderer.pas',
   HorizontalTrackBarControl in 'Source\Lib\UI\HorizontalTrackBar\HorizontalTrackBarControl.pas',
