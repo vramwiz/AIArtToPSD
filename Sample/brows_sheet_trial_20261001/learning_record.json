@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "recordType": "project_reuse_feedback",
+  "date": "2026-10-01",
+  "manualVisualAcceptance": "accepted_by_user",
+  "userFeedback": "眉も問題なし。学習結果として記録、作業を引き継げるようにして。",
+  "acceptedScope": ["両眉8種類の一括生成", "通常・喜・怒・哀・楽・困る・画面左上げ・画面右上げ", "左右一組の共通20%縮小と配置", "眉以外の透明化と前髪に隠れる部分の遮蔽", "既存の目・口・元眉を保持した追加"],
+  "artifacts": {
+    "generationPrompt": "prompt.json",
+    "generatedSheet": "brows_sheet.png",
+    "maskedSheet": "brows_sheet_masked.png",
+    "visibilityMask": "brow_visibility_mask.png",
+    "individualLayers": "layers/",
+    "placement": "measurements.json",
+    "preparationScript": "prepare_layout.ps1",
+    "importManifest": "result.json",
+    "verification": "verification.json",
+    "comparison": "face_comparison.png",
+    "comparisonContext": "review_context.json",
+    "psd": "brows_sheet_review.psd"
+  },
+  "reuseRules": [
+    "両眉は左右一組で生成・配置し、非対称形も一組として保持する。左右は画面基準で名前を付ける。",
+    "横長セルを選び、全差分で共通倍率を使う。上下の変化を消すような個別の高さ合わせをしない。",
+    "眉以外の肌・目・髪・影・光を透明にし、細い眉線を縮小後にも残す。",
+    "前髪がベースに含まれる場合、眉が髪の上へ現れないよう現在の配置に対応する遮蔽を適用する。",
+    "今回の肌と髪の色判定、マスク、座標はこの原画専用。位置・倍率・髪型を変えたら未加工シートから再計算する。",
+    "加工前のシート、マスク、アプリ出力PNG、配置、PSDを保持する。",
+    "対象外の画像・表示・座標を保持し、比較だけで補った目などは診断用であることを明記する。"
+  ],
+  "acceptedLimitations": ["喜と楽、哀と困るの差は控えめ", "前髪で画面左側の非対称変化が見えにくい"],
+  "unverified": ["別原画での再現", "汎用的な髪の自動判定", "連続アニメーション", "目・口・眉の全組合せ"],
+  "storagePurpose": "後続のCodexが読むプロジェクト内の再利用・学習記録。モデル本体の学習更新ではない。"
+}

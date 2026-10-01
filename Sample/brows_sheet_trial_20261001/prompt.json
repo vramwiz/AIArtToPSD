@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-01",
+  "tool": "built-in image_gen",
+  "transparent_background": true,
+  "layout": {
+    "columns": 2,
+    "rows": 4
+  },
+  "states": [
+    "通常",
+    "喜",
+    "怒",
+    "哀",
+    "楽",
+    "困る",
+    "画面左上げ",
+    "画面右上げ"
+  ],
+  "references": [
+    "../mouth_only_20261001/face_review.png",
+    "../brows_only_20261001/brows_only.png"
+  ],
+  "prompt": "Create ONE transparent PNG sprite sheet of EIGHT PAIRED EYEBROW expression assets for the anime woman in the references. Reference 1 gives face angle and the delicate, very thin subdued warm gray-brown brows. Reference 2 contains only visible fragments of her ORIGINAL brows and is a color/line-weight reference, NOT a demand to draw broken marks. For this expression sheet draw COMPLETE paired eyebrow curves; hair occlusion will be handled separately when compositing. Do not include any hair in the sprite.\n\nLAYOUT: landscape 1536x1024 preferred. Exactly TWO columns and FOUR rows, eight equal WIDE horizontal cells. ONE complete LEFT+RIGHT eyebrow pair per cell. Both brows are always one paired asset. Same scale, same brow lengths, same facial spacing, same slight head tilt as reference (screen-right brow slightly higher). Leave generous transparent gutters; every sprite stays inside its cell. Pair width approximately 75% of cell width, with brow shapes no taller than 45% of cell height. Keep all pairs registered to identical face anchors; expressive raising/lowering or tilting is allowed but do not recenter individual brows independently. Use visibly thin, understated lines tapering at ends; NOT thick black fashion brows, NOT eyelids, NOT eyelashes. The entire brow should only be a few pixels thick relative to ~200px brow length.\n\nORDER left-to-right then top-to-bottom:\n1 NORMAL: neutral relaxed paired brows, gentle nearly horizontal low arches, match her existing subtle brow style.\n2 JOY / 喜: both gently raised and softly rounded, alert pleased expression, more raised than normal, not surprised exaggerated circles.\n3 ANGER / 怒: inner ends lowered toward bridge of nose, outer ends higher; clear shallow V attitude, same thinness, no frown creases or eyes.\n4 SADNESS / 哀: inner ends raised and outer ends lowered, clear worried inverted attitude, softly curved and sorrowful.\n5 RELAXED PLEASURE / 楽: easy relaxed slightly lifted outer arches, a calm content smile feeling, lower/softer and flatter than JOY.\n6 TROUBLED / 困る: inner ends drawn up and inward more sharply, outer ends drooping; distinctly hesitant/strained and subtly uneven, different from softer symmetric SADNESS.\n7 ASYMMETRIC screen-LEFT RAISED: screen-left brow raised into a questioning arch, screen-right brow low and flatter. Same pair spacing and brow lengths, obvious but subtle asymmetry.\n8 ASYMMETRIC screen-RIGHT RAISED: reverse the emotional asymmetry: screen-right brow raised and arched, screen-left brow low and flat. Keep original head angle, do not horizontally mirror the whole face geometry.\n\nCRITICAL: EYEBROWS ONLY. True transparent background and all space outside the narrow brow strokes alpha=0. No eyes, eyelids, eyelashes, hair, forehead, skin panels, nose, wrinkles, floating speckles, shadow, glow or mist. No labels, text, grid, frames, or face. Use restrained warm gray-brown pigment, thinner and lighter than the eyelashes in the reference. Do not add a second parallel contour to each brow. All eight paired sprites should be complete and separated. Preserve expression-induced relative vertical differences inside the pair so they can share one scale when placed on the face."
+}

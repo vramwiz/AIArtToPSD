@@ -1,0 +1,20 @@
+﻿{
+    "newMouthWidth":  33,
+    "unchangedOriginalImageLayers":  [
+                                         "目（両目・元画素）",
+                                         "眉（両眉・元画素）",
+                                         "口（元画素）",
+                                         "ベース（目・眉・口消去済み）",
+                                         "元画像（比較用）"
+                                     ],
+    "originalMouthHidden":  true,
+    "addedLayers":  1,
+    "newMouthHeight":  12,
+    "manualVisualAcceptance":  "pending",
+    "newMouthBounds":  {
+                           "left":  496,
+                           "top":  218,
+                           "right":  529,
+                           "bottom":  230
+                       }
+}

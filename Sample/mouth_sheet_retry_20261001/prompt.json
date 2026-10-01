@@ -1,0 +1,22 @@
+{
+  "date": "2026-10-01",
+  "tool": "built-in image_gen",
+  "transparent_background": true,
+  "states": [
+    "閉じ",
+    "半開き",
+    "開き",
+    "あ",
+    "い",
+    "う",
+    "え",
+    "お",
+    "ん"
+  ],
+  "references": [
+    "../mouth_only_20261001/face_review.png",
+    "../mouth_only_20261001/mouth_only.png"
+  ],
+  "prompt": "Create ONE transparent PNG sprite sheet of NINE mouth-only expression sprites for this anime woman. Reference 1 gives the drawing style; reference 2 is the original mouth. This is a 3x3 sheet, not a full face. Equal square cells, square canvas, all mouths at the same character scale and centered at the centers of their own cells. Use each cell's central 65% only; leave large empty transparent gutters. NO letters, numbers, labels, grid lines, backgrounds, face, chin, nose, cheeks, facial skin patches, hair or glow.\n\nCRITICAL CORRECTION: THE TOP-LEFT AND BOTTOM-RIGHT SPRITES MUST BE FULLY CLOSED MOUTHS. These TWO CLOSED mouths must be ONLY ONE VERY THIN BROWN LINE, like a pen stroke, with at most tiny antialiasing. Their visible thickness should be roughly 2% of their width. NO PINK FILLED AREA, NO LOWER-LIP SHAPE, NO WHITE STRIP, NO TEETH, NO TONGUE, NO DARK CAVITY, NO GAP, NO LIP GLOSS. Everything above and below that thin line must be transparent. An open mouth made smaller or flattened is NOT a closed mouth. Do not imitate the original small pale mouth interior in these closed sprites: replace it with the single closed line. This requirement is more important than decorative consistency.\n\nEXACT CELL ORDER (left to right, top to bottom):\n1. CLOSED: one thin gently upturned brown smile line ONLY. No interior at all.\n2. HALF-OPEN: shallow slightly open gentle smile, small teeth highlight, low opening.\n3. OPEN: relaxed friendly mouth opened substantially more than HALF-OPEN.\n4. Japanese A / あ: broad vertically open soft oval, taller cavity, little tongue.\n5. Japanese I / い: wide horizontally stretched and shallow, upper teeth visible.\n6. Japanese U / う: small narrow lightly pursed opening; narrower and shorter than O.\n7. Japanese E / え: medium-wide opening, height between I and A, upper teeth visible.\n8. Japanese O / お: rounded vertically oval open cavity, narrower than A, taller than U.\n9. Japanese N / ん: one thin almost straight, softly pressed brown line ONLY. Fully closed, no interior or pink lip area.\n\nKeep the same delicate warm brown outlines, restrained natural pink mouth interior where OPEN, simple soft anime shading and consistent slightly oblique viewing angle. Mouth width varies naturally between phonemes; never enlarge the small U or closed line to fill a cell. All sprites share one coordinate scale, and both closed sprites have normal character mouth width. White highlights and teeth inside open mouths are opaque. All space outside the actual mouth shapes is true alpha=0. Square 1536x1536 preferred; if output size differs, retain the exact uniform 3x3 arrangement. Output exactly nine sprites, each isolated and fully contained in its cell. Before final output, check that sprites 1 and 9 consist solely of thin closed lines with transparent pixels above and below.",
+  "evaluation": "Even if some forms fail, evaluate independent cells after common-scale reduction on the original face; retain original layers and distinguish usable candidates from failed states."
+}

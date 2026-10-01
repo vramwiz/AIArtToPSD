@@ -1,0 +1,172 @@
+﻿{
+    "brows":  [
+                  {
+                      "width":  91,
+                      "height":  13,
+                      "visibleCenterY":  144.5,
+                      "visiblePixels":  103,
+                      "visibleWidth":  90,
+                      "visibleCenterX":  508,
+                      "state":  "normal",
+                      "name":  "01 通常",
+                      "bounds":  {
+                                     "left":  463,
+                                     "top":  138,
+                                     "right":  554,
+                                     "bottom":  151
+                                 },
+                      "visibleHeight":  11
+                  },
+                  {
+                      "width":  90,
+                      "height":  11,
+                      "visibleCenterY":  140.5,
+                      "visiblePixels":  89,
+                      "visibleWidth":  90,
+                      "visibleCenterX":  509,
+                      "state":  "joy",
+                      "name":  "02 喜",
+                      "bounds":  {
+                                     "left":  464,
+                                     "top":  135,
+                                     "right":  554,
+                                     "bottom":  146
+                                 },
+                      "visibleHeight":  11
+                  },
+                  {
+                      "width":  87,
+                      "height":  15,
+                      "visibleCenterY":  143,
+                      "visiblePixels":  95,
+                      "visibleWidth":  87,
+                      "visibleCenterX":  507.5,
+                      "state":  "anger",
+                      "name":  "03 怒",
+                      "bounds":  {
+                                     "left":  464,
+                                     "top":  136,
+                                     "right":  551,
+                                     "bottom":  151
+                                 },
+                      "visibleHeight":  14
+                  },
+                  {
+                      "width":  94,
+                      "height":  13,
+                      "visibleCenterY":  144,
+                      "visiblePixels":  110,
+                      "visibleWidth":  92,
+                      "visibleCenterX":  509,
+                      "state":  "sadness",
+                      "name":  "04 哀",
+                      "bounds":  {
+                                     "left":  462,
+                                     "top":  138,
+                                     "right":  556,
+                                     "bottom":  151
+                                 },
+                      "visibleHeight":  12
+                  },
+                  {
+                      "width":  91,
+                      "height":  23,
+                      "visibleCenterY":  143.5,
+                      "visiblePixels":  92,
+                      "visibleWidth":  90,
+                      "visibleCenterX":  508,
+                      "state":  "pleasure",
+                      "name":  "05 楽",
+                      "bounds":  {
+                                     "left":  463,
+                                     "top":  130,
+                                     "right":  554,
+                                     "bottom":  153
+                                 },
+                      "visibleHeight":  9
+                  },
+                  {
+                      "width":  91,
+                      "height":  14,
+                      "visibleCenterY":  142,
+                      "visiblePixels":  107,
+                      "visibleWidth":  90,
+                      "visibleCenterX":  508,
+                      "state":  "troubled",
+                      "name":  "06 困る",
+                      "bounds":  {
+                                     "left":  463,
+                                     "top":  135,
+                                     "right":  554,
+                                     "bottom":  149
+                                 },
+                      "visibleHeight":  14
+                  },
+                  {
+                      "width":  74,
+                      "height":  14,
+                      "visibleCenterY":  143,
+                      "visiblePixels":  102,
+                      "visibleWidth":  73,
+                      "visibleCenterX":  517.5,
+                      "state":  "screen_left_raised",
+                      "name":  "07 画面左上げ",
+                      "bounds":  {
+                                     "left":  481,
+                                     "top":  136,
+                                     "right":  555,
+                                     "bottom":  150
+                                 },
+                      "visibleHeight":  14
+                  },
+                  {
+                      "width":  93,
+                      "height":  17,
+                      "visibleCenterY":  144.5,
+                      "visiblePixels":  102,
+                      "visibleWidth":  92,
+                      "visibleCenterX":  508,
+                      "state":  "screen_right_raised",
+                      "name":  "08 画面右上げ",
+                      "bounds":  {
+                                     "left":  462,
+                                     "top":  136,
+                                     "right":  555,
+                                     "bottom":  153
+                                 },
+                      "visibleHeight":  15
+                  }
+              ],
+    "defaultVisible":  "anger",
+    "hairExcludedByRecordedMask":  true,
+    "originalOrderPreserved":  true,
+    "commonScale":  0.2,
+    "addedGroups":  1,
+    "actualEyeVisibilityChanged":  false,
+    "diagnosticOnlyEyeLayerId":  "{f1839997-8ee6-422f-9e7c-fbb244dc67d1}",
+    "unchangedOriginalImageLayers":  [
+                                         "01 通常",
+                                         "02 閉じ",
+                                         "03 半開き",
+                                         "04 笑顔閉じ",
+                                         "05 ほぼ閉じ",
+                                         "06 見開き",
+                                         "目（両目・元画素）",
+                                         "眉（両眉・元画素）",
+                                         "01 閉じ",
+                                         "02 半開き",
+                                         "03 開き",
+                                         "04 あ",
+                                         "05 い",
+                                         "06 う",
+                                         "07 え",
+                                         "08 お",
+                                         "09 ん",
+                                         "口差分（少し開く・試験）",
+                                         "口（元画素）",
+                                         "ベース（目・眉・口消去済み）",
+                                         "元画像（比較用）"
+                                     ],
+    "manualVisualAcceptance":  "accepted_by_user",
+    "addedBrowLayers":  8
+}

@@ -1,0 +1,171 @@
+﻿{
+    "unchangedOriginalImageLayers":  [
+                                         "目（両目・元画素）",
+                                         "眉（両眉・元画素）",
+                                         "口差分（少し開く・試験）",
+                                         "口（元画素）",
+                                         "ベース（目・眉・口消去済み）",
+                                         "元画像（比較用）"
+                                     ],
+    "addedGroups":  1,
+    "originalOrderPreserved":  true,
+    "defaultVisible":  "closed",
+    "mouths":  [
+                   {
+                       "width":  31,
+                       "height":  7,
+                       "visibleCenterY":  223.5,
+                       "visiblePixels":  44,
+                       "visibleWidth":  31,
+                       "visibleCenterX":  512.5,
+                       "state":  "closed",
+                       "name":  "01 閉じ",
+                       "bounds":  {
+                                      "left":  497,
+                                      "top":  220,
+                                      "right":  528,
+                                      "bottom":  227
+                                  },
+                       "visibleHeight":  5
+                   },
+                   {
+                       "width":  40,
+                       "height":  15,
+                       "visibleCenterY":  224,
+                       "visiblePixels":  113,
+                       "visibleWidth":  28,
+                       "visibleCenterX":  513,
+                       "state":  "half",
+                       "name":  "02 半開き",
+                       "bounds":  {
+                                      "left":  495,
+                                      "top":  220,
+                                      "right":  535,
+                                      "bottom":  235
+                                  },
+                       "visibleHeight":  8
+                   },
+                   {
+                       "width":  38,
+                       "height":  25,
+                       "visibleCenterY":  223.5,
+                       "visiblePixels":  356,
+                       "visibleWidth":  35,
+                       "visibleCenterX":  512.5,
+                       "state":  "open",
+                       "name":  "03 開き",
+                       "bounds":  {
+                                      "left":  495,
+                                      "top":  215,
+                                      "right":  533,
+                                      "bottom":  240
+                                  },
+                       "visibleHeight":  15
+                   },
+                   {
+                       "width":  32,
+                       "height":  28,
+                       "visibleCenterY":  223,
+                       "visiblePixels":  400,
+                       "visibleWidth":  25,
+                       "visibleCenterX":  512.5,
+                       "state":  "a",
+                       "name":  "04 あ",
+                       "bounds":  {
+                                      "left":  499,
+                                      "top":  212,
+                                      "right":  531,
+                                      "bottom":  240
+                                  },
+                       "visibleHeight":  22
+                   },
+                   {
+                       "width":  43,
+                       "height":  33,
+                       "visibleCenterY":  224,
+                       "visiblePixels":  299,
+                       "visibleWidth":  40,
+                       "visibleCenterX":  512,
+                       "state":  "i",
+                       "name":  "05 い",
+                       "bounds":  {
+                                      "left":  492,
+                                      "top":  207,
+                                      "right":  535,
+                                      "bottom":  240
+                                  },
+                       "visibleHeight":  12
+                   },
+                   {
+                       "width":  17,
+                       "height":  11,
+                       "visibleCenterY":  223.5,
+                       "visiblePixels":  102,
+                       "visibleWidth":  17,
+                       "visibleCenterX":  512.5,
+                       "state":  "u",
+                       "name":  "06 う",
+                       "bounds":  {
+                                      "left":  504,
+                                      "top":  218,
+                                      "right":  521,
+                                      "bottom":  229
+                                  },
+                       "visibleHeight":  9
+                   },
+                   {
+                       "width":  36,
+                       "height":  21,
+                       "visibleCenterY":  223,
+                       "visiblePixels":  286,
+                       "visibleWidth":  30,
+                       "visibleCenterX":  513,
+                       "state":  "e",
+                       "name":  "07 え",
+                       "bounds":  {
+                                      "left":  492,
+                                      "top":  216,
+                                      "right":  528,
+                                      "bottom":  237
+                                  },
+                       "visibleHeight":  14
+                   },
+                   {
+                       "width":  38,
+                       "height":  41,
+                       "visibleCenterY":  223,
+                       "visiblePixels":  307,
+                       "visibleWidth":  19,
+                       "visibleCenterX":  512.5,
+                       "state":  "o",
+                       "name":  "08 お",
+                       "bounds":  {
+                                      "left":  493,
+                                      "top":  204,
+                                      "right":  531,
+                                      "bottom":  245
+                                  },
+                       "visibleHeight":  20
+                   },
+                   {
+                       "width":  30,
+                       "height":  23,
+                       "visibleCenterY":  223.5,
+                       "visiblePixels":  39,
+                       "visibleWidth":  29,
+                       "visibleCenterX":  512.5,
+                       "state":  "n",
+                       "name":  "09 ん",
+                       "bounds":  {
+                                      "left":  498,
+                                      "top":  222,
+                                      "right":  528,
+                                      "bottom":  245
+                                  },
+                       "visibleHeight":  3
+                   }
+               ],
+    "commonScale":  0.16906474820143885,
+    "manualVisualAcceptance":  "accepted_by_user",
+    "addedMouthLayers":  9
+}

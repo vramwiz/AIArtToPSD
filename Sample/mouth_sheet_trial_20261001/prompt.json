@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-01",
+  "tool": "built-in image_gen",
+  "transparent_background": true,
+  "states": [
+    "閉じ",
+    "半開き",
+    "開き",
+    "あ",
+    "い",
+    "う",
+    "え",
+    "お",
+    "ん"
+  ],
+  "layout": {
+    "rows": 3,
+    "columns": 3,
+    "order": "row-major"
+  },
+  "prompt": "Create ONE transparent PNG SPRITE SHEET containing exactly NINE isolated anime mouth expressions for the same woman. Reference image 1 is her face/style; reference image 2 is her approved isolated open-mouth asset/style, NOT a layout template. No full face. This task is a production mouth sprite sheet, not nine independent illustrations.\n\nCANVAS/LAYOUT: square 1536x1536 preferred, exact uniform 3 columns x 3 rows, nine equal cells. If another square resolution is used, keep the same equal thirds. Each cell contains one mouth only. All mouths share the same character scale, line thickness, colors, viewing angle and horizontal axis, centered on their cell centers. Mouth openings vary in width and height as specified, do NOT individually enlarge every mouth to fill its cell. Each mouth stays inside the central 65 percent of its own cell in both axes. Leave large fully transparent gutters. No visible grid, frames, letters, numbers, labels, text, face, skin patches, nose, chin, hair, glow, backgrounds or shadows. Real alpha transparency, not painted checkerboard. Preserve teeth/highlights as opaque pixels inside the mouth.\n\nEXACT ROW-MAJOR ORDER:\nRow 1 col 1 CLOSED: relaxed gently smiling thin closed-lip curve, absolutely NO opening and no visible teeth.\nRow 1 col 2 HALF-OPEN: the same gentle smile, shallow small opening, modest upper-teeth highlight; visibly between CLOSED and OPEN in opening height.\nRow 1 col 3 OPEN: clearly larger open mouth than HALF-OPEN, friendly relaxed vertical opening and dark interior; not screaming.\nRow 2 col 1 Japanese A (あ): vertically open broad soft oval, jaw lowered, taller than the half-open smile, dark inner mouth with a little tongue.\nRow 2 col 2 Japanese I (い): mouth stretched sideways, wide and shallow opening with visible upper teeth, clearly different from A.\nRow 2 col 3 Japanese U (う): small narrow gently pursed opening, restrained lips, much narrower than I; no exaggerated lipstick.\nRow 3 col 1 Japanese E (え): medium-wide opening, visible upper teeth, intermediate opening height between I and A.\nRow 3 col 2 Japanese O (お): clearly rounded O-shaped vertically oval open mouth, narrower than A and taller than U, visible dark interior.\nRow 3 col 3 Japanese N (ん): lips together, softly pressed nearly flat closed line, NO hole and no teeth; distinguish from the relaxed upturned CLOSED smile.\n\nSTYLE: delicate thin warm-brown outlines, restrained natural pink lips, dark warm interior where open, simple soft anime shading matching the references. Slight upward tilt to viewer's right may be retained consistently, but keep orientations consistent. No giant red lips, photorealism, extra anatomy, drool, exaggerated gloss or expression stickers. Generate all nine requested forms, no duplicates except the naturally related closed forms, and no missing or extra mouths. Output only the single 3x3 transparent sheet.",
+  "stopRule": "Stop at any material generation, split, scaling or placement failure; do not import a defective batch."
+}

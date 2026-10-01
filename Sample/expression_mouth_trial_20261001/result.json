@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "requestId": "{1FC0B2B1-FC2B-4F16-9E30-2F50669761CF}",
+  "jobId": "{1FC0B2B1-FC2B-4F16-9E30-2F50669761CF}",
+  "documentId": "{304B5248-52B3-4615-8A0D-D57E69923CD5}",
+  "ifRevision": "0",
+  "assets": [
+    {
+      "assetId": "mouth-open",
+      "sha256": "90d87f3c970bddc2452b728d287efeabcf489f47a07f87449494320a3a29733e",
+      "path": "images/mouth_open_generated.png",
+      "width": 1774,
+      "pixelFormat": "RGBA8",
+      "height": 887,
+      "colorSpace": "sRGB"
+    }
+  ],
+  "operations": [
+    {
+      "layerId": "{FA3938F8-220E-46E6-B19C-3617785AE68C}",
+      "opacity": 255,
+      "visible": false,
+      "op": "set_attributes"
+    },
+    {
+      "layerId": "{68554e41-e8cd-445e-8fa9-40ac8614bdd4}",
+      "trimTransparent": true,
+      "parentId": "{90458844-3ECD-4932-A29D-53144A6E8DC1}",
+      "name": "口差分（少し開く・試験）",
+      "bounds": {
+        "right": 529,
+        "top": 218,
+        "bottom": 230,
+        "left": 496
+      },
+      "visible": true,
+      "resample": true,
+      "sourceBounds": {
+        "right": 1106,
+        "top": 372,
+        "bottom": 529,
+        "left": 668
+      },
+      "assetId": "mouth-open",
+      "beforeLayerId": "{FA3938F8-220E-46E6-B19C-3617785AE68C}",
+      "opacity": 255,
+      "op": "add_layer"
+    }
+  ]
+}

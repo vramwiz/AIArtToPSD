@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "recordType": "project_reuse_feedback",
+  "date": "2026-10-01",
+  "manualVisualAcceptance": "accepted_by_user",
+  "userFeedback": "十分と思われる。いに関しては上下の歯を少しくいしばったぐらいが、えとの差別化が出来そう。これは成功例として記録、学習データに追加して。",
+  "acceptedScope": ["口9種の一括生成", "閉じ・んの線状の閉口", "共通倍率での分割・縮小", "中心位置の補正", "既存パーツを保持したアプリ取込"],
+  "artifacts": {
+    "generationPrompt": "prompt.json",
+    "generatedSheet": "mouth_sheet.png",
+    "individualLayers": "layers/",
+    "placement": "result.json",
+    "verification": "verification.json",
+    "comparison": "face_comparison.png",
+    "psd": "mouth_sheet_review.psd"
+  },
+  "nextGenerationGuidance": {
+    "target": "い",
+    "instruction": "上下の歯を軽く食いしばった程度の横長の形。上下の歯を見せて隙間を小さくする。えは口内が見える開口として、両者を区別する。",
+    "status": "user_suggested_not_yet_generated_or_validated",
+    "existingImageChanged": false
+  },
+  "unverified": ["音声同期", "連続アニメーション", "別原画での再現"],
+  "storagePurpose": "後続のCodex作業が読むプロジェクト内の再利用・学習記録。モデル自体の学習更新ではない。"
+}

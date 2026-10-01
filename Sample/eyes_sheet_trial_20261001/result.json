@@ -1,0 +1,179 @@
+{
+  "schemaVersion": 1,
+  "requestId": "{006BF2EB-15AC-4121-9113-758C7CEB9429}",
+  "jobId": "{006BF2EB-15AC-4121-9113-758C7CEB9429}",
+  "documentId": "{98646C0E-1A3F-4171-B416-35B4544F1186}",
+  "ifRevision": "25",
+  "assets": [
+    {
+      "pixelFormat": "RGBA8",
+      "width": 1536,
+      "path": "images/eyes_sheet.png",
+      "sha256": "8d2439a2bca4cf950de31c8d372684880a40cf48ad8fb9c079b58472a151c2ac",
+      "colorSpace": "sRGB",
+      "assetId": "eyes-sheet",
+      "height": 1024
+    }
+  ],
+  "operations": [
+    {
+      "opacity": 255,
+      "layerId": "{25836D63-66AB-4640-BC92-F32FE21CCAF7}",
+      "visible": false,
+      "op": "set_attributes"
+    },
+    {
+      "parentId": "{A331ECDC-9985-4909-AFB9-938EEEBBFB20}",
+      "name": "目差分6種（両目・確認用）",
+      "beforeLayerId": "{25836D63-66AB-4640-BC92-F32FE21CCAF7}",
+      "visible": true,
+      "op": "add_group",
+      "opacity": 255,
+      "layerId": "{f8d19cde-9494-47a1-b381-49ce352b6c51}"
+    },
+    {
+      "visible": false,
+      "resample": true,
+      "parentId": "{f8d19cde-9494-47a1-b381-49ce352b6c51}",
+      "sourceBounds": {
+        "left": 83,
+        "right": 723,
+        "bottom": 327,
+        "top": 107
+      },
+      "layerId": "{f1839997-8ee6-422f-9e7c-fbb244dc67d1}",
+      "opacity": 255,
+      "beforeLayerId": "",
+      "assetId": "eyes-sheet",
+      "trimTransparent": true,
+      "bounds": {
+        "left": 443,
+        "right": 571,
+        "bottom": 196,
+        "top": 152
+      },
+      "name": "01 通常",
+      "op": "add_layer"
+    },
+    {
+      "visible": true,
+      "resample": true,
+      "parentId": "{f8d19cde-9494-47a1-b381-49ce352b6c51}",
+      "sourceBounds": {
+        "left": 822,
+        "right": 1462,
+        "bottom": 339,
+        "top": 119
+      },
+      "layerId": "{caf99b69-1351-441e-8aff-518089ad2c85}",
+      "opacity": 255,
+      "beforeLayerId": "",
+      "assetId": "eyes-sheet",
+      "trimTransparent": true,
+      "bounds": {
+        "left": 443,
+        "right": 571,
+        "bottom": 196,
+        "top": 152
+      },
+      "name": "02 閉じ",
+      "op": "add_layer"
+    },
+    {
+      "visible": false,
+      "resample": true,
+      "parentId": "{f8d19cde-9494-47a1-b381-49ce352b6c51}",
+      "sourceBounds": {
+        "left": 85,
+        "right": 725,
+        "bottom": 636,
+        "top": 416
+      },
+      "layerId": "{e6bbde19-ddfc-4c8c-bcfc-9706a8023fd8}",
+      "opacity": 255,
+      "beforeLayerId": "",
+      "assetId": "eyes-sheet",
+      "trimTransparent": true,
+      "bounds": {
+        "left": 443,
+        "right": 571,
+        "bottom": 196,
+        "top": 152
+      },
+      "name": "03 半開き",
+      "op": "add_layer"
+    },
+    {
+      "visible": false,
+      "resample": true,
+      "parentId": "{f8d19cde-9494-47a1-b381-49ce352b6c51}",
+      "sourceBounds": {
+        "left": 827,
+        "right": 1467,
+        "bottom": 650,
+        "top": 430
+      },
+      "layerId": "{172a5dba-873f-4a31-b22e-0100b9d4c2b9}",
+      "opacity": 255,
+      "beforeLayerId": "",
+      "assetId": "eyes-sheet",
+      "trimTransparent": true,
+      "bounds": {
+        "left": 443,
+        "right": 571,
+        "bottom": 196,
+        "top": 152
+      },
+      "name": "04 笑顔閉じ",
+      "op": "add_layer"
+    },
+    {
+      "visible": false,
+      "resample": true,
+      "parentId": "{f8d19cde-9494-47a1-b381-49ce352b6c51}",
+      "sourceBounds": {
+        "left": 88,
+        "right": 728,
+        "bottom": 949,
+        "top": 729
+      },
+      "layerId": "{6b6d5129-6d6e-4e5a-833d-8b99102f9416}",
+      "opacity": 255,
+      "beforeLayerId": "",
+      "assetId": "eyes-sheet",
+      "trimTransparent": true,
+      "bounds": {
+        "left": 443,
+        "right": 571,
+        "bottom": 196,
+        "top": 152
+      },
+      "name": "05 ほぼ閉じ",
+      "op": "add_layer"
+    },
+    {
+      "visible": false,
+      "resample": true,
+      "parentId": "{f8d19cde-9494-47a1-b381-49ce352b6c51}",
+      "sourceBounds": {
+        "left": 827,
+        "right": 1467,
+        "bottom": 925,
+        "top": 705
+      },
+      "layerId": "{cbcb36fb-f6cd-480a-ad3e-1d2b07ec48c6}",
+      "opacity": 255,
+      "beforeLayerId": "",
+      "assetId": "eyes-sheet",
+      "trimTransparent": true,
+      "bounds": {
+        "left": 443,
+        "right": 571,
+        "bottom": 196,
+        "top": 152
+      },
+      "name": "06 見開き",
+      "op": "add_layer"
+    }
+  ]
+}

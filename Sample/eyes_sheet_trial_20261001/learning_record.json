@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "recordType": "project_reuse_feedback",
+  "date": "2026-10-01",
+  "manualVisualAcceptance": "accepted_by_user",
+  "userFeedback": "目も問題ないものとする。学習データを記録し再利用しやすくして。",
+  "acceptedScope": ["両目6種の横長シート生成", "通常・閉じ・半開き・笑顔閉じ・ほぼ閉じ・見開き", "両目一組のまま共通倍率20%で縮小", "髪・眉・周囲の肌を含めない差分", "既存の口と原画の目を保持したアプリ追加"],
+  "artifacts": {
+    "generationPrompt": "prompt.json",
+    "generatedSheet": "eyes_sheet.png",
+    "individualLayers": "layers/",
+    "placement": "measurements.json",
+    "importManifest": "result.json",
+    "verification": "verification.json",
+    "comparison": "face_comparison.png",
+    "psd": "eyes_sheet_review.psd"
+  },
+  "reuseRules": [
+    "左右の目は一組で生成し、別々に拡縮しない。",
+    "横長セルに合わせた行列配置を選び、実出力の解像度を測る。",
+    "全差分を共通倍率にし、開き具合による高さの差を保つ。",
+    "目尻などの基準位置を見てペア全体を平行移動する。笑顔閉じの弧を機械的に中央へ寄せない。",
+    "髪・眉・周囲の肌を透明にし、白目と虹彩のハイライトを保持する。",
+    "生成プレビューの背景RGBではなく、実アルファ合成とアプリ縮小後の顔で確認する。",
+    "既存画像のハッシュ・座標・表示状態を照合し、置換対象の表示以外を保持する。"
+  ],
+  "unverified": ["別原画での再現", "連続アニメーション", "汎用的な基準位置の自動検出"],
+  "storagePurpose": "後続のCodexが読むプロジェクト内の再利用資料。モデル本体の学習更新ではない。"
+}

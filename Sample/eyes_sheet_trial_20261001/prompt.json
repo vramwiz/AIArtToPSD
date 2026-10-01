@@ -1,0 +1,22 @@
+{
+  "date": "2026-10-01",
+  "tool": "built-in image_gen",
+  "transparent_background": true,
+  "layout": {
+    "columns": 2,
+    "rows": 3
+  },
+  "states": [
+    "通常",
+    "閉じ",
+    "半開き",
+    "笑顔閉じ",
+    "ほぼ閉じ",
+    "見開き"
+  ],
+  "references": [
+    "../mouth_only_20261001/face_review.png",
+    "../eyes_no_hair_20261001/eyes_no_hair.png"
+  ],
+  "prompt": "Create ONE transparent PNG sprite sheet containing SIX PAIRS OF EYES for the same anime woman. Use the first reference only for character identity, teal eye color, delicate painted anime style and head angle. The second reference is the exact original paired-eye geometry: match its left/right asymmetry, eye spacing, eye width and slight diagonal baseline (screen-right eye is a little higher). Both eyes must ALWAYS stay together as a single pair, never separate left and right into different cells.\n\nLAYOUT: landscape canvas, preferably 1536x1024. Exactly 2 columns x 3 rows, six equal cells. Each cell is a wide horizontal rectangle. Within each cell place one complete paired-eye sprite, at the SAME character scale, SAME horizontal eye positions, SAME baseline. Use the central 80% width and central 70% height of each cell, with generous genuinely transparent gutters. No labels, text, borders, grid lines. Do not maximize individual expression bounds or enlarge closed eyes. Every pair should have identical inner and outer eye-corner positions across all six cells; only eyelid openness/curvature and iris visibility change. Preserve the reference's viewing angle; do not turn into symmetrical front-facing stock eyes.\n\nCELL ORDER left-to-right then top-to-bottom:\n1 NORMAL: reproduce the reference's relaxed open eyes and teal irises, same size, spacing and gaze.\n2 CLOSED: both eyes fully closed in a natural resting blink. Thin dark brown eyelid/lash curves only; no white eyeballs, no irises, no skin-filled eyelid panels. Preserve the eye corner anchors.\n3 HALF-OPEN: upper lids lowered to about half normal opening; teal irises correctly occluded by the upper lids, looking forward, not looking down. Keep original eye width and spacing.\n4 HAPPY CLOSED: both eyes fully closed with gentle upward smiling eyelid arcs. Lashes only; no iris, sclera, skin patches or eyebrow arcs.\n5 NEARLY CLOSED: both eyes opened about one quarter, a thin slit with a little teal iris. Keep same corners, scale and gaze; no new bags or wrinkles.\n6 WIDE OPEN: both eyes mildly surprised, somewhat taller opening than normal but same width/spacing, same teal iris size. No enlarged giant pupils or cartoon symbols.\n\nCRITICAL TRANSPARENCY: output ONLY eyelashes, necessary thin eyelid contours, and eye interiors (opaque sclera/irises/highlights where eyes are open). All other pixels must be transparent. Absolutely NO HAIR strands, bangs, blue-gray shapes, eyebrows, nose, cheek, face outline, surrounding skin patches, eye shadow clouds, glow, cast shadows or background. Closed-eye cells have ONLY the two narrow eyelid/lash marks; the spaces above/below them are transparent. Do not copy the skin or hair around the eyes from the reference. Do not draw eyebrows disguised as extra arcs. White eye highlights and sclera must remain opaque and not be erased as background. Natural eyelash antialiasing allowed. Keep high consistency of line weight and iris details across states. Do not include a face. Make all six pairs isolated and complete, with no clipping."
+}

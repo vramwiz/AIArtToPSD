@@ -1,0 +1,29 @@
+{
+  "acceptedByUser": {
+    "pairedEyeVariants": 6,
+    "mouthVariants": 9,
+    "pairedBrowVariants": 8
+  },
+  "preview": "preview.png",
+  "snapshotRevision": "49",
+  "psd": "accepted_face_variants.psd",
+  "allPriorImageHashesUnchanged": true,
+  "date": "2026-10-01",
+  "psdSha256": "ba237b1b9156f3e8a467859baedbf454124c7850b625bad30cb5668bd4df6c20",
+  "note": "Read-only handoff export. Current document and visibility were not changed. Archived IDs must not be reused for import.",
+  "visibleImageLayers": [
+    {
+      "name": "05 い",
+      "layerId": "{b1edf4b1-43cf-42c7-909a-f1c1d4bf5ffe}",
+      "parentId": "{55cae3d2-b5cd-416b-91da-8e4c0b860b05}"
+    },
+    {
+      "name": "ベース（目・眉・口消去済み）",
+      "layerId": "{71D93FA7-E1EB-4FC2-9126-683C73AE9A79}",
+      "parentId": "{A331ECDC-9985-4909-AFB9-938EEEBBFB20}"
+    }
+  ],
+  "nativeLayers": "native_layers.json",
+  "imageLayers": 29,
+  "groupLayers": 4
+}
