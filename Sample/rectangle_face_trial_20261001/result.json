@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "requestId": "{7E255760-62B6-4411-9598-6EFC632CC82A}",
+  "jobId": "{7E255760-62B6-4411-9598-6EFC632CC82A}",
+  "documentId": "{9E57C0EE-3D74-4C04-94AD-B7BEE973F399}",
+  "ifRevision": "0",
+  "assets": [
+    {
+      "assetId": "source-1",
+      "path": "input/source-1.png",
+      "sha256": "c3392f6623804141ada8a9f49e200d868579e6f4109ca6e475b17eba8d4d0fe6",
+      "width": 1024,
+      "height": 1536,
+      "pixelFormat": "RGBA8",
+      "colorSpace": "sRGB"
+    },
+    {
+      "colorSpace": "sRGB",
+      "path": "images/base.png",
+      "assetId": "skin-base",
+      "sha256": "74f109cda0137f1ee6acfd3e957c86ab52dfb4c657a9467b1982ed09a3614432",
+      "height": 1536,
+      "pixelFormat": "RGBA8",
+      "width": 1024
+    }
+  ],
+  "operations": [
+    {
+      "opacity": 255,
+      "visible": false,
+      "op": "set_attributes",
+      "layerId": "{B64F4650-9504-4288-92F6-F6A267C1C199}"
+    },
+    {
+      "name": "元画像（比較用）",
+      "op": "rename_layer",
+      "layerId": "{B64F4650-9504-4288-92F6-F6A267C1C199}"
+    },
+    {
+      "op": "add_group",
+      "opacity": 255,
+      "layerId": "{6d97eaf3-c741-42e6-830b-10dc565477d4}",
+      "parentId": "",
+      "visible": true,
+      "beforeLayerId": "{B64F4650-9504-4288-92F6-F6A267C1C199}",
+      "name": "矩形分離（元画素・拡縮なし）"
+    },
+    {
+      "opacity": 255,
+      "name": "目（両目・元画素）",
+      "bounds": {
+        "left": 439,
+        "right": 572,
+        "top": 153,
+        "bottom": 199
+      },
+      "layerId": "{2796ecb4-000c-445a-bd87-4dd0b6d2ba4b}",
+      "op": "add_layer",
+      "assetId": "source-1",
+      "sourceBounds": {
+        "left": 439,
+        "right": 572,
+        "top": 153,
+        "bottom": 199
+      },
+      "beforeLayerId": "",
+      "parentId": "{6d97eaf3-c741-42e6-830b-10dc565477d4}",
+      "visible": true
+    },
+    {
+      "opacity": 255,
+      "name": "眉（両眉・元画素）",
+      "bounds": {
+        "left": 449,
+        "right": 558,
+        "top": 134,
+        "bottom": 153
+      },
+      "layerId": "{09d38900-987c-4b50-9415-4ae9fe21fd50}",
+      "op": "add_layer",
+      "assetId": "source-1",
+      "sourceBounds": {
+        "left": 449,
+        "right": 558,
+        "top": 134,
+        "bottom": 153
+      },
+      "beforeLayerId": "",
+      "parentId": "{6d97eaf3-c741-42e6-830b-10dc565477d4}",
+      "visible": true
+    },
+    {
+      "opacity": 255,
+      "name": "口（元画素）",
+      "bounds": {
+        "left": 495,
+        "right": 540,
+        "top": 215,
+        "bottom": 232
+      },
+      "layerId": "{1d6edc9f-3f6e-4df1-a72d-6f4742b011f6}",
+      "op": "add_layer",
+      "assetId": "source-1",
+      "sourceBounds": {
+        "left": 495,
+        "right": 540,
+        "top": 215,
+        "bottom": 232
+      },
+      "beforeLayerId": "",
+      "parentId": "{6d97eaf3-c741-42e6-830b-10dc565477d4}",
+      "visible": true
+    },
+    {
+      "opacity": 255,
+      "name": "ベース（目・眉・口消去済み）",
+      "bounds": {
+        "left": 0,
+        "right": 1024,
+        "top": 0,
+        "bottom": 1536
+      },
+      "layerId": "{bbf8035c-791f-4924-afad-251b12fef2cc}",
+      "op": "add_layer",
+      "assetId": "skin-base",
+      "beforeLayerId": "",
+      "parentId": "{6d97eaf3-c741-42e6-830b-10dc565477d4}",
+      "visible": true
+    }
+  ]
+}

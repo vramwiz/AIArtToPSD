@@ -20,6 +20,7 @@ uses
   ArtLayerName in 'Source\Core\ArtLayerName.pas',
   ArtLayerList in 'Source\Shell\ArtLayerList.pas',
   ArtDocument in 'Source\Core\ArtDocument.pas',
+  ArtRasterTransform in 'Source\Core\ArtRasterTransform.pas',
   ArtPng in 'Source\Persistence\PNG\ArtPng.pas',
   ArtPsd in 'Source\Persistence\PSD\ArtPsd.pas',
   AIArtToPSDMainForm in 'Source\Shell\AIArtToPSDMainForm.pas' {MainForm};

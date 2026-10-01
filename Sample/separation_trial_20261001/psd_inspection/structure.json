@@ -1,0 +1,304 @@
+{
+  "path": "Sample\\separation_trial_20261001\\front_hair_trial_v3.psd",
+  "relative_path": "front_hair_trial_v3.psd",
+  "size": 8519273,
+  "sha256": "b7aa73f87bb127b4389aed2c2da001ef1309dc9d1870b749ad7b82fafd0bbdba",
+  "status": "ok",
+  "warnings": [],
+  "header": {
+    "version": 1,
+    "channels": 4,
+    "width": 1024,
+    "height": 1536,
+    "depth": 8,
+    "color_mode": 3,
+    "reserved_zero": true
+  },
+  "sections": [
+    {
+      "kind": "color_mode",
+      "offset": 26,
+      "payload_start": 30,
+      "end": 30,
+      "length": 0
+    },
+    {
+      "kind": "resources",
+      "offset": 30,
+      "payload_start": 34,
+      "end": 34,
+      "length": 0
+    },
+    {
+      "kind": "layer_mask",
+      "offset": 34,
+      "payload_start": 38,
+      "end": 7242308,
+      "length": 7242270
+    }
+  ],
+  "layers": [
+    {
+      "index": 0,
+      "offset": 44,
+      "end": 162,
+      "rect": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "name": "元画像（比較用）",
+      "legacy_hex": "",
+      "section_type": 0,
+      "blend": "norm",
+      "opacity": 255,
+      "clipping": 0,
+      "flags": 2,
+      "visible": false,
+      "mask": {
+        "length": 0
+      },
+      "blending_ranges_length": 0,
+      "channels": [
+        {
+          "id": 0,
+          "length": 1197640,
+          "offset": 410,
+          "end": 1198050,
+          "compression": 1,
+          "row_lengths_sum": 1194566,
+          "validation": "rle-length-table-checked"
+        },
+        {
+          "id": 1,
+          "length": 1141253,
+          "offset": 1198050,
+          "end": 2339303,
+          "compression": 1,
+          "row_lengths_sum": 1138179,
+          "validation": "rle-length-table-checked"
+        },
+        {
+          "id": 2,
+          "length": 1096851,
+          "offset": 2339303,
+          "end": 3436154,
+          "compression": 1,
+          "row_lengths_sum": 1093777,
+          "validation": "rle-length-table-checked"
+        },
+        {
+          "id": -1,
+          "length": 125933,
+          "offset": 3436154,
+          "end": 3562087,
+          "compression": 1,
+          "row_lengths_sum": 122859,
+          "validation": "rle-length-table-checked"
+        }
+      ],
+      "tags": [
+        {
+          "offset": 114,
+          "signature": "8BIM",
+          "key": "luni",
+          "length": 20,
+          "name": "元画像（比較用）",
+          "end": 146
+        },
+        {
+          "offset": 146,
+          "signature": "8BIM",
+          "key": "lyid",
+          "length": 4,
+          "layer_id": 1,
+          "end": 162
+        }
+      ],
+      "depth": 0
+    },
+    {
+      "index": 1,
+      "offset": 162,
+      "end": 288,
+      "rect": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "name": "残り（未分離・補完なし）",
+      "legacy_hex": "",
+      "section_type": 0,
+      "blend": "norm",
+      "opacity": 255,
+      "clipping": 0,
+      "flags": 0,
+      "visible": true,
+      "mask": {
+        "length": 0
+      },
+      "blending_ranges_length": 0,
+      "channels": [
+        {
+          "id": 0,
+          "length": 1187051,
+          "offset": 3562087,
+          "end": 4749138,
+          "compression": 1,
+          "row_lengths_sum": 1183977,
+          "validation": "rle-length-table-checked"
+        },
+        {
+          "id": 1,
+          "length": 1130616,
+          "offset": 4749138,
+          "end": 5879754,
+          "compression": 1,
+          "row_lengths_sum": 1127542,
+          "validation": "rle-length-table-checked"
+        },
+        {
+          "id": 2,
+          "length": 1086252,
+          "offset": 5879754,
+          "end": 6966006,
+          "compression": 1,
+          "row_lengths_sum": 1083178,
+          "validation": "rle-length-table-checked"
+        },
+        {
+          "id": -1,
+          "length": 126444,
+          "offset": 6966006,
+          "end": 7092450,
+          "compression": 1,
+          "row_lengths_sum": 123370,
+          "validation": "rle-length-table-checked"
+        }
+      ],
+      "tags": [
+        {
+          "offset": 232,
+          "signature": "8BIM",
+          "key": "luni",
+          "length": 28,
+          "name": "残り（未分離・補完なし）",
+          "end": 272
+        },
+        {
+          "offset": 272,
+          "signature": "8BIM",
+          "key": "lyid",
+          "length": 4,
+          "layer_id": 2,
+          "end": 288
+        }
+      ],
+      "depth": 0
+    },
+    {
+      "index": 2,
+      "offset": 288,
+      "end": 410,
+      "rect": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "name": "前髪（可視部・試験）",
+      "legacy_hex": "",
+      "section_type": 0,
+      "blend": "norm",
+      "opacity": 255,
+      "clipping": 0,
+      "flags": 0,
+      "visible": true,
+      "mask": {
+        "length": 0
+      },
+      "blending_ranges_length": 0,
+      "channels": [
+        {
+          "id": 0,
+          "length": 40046,
+          "offset": 7092450,
+          "end": 7132496,
+          "compression": 1,
+          "row_lengths_sum": 36972,
+          "validation": "rle-length-table-checked"
+        },
+        {
+          "id": 1,
+          "length": 40060,
+          "offset": 7132496,
+          "end": 7172556,
+          "compression": 1,
+          "row_lengths_sum": 36986,
+          "validation": "rle-length-table-checked"
+        },
+        {
+          "id": 2,
+          "length": 40025,
+          "offset": 7172556,
+          "end": 7212581,
+          "compression": 1,
+          "row_lengths_sum": 36951,
+          "validation": "rle-length-table-checked"
+        },
+        {
+          "id": -1,
+          "length": 29722,
+          "offset": 7212581,
+          "end": 7242303,
+          "compression": 1,
+          "row_lengths_sum": 26648,
+          "validation": "rle-length-table-checked"
+        }
+      ],
+      "tags": [
+        {
+          "offset": 358,
+          "signature": "8BIM",
+          "key": "luni",
+          "length": 24,
+          "name": "前髪（可視部・試験）",
+          "end": 394
+        },
+        {
+          "offset": 394,
+          "signature": "8BIM",
+          "key": "lyid",
+          "length": 4,
+          "layer_id": 3,
+          "end": 410
+        }
+      ],
+      "depth": 0
+    }
+  ],
+  "resources": [],
+  "layer_info": {
+    "offset": 38,
+    "payload_start": 42,
+    "end": 7242304,
+    "length": 7242262,
+    "trailing_bytes": 1,
+    "trailing_zero": true
+  },
+  "signed_layer_count": -3,
+  "global_mask_length": 0,
+  "global_tags": [],
+  "merged": {
+    "offset": 7242308,
+    "end": 8519273,
+    "compression": 1,
+    "row_count": 6144,
+    "encoded_bytes": 1264675,
+    "payload_start": 7254598,
+    "expected_end": 8519273
+  },
+  "decode_selected": false
+}

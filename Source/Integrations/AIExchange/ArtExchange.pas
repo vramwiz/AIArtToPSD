@@ -1,7 +1,7 @@
 ﻿unit ArtExchange;
 
 interface
-uses System.SysUtils, System.Generics.Collections, ArtDocument;
+uses System.SysUtils, System.Generics.Collections, System.JSON, ArtDocument;
 type
   TArtExchangeJob = class
   public
@@ -9,6 +9,9 @@ type
     Revision: UInt64;
     State,MessageText,PromptText: string;
     Progress: Integer;
+    WorkspaceSize: Integer;
+    WorkspaceBounds: TArtBounds;
+    WorkspaceLayerId: string;
   end;
   TArtExchange = class
   private
@@ -25,15 +28,15 @@ type
     procedure CancelJob(const Id: string);
     function FindJob(const Id: string): TArtExchangeJob;
     procedure NotifyJob(Document: TArtDocument; const Id,State,MessageText: string; Progress: Integer);
-    function ExportJob(Document: TArtDocument; const Prompt,Root: string): string;
+    function ExportJob(Document: TArtDocument; const Prompt,Root: string; Workspace: TJSONObject = nil): string;
     function PrepareResult(Document: TArtDocument; const FileName: string;
       out Job: TArtExchangeJob; out Digest: string): TArtDocument;
     procedure CommitResult(Job: TArtExchangeJob; const Digest: string);
   end;
 
 implementation
-uses System.Classes, System.IOUtils, System.JSON, System.Hash, Winapi.Windows,
-  ArtPng, ArtPsd, ArtParts, ArtLayerName;
+uses System.Classes, System.IOUtils, System.Hash, Winapi.Windows,
+  ArtPng, ArtPsd, ArtParts, ArtLayerName, ArtRasterTransform;
 const MAX_JSON = 1048576; MAX_ASSETS = 128; MAX_OPERATIONS = 256;
   MAX_ASSET_BYTES = 134217728;
 
@@ -93,6 +96,23 @@ begin
   Result := TArtBounds.Create(Num(O,'left',-30000,30000),Num(O,'top',-30000,30000),
     Num(O,'right',-30000,60000),Num(O,'bottom',-30000,60000));
   PixelByteCount(Result.Width,Result.Height,4);
+end;
+procedure ReadWorkspace(Document: TArtDocument; O: TJSONObject; Job: TArtExchangeJob);
+var Layer: TArtLayer;
+begin
+  Job.WorkspaceSize := Num(O,'size',1,4096);
+  Job.WorkspaceBounds := ReadBounds(Obj(Field(O,'bounds')));
+  if (Job.WorkspaceBounds.Width<1) or (Job.WorkspaceBounds.Width<>Job.WorkspaceBounds.Height) or
+    (Job.WorkspaceBounds.Left<0) or (Job.WorkspaceBounds.Top<0) or
+    (Job.WorkspaceBounds.Right>Document.Width) or (Job.WorkspaceBounds.Bottom>Document.Height) then
+    raise EArtFormat.Create('Workspace must be a square inside the document');
+  PixelByteCount(Job.WorkspaceSize,Job.WorkspaceSize,4);
+  Job.WorkspaceLayerId := Str(O,'sourceLayerId');
+  if Job.WorkspaceLayerId<>'' then begin
+    Layer := Document.FindLayer(Job.WorkspaceLayerId);
+    if (Layer=nil) or (Layer.Kind<>alkImage) then raise EArtFormat.Create('Workspace source layer not found');
+    if Layer.HasMask or (Layer.Clipping<>0) then raise EArtFormat.Create('Masked workspace source is not supported');
+  end;
 end;
 procedure RejectLinks(const Path: string);
 var Current,Parent: string; Attributes: Cardinal;
@@ -229,6 +249,7 @@ begin
     Result.SessionId := Str(Request,'documentId'); if Result.SessionId='' then raise EArtFormat.Create('Recovery document ID');
     Result.Revision := Version; RenderPsdLayers(Result);
     Job := TArtExchangeJob.Create; Job.Id := Str(Request,'jobId'); Job.Directory := Base;
+    if Request.GetValue('workspace')<>nil then ReadWorkspace(Result,Obj(Field(Request,'workspace')),Job);
     if Job.Id<>ExtractFileName(Base) then raise EArtFormat.Create('Recovery directory ID mismatch');
     Job.PromptText := Str(Request,'prompt'); Job.DocumentId := Result.SessionId; Job.Revision := Result.Revision; Job.State := 'queued';
     if FileExists(TPath.Combine(Base,'result.json')) then Job.State := 'ready';
@@ -261,10 +282,11 @@ begin
   if State='cancelled' then begin CancelJob(Id); Exit; end;
   Job.State := State; Job.Progress := Progress; Job.MessageText := MessageText;
 end;
-function TArtExchange.ExportJob(Document: TArtDocument; const Prompt,Root: string): string;
+function TArtExchange.ExportJob(Document: TArtDocument; const Prompt,Root: string; Workspace: TJSONObject): string;
 var Job: TArtExchangeJob; Request,Canvas,LayerJson,Asset,Recovery: TJSONObject;
     Layers,Assets,Supported: TJSONArray; ImageDirectory,ImagePath,SelectedId: string;
     Pixels: TBytes; Counter: Integer; Ready: Boolean;
+    WorkspacePixels: TBytes; WorkspaceLayer: TArtLayer; SourceRect: TArtBounds;
   procedure ExportLayers(List: TList<TArtLayer>; const ParentId: string; Depth: Integer);
   var L: TArtLayer; Parts: TArtLayerNameParts;
   begin
@@ -299,6 +321,7 @@ begin
   Pixels := RenderPsdLayers(Document);
   Job := TArtExchangeJob.Create; Request := TJSONObject.Create; Ready := False;
   try
+    if Workspace<>nil then ReadWorkspace(Document,Workspace,Job);
     Job.State := 'queued'; Job.Progress := 0; Job.PromptText := Prompt;
     Job.Id := NewId; Job.DocumentId := Document.SessionId; Job.Revision := Document.Revision;
     Job.Directory := TPath.GetFullPath(TPath.Combine(Root,Job.Id)); RejectLinks(Job.Directory);
@@ -313,6 +336,28 @@ begin
     for var Operation in ['add_group','add_layer','replace_layer','rename_layer','set_attributes','select_part'] do Supported.Add(Operation);
     Layers := TJSONArray.Create; Request.AddPair('layers',Layers); Assets := TJSONArray.Create; Request.AddPair('assets',Assets);
     Counter := 0; ExportLayers(Document.Roots,'',0);
+    if Workspace<>nil then begin
+      SourceRect := Job.WorkspaceBounds;
+      if Job.WorkspaceLayerId='' then
+        WorkspacePixels := ResampleRgba(Pixels,Document.Width,Document.Height,SourceRect,Job.WorkspaceSize,Job.WorkspaceSize)
+      else begin
+        WorkspaceLayer := Document.FindLayer(Job.WorkspaceLayerId);
+        Dec(SourceRect.Left,WorkspaceLayer.Bounds.Left); Dec(SourceRect.Right,WorkspaceLayer.Bounds.Left);
+        Dec(SourceRect.Top,WorkspaceLayer.Bounds.Top); Dec(SourceRect.Bottom,WorkspaceLayer.Bounds.Top);
+        WorkspacePixels := ResampleRgba(WorkspaceLayer.Pixels,WorkspaceLayer.Bounds.Width,WorkspaceLayer.Bounds.Height,
+          SourceRect,Job.WorkspaceSize,Job.WorkspaceSize);
+      end;
+      ImagePath := TPath.Combine(ImageDirectory,'workspace-source.png');
+      WriteRgbaPng(ImagePath,Job.WorkspaceSize,Job.WorkspaceSize,WorkspacePixels);
+      Canvas := TJSONObject.Create; Request.AddPair('workspace',Canvas);
+      Canvas.AddPair('sourceLayerId',Job.WorkspaceLayerId); Canvas.AddPair('assetId','workspace-source');
+      AddNum(Canvas,'size',Job.WorkspaceSize); Canvas.AddPair('bounds',BoundsJson(Job.WorkspaceBounds));
+      Canvas.AddPair('mapping','canvas = bounds.origin + workspace * bounds.width / size');
+      Asset := TJSONObject.Create; Assets.AddElement(Asset); Asset.AddPair('assetId','workspace-source');
+      Asset.AddPair('path','input/workspace-source.png'); Asset.AddPair('sha256',FileHash(ImagePath));
+      AddNum(Asset,'width',Job.WorkspaceSize); AddNum(Asset,'height',Job.WorkspaceSize);
+      Asset.AddPair('pixelFormat','RGBA8'); Asset.AddPair('colorSpace','sRGB');
+    end;
     WriteRgbaPng(TPath.Combine(Job.Directory,'preview.png'),Document.Width,Document.Height,Pixels);
     if Length(TEncoding.UTF8.GetBytes(Request.ToJSON))>MAX_JSON then raise EArtFormat.Create('Request metadata exceeds recovery limit');
     TFile.WriteAllText(TPath.Combine(Job.Directory,'request.json.tmp'),Request.ToJSON,TEncoding.UTF8);
@@ -322,6 +367,11 @@ begin
       'result.json must contain assets and operations arrays. Each asset needs assetId, relative path, SHA-256, width, height, pixelFormat=RGBA8, colorSpace=sRGB. '+
       'Supported operations: add_group (layerId,name,parentId,beforeLayerId,visible,opacity); add_layer (same + assetId,bounds); '+
       'replace_layer (layerId,assetId,bounds); rename_layer (layerId,name); set_attributes (layerId,visible,opacity); select_part (layerId). '+
+      'add_layer/replace_layer optionally accept resample=true, sourceBounds (rectangle in the original asset), trimTransparent=true. '+
+      'Always supply the unchanged original generated asset when readjusting; never repeatedly resize a previously reduced PNG. '+
+      'If request.workspace exists, edit its workspace-source PNG at the issued square size. '+
+      'Set coordinateSpace=workspace on image operations; their bounds use that square, and the app maps them back to the canvas. '+
+      'Keep paired eyes in one layer. Do not recenter any generated part or change the shared square framing. '+
       'Use empty parentId/beforeLayerId for root/append. Finish all PNGs first, write result.json.tmp then rename to result.json. '+
       'Read connection.json for the current pipeName (read it again after reconnect/restart). If pipeName is present, send message-mode UTF-8 JSON commands: schemaVersion=1, requestId, command, args. '+
       'Commands: status (args {} or jobId); progress (jobId,state=running/ready/failed,progress=0..100,message); import (jobId); cancel (jobId). '+
@@ -364,17 +414,51 @@ var Stream: TFileStream; Bytes: TBytes; Value: TJSONValue; Manifest,A,O,B: TJSON
   function ImageFor(const Id: string): TArtPngData;
   begin if not Data.TryGetValue(Id,Result) then raise EArtFormat.Create('Unknown assetId: '+Id); end;
   procedure SetImage(Layer: TArtLayer; const Img: TArtPngData; const R: TArtBounds);
-  var DX,DY: Integer;
+  var DX,DY: Integer; SourceRect,DestRect,TrimRect: TArtBounds;
+      Resize,Trim,IsWorkspace: Boolean; NewPixels: TBytes;
   begin
-    if (Layer.Kind<>alkImage) or (R.Width<>Img.Width) or (R.Height<>Img.Height) then raise EArtFormat.Create('Image bounds do not match PNG');
-    DX := R.Left-Layer.Bounds.Left; DY := R.Top-Layer.Bounds.Top;
+    if Layer.Kind<>alkImage then raise EArtFormat.Create('Image layer required');
+    SourceRect := TArtBounds.Create(0,0,Img.Width,Img.Height);
+    if O.GetValue('sourceBounds')<>nil then SourceRect := ReadBounds(Obj(Field(O,'sourceBounds')));
+    if (SourceRect.Width<1) or (SourceRect.Height<1) or (SourceRect.Left<0) or (SourceRect.Top<0) or
+      (SourceRect.Right>Img.Width) or (SourceRect.Bottom>Img.Height) then raise EArtFormat.Create('Source bounds outside PNG');
+    Resize := False; Trim := False; IsWorkspace := False;
+    if O.GetValue('resample')<>nil then Resize := Bool(O,'resample');
+    if O.GetValue('trimTransparent')<>nil then Trim := Bool(O,'trimTransparent');
+    if O.GetValue('coordinateSpace')<>nil then begin
+      if Str(O,'coordinateSpace')='workspace' then IsWorkspace := True
+      else if Str(O,'coordinateSpace')<>'canvas' then raise EArtFormat.Create('Unknown coordinate space');
+    end;
+    if not Resize and ((R.Width<>SourceRect.Width) or (R.Height<>SourceRect.Height)) then
+      raise EArtFormat.Create('Image bounds do not match PNG; resample=true required');
+    DestRect := R;
+    if IsWorkspace then begin
+      if Job.WorkspaceSize=0 then raise EArtFormat.Create('No square workspace was issued');
+      DestRect := MapSquareBounds(R,Job.WorkspaceBounds,Job.WorkspaceSize); Resize := True;
+    end;
+    if (DestRect.Width<1) or (DestRect.Height<1) then raise EArtFormat.Create('Empty destination bounds');
+    if Layer.HasMask and (Resize or Trim or (O.GetValue('sourceBounds')<>nil)) then
+      raise EArtFormat.Create('Resize/crop of masked layers is not supported');
+    Inc(Total,PixelByteCount(DestRect.Width,DestRect.Height,4));
+    if Total>MAX_ASSET_BYTES then raise EArtFormat.Create('AI transformed image memory limit');
+    if Resize or (O.GetValue('sourceBounds')<>nil) then
+      NewPixels := ResampleRgba(Img.Pixels,Img.Width,Img.Height,SourceRect,DestRect.Width,DestRect.Height)
+    else NewPixels := Img.Pixels;
+    if Trim then begin
+      TrimRect := AlphaBounds(NewPixels,DestRect.Width,DestRect.Height);
+      if TrimRect.Width=0 then raise EArtFormat.Create('Cannot trim an empty image');
+      NewPixels := ResampleRgba(NewPixels,DestRect.Width,DestRect.Height,TrimRect,TrimRect.Width,TrimRect.Height);
+      DestRect := TArtBounds.Create(DestRect.Left+TrimRect.Left,DestRect.Top+TrimRect.Top,
+        DestRect.Left+TrimRect.Right,DestRect.Top+TrimRect.Bottom);
+    end;
+    DX := DestRect.Left-Layer.Bounds.Left; DY := DestRect.Top-Layer.Bounds.Top;
     if Layer.HasMask then begin
       Inc(Layer.MaskBounds.Left,DX); Inc(Layer.MaskBounds.Right,DX); Inc(Layer.MaskBounds.Top,DY); Inc(Layer.MaskBounds.Bottom,DY);
     end;
-    Layer.Pixels := Img.Pixels; Layer.Bounds := R;
+    Layer.Pixels := NewPixels; Layer.Bounds := DestRect;
   end;
 begin
-  Result := nil; Job := nil; Digest := ''; Current := nil; Value := nil;
+  Job := nil; Digest := ''; Current := nil; Value := nil;
   if Document=nil then raise EArtFormat.Create('文書を開いてください。');
   RejectLinks(FileName);
   Stream := TFileStream.Create(FileName,fmOpenRead or fmShareDenyWrite);

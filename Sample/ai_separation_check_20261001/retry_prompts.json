@@ -1,0 +1,7 @@
+{
+  "date": "2026-10-01",
+  "tool": "built-in image_gen",
+  "transparent_background": true,
+  "input": "base_generated.png",
+  "base_no_glow_v2": "Edit target: supplied 1024x1536 PNG of a full-body anime woman with a blank skin-filled face. Correct ONLY its unwanted surrounding glow/background and transparency. This is a technical PSD base layer cleanup, not a new illustration. KEEP the character exactly at her current position, scale, proportions, pose and full-body framing on the SAME 1024x1536 canvas. Preserve all character pixels and details as closely as possible: blue-gray hair and fine strands, blank face with nose but NO eyes/eyebrows/mouth, skin, white blouse, teal skirt, hands, legs and brown boots. The diffuse light clouds around the hair, arms, skirt and legs are UNWANTED BACKGROUND, NOT part of the character: completely REMOVE them, along with every black/dark background pixel, haze, halo, drop shadow, ambient glow and studio spotlight. Output only the solid character silhouette on real transparent alpha=0 empty space, including gaps between arms and torso, between legs, and between fine hair strands. Character interior must remain opaque (alpha=255); only narrow silhouette antialiasing may use partial alpha. No wide semitransparent aura, no gray translucent sheet, no faint residual background anywhere. Do not paint a checkerboard. Keep facial skin fully filled, with no transparent eye or mouth holes. Do not redraw, recenter, zoom, crop, change clothing or facial silhouette. Return a single RGBA PNG with actual clean transparency."
+}

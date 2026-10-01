@@ -29,3 +29,10 @@ Win64/
 /Exchange/
 
 /Tests/ViewerSmoke.res
+
+/Tools/BuildVisiblePartPsd.res
+/Tools/PrepareExchangeJob.res
+/Tests/VisibilitySmoke.res
+/Tests/output/visibility*/
+/Tests/TransformSmoke.res
+/Tests/output/transform*/

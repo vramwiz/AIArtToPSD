@@ -1,0 +1,46 @@
+{
+  "source": "D:\\DelphiProg\\test\\AIArtToPSD\\Sample\\character_neutral.png",
+  "source_sha256": "58ece460e16d10beba67aa0b239c6e7075200c73dd6afdac6135f6c9bb1fff07",
+  "canvas": [
+    1024,
+    1536
+  ],
+  "method": "reviewed polygon + cool-color boundary rule + traced warm hair tips + source pixel ownership",
+  "automatic_semantic_segmentation": false,
+  "hidden_part_completion": false,
+  "selected_pixels": 11632,
+  "part_bounds": [
+    419,
+    58,
+    578,
+    209
+  ],
+  "alpha_max_difference": 0,
+  "visible_rgb_max_difference": 0,
+  "visible_rgba_changed_pixels": 0,
+  "overlapping_visible_pixels": 0,
+  "source_unchanged": true,
+  "limitations": [
+    "Source-specific hand-reviewed mask",
+    "Boundary still requires visual review",
+    "Remainder includes original background glow",
+    "Hair removal leaves transparent holes; no hidden forehead generated",
+    "Exact recomposition alone does not prove semantic correctness",
+    "Warm hair-tip pixels mix skin color; boundaries remain a reviewed approximation"
+  ],
+  "psd_structure_status": "ok",
+  "psd_structure_warnings": [],
+  "psd_layer_count": 3,
+  "native_checks": {
+    "debug_v3": {
+      "visible_rgba_max_difference": 0,
+      "alpha_max_difference": 0,
+      "isolated_part_visible_rgba_max_difference": 0
+    },
+    "v3": {
+      "visible_rgba_max_difference": 0,
+      "alpha_max_difference": 0,
+      "isolated_part_visible_rgba_max_difference": 0
+    }
+  }
+}

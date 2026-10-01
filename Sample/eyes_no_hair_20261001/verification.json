@@ -1,0 +1,18 @@
+﻿{
+    "retainedSourcePixels":  2341,
+    "transparentPixels":  3777,
+    "unchangedImageLayers":  [
+                                 "眉（両眉・元画素）",
+                                 "口（元画素）",
+                                 "ベース（目・眉・口消去済み）",
+                                 "元画像（比較用）"
+                             ],
+    "bounds":  {
+                   "left":  439,
+                   "right":  572,
+                   "bottom":  199,
+                   "top":  153
+               },
+    "allLayerMetadataUnchanged":  true,
+    "changedRetainedPixels":  0
+}

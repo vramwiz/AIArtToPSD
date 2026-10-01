@@ -1,0 +1,38 @@
+﻿[
+    {
+        "width":  133,
+        "changedPixels":  0,
+        "name":  "目（両目・元画素）",
+        "bounds":  {
+                       "left":  439,
+                       "top":  153,
+                       "right":  572,
+                       "bottom":  199
+                   },
+        "height":  46
+    },
+    {
+        "width":  109,
+        "changedPixels":  0,
+        "name":  "眉（両眉・元画素）",
+        "bounds":  {
+                       "left":  449,
+                       "top":  134,
+                       "right":  558,
+                       "bottom":  153
+                   },
+        "height":  19
+    },
+    {
+        "width":  45,
+        "changedPixels":  0,
+        "name":  "口（元画素）",
+        "bounds":  {
+                       "left":  495,
+                       "top":  215,
+                       "right":  540,
+                       "bottom":  232
+                   },
+        "height":  17
+    }
+]

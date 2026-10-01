@@ -20,7 +20,7 @@ type
     FEditor: TEdit;
     FEditing: TArtLayer;
     FOriginalName: string;
-    FEditEnabled, FFinishing: Boolean;
+    FEditEnabled, FVisibilityEnabled, FFinishing: Boolean;
     FOnSelect: TNotifyEvent;
     FOnRename: TArtLayerRenameEvent;
     FPopup: TPopupMenu;
@@ -61,6 +61,7 @@ type
     function LayerAt(Index: Integer): TArtLayer;
     property Selected: TArtLayer read FSelected write SetSelected;
     property EditEnabled: Boolean read FEditEnabled write SetEditEnabled;
+    property VisibilityEnabled: Boolean read FVisibilityEnabled write FVisibilityEnabled;
     property OnAttributes: TArtLayerAttributesEvent read FOnAttributes write FOnAttributes;
     function SliderAt(Index: Integer): THorizontalTrackBarControl;
     property NameEditor: TEdit read FEditor;
@@ -186,7 +187,7 @@ begin
   if ((Y+FScroll.Position-LIST_PADDING) mod (ROW_HEIGHT+GAP)>=ROW_HEIGHT) then Exit;
   L := FLayers[Index]; Selected := L;
   if (Button=mbLeft) and (X>=LIST_PADDING) and (X<LIST_PADDING+26) then begin
-    if FEditEnabled and Assigned(FOnAttributes) then
+    if (FEditEnabled or FVisibilityEnabled) and Assigned(FOnAttributes) then
       try FOnAttributes(Self,L,not L.Visible,L.Opacity);
       except on E: Exception do MessageDlg(E.Message,mtError,[mbOK],0); end;
     SyncSliders; Invalidate; Exit;

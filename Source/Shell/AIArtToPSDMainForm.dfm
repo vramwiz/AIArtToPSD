@@ -1,7 +1,7 @@
-﻿object MainForm: TMainForm
+object MainForm: TMainForm
   Left = 0
   Top = 0
-  Caption = 'AI立ち絵メーカー'
+  Caption = 'AI'#31435#12385#32117#12513#12540#12459#12540
   ClientHeight = 600
   ClientWidth = 960
   Color = clBtnFace

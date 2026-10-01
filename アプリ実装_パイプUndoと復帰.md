@@ -39,7 +39,7 @@ AI状態欄は生成待ち・生成中・取込待ち・失敗・中止・取込
 | command | args | 動作 |
 | --- | --- | --- |
 | status | {}、またはjobId | 文書ID／版、編集・未保存・Undo状態、ジョブ状態・進捗・staleを取得 |
-| export | prompt | ジョブを作成し、jobId・directoryを返す |
+| export | prompt、任意のworkspace | ジョブを作成し、jobId・directoryを返す |
 | progress | jobId、state、progress、message | running／ready／failedを通知。progressは0～100、messageは1,000文字以内 |
 | import | jobId | 発行済みジョブのresult.jsonを検証・取込。完了後に成功応答 |
 | cancel | jobId | 結果取込を中止 |
@@ -59,6 +59,8 @@ $arguments = @{ jobId = $connection.jobId } | ConvertTo-Json -Compress
 ```
 
 クラウドAPIは呼び出さない。生成用PNGと結果JSONの形式は[工程13](アプリ実装_AI画像指示交換.md)を参照。
+
+2026-10-01追加：export.workspaceに元絵内の正方形bounds・size・sourceLayerIdを指定すると、共通の作業画像を書き出す。要求に記録した座標系は復帰時にも復元する。取込の拡縮・透明余白除去はresult.jsonの既存画像操作の任意項目で指定し、新しいパイプ命令や手動編集UIは追加しない。実装詳細・JSON例は上記工程13文書を参照。
 
 ## 検証
 

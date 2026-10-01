@@ -1,0 +1,181 @@
+{
+  "schemaVersion": 1,
+  "requestId": "{5498490C-6266-4116-B99B-6CABBA007D3D}",
+  "jobId": "{5498490C-6266-4116-B99B-6CABBA007D3D}",
+  "documentId": "{00F5A9A8-D17E-4CEB-8106-DBD130272701}",
+  "ifRevision": "0",
+  "assets": [
+    {
+      "assetId": "eye_left",
+      "path": "images/eye_left.png",
+      "sha256": "0f11b468cf6a88d695e2f39c46c2727110e3df7440453c675060de87b67852bd",
+      "width": 1024,
+      "height": 1536,
+      "pixelFormat": "RGBA8",
+      "colorSpace": "sRGB"
+    },
+    {
+      "assetId": "eye_right",
+      "path": "images/eye_right.png",
+      "sha256": "df17df8530c272f05a064dc5e302b8b6e099ccc8e751884f66f8b8957449ea64",
+      "width": 1024,
+      "height": 1536,
+      "pixelFormat": "RGBA8",
+      "colorSpace": "sRGB"
+    },
+    {
+      "assetId": "brow_left",
+      "path": "images/brow_left.png",
+      "sha256": "2b2df73d879c2991f876f5b013a3df80a13c1280effa66bc09f7b35c34245ce9",
+      "width": 1024,
+      "height": 1536,
+      "pixelFormat": "RGBA8",
+      "colorSpace": "sRGB"
+    },
+    {
+      "assetId": "brow_right",
+      "path": "images/brow_right.png",
+      "sha256": "c7767a9d200f3c9444aa72e31ab32aa083014b1854c58985bbf3ea7491cefc0a",
+      "width": 1024,
+      "height": 1536,
+      "pixelFormat": "RGBA8",
+      "colorSpace": "sRGB"
+    },
+    {
+      "assetId": "mouth",
+      "path": "images/mouth.png",
+      "sha256": "177e91d1baf928d1fcfb9bae4c2530c084b61de189c64ed1e0f8c7b0a0552f18",
+      "width": 1024,
+      "height": 1536,
+      "pixelFormat": "RGBA8",
+      "colorSpace": "sRGB"
+    },
+    {
+      "assetId": "remainder",
+      "path": "images/remainder.png",
+      "sha256": "8debbeaaa73d7e8822493ff174468c66dc5b3746c111c7ce95c85136252c79dd",
+      "width": 1024,
+      "height": 1536,
+      "pixelFormat": "RGBA8",
+      "colorSpace": "sRGB"
+    }
+  ],
+  "operations": [
+    {
+      "op": "set_attributes",
+      "layerId": "{C6DF715A-C69E-489E-9BB6-DF1225FAE1E3}",
+      "visible": false,
+      "opacity": 255
+    },
+    {
+      "op": "rename_layer",
+      "layerId": "{C6DF715A-C69E-489E-9BB6-DF1225FAE1E3}",
+      "name": "元画像（比較用）"
+    },
+    {
+      "op": "add_group",
+      "layerId": "face-parts",
+      "name": "顔パーツ（分離試験）",
+      "parentId": "",
+      "beforeLayerId": "{C6DF715A-C69E-489E-9BB6-DF1225FAE1E3}",
+      "visible": true,
+      "opacity": 255
+    },
+    {
+      "op": "add_layer",
+      "layerId": "eye_left",
+      "name": "目（画面左）",
+      "parentId": "face-parts",
+      "beforeLayerId": "",
+      "visible": true,
+      "opacity": 255,
+      "assetId": "eye_left",
+      "bounds": {
+        "left": 0,
+        "top": 0,
+        "right": 1024,
+        "bottom": 1536
+      }
+    },
+    {
+      "op": "add_layer",
+      "layerId": "eye_right",
+      "name": "目（画面右）",
+      "parentId": "face-parts",
+      "beforeLayerId": "",
+      "visible": true,
+      "opacity": 255,
+      "assetId": "eye_right",
+      "bounds": {
+        "left": 0,
+        "top": 0,
+        "right": 1024,
+        "bottom": 1536
+      }
+    },
+    {
+      "op": "add_layer",
+      "layerId": "brow_left",
+      "name": "眉（画面左・可視部のみ）",
+      "parentId": "face-parts",
+      "beforeLayerId": "",
+      "visible": true,
+      "opacity": 255,
+      "assetId": "brow_left",
+      "bounds": {
+        "left": 0,
+        "top": 0,
+        "right": 1024,
+        "bottom": 1536
+      }
+    },
+    {
+      "op": "add_layer",
+      "layerId": "brow_right",
+      "name": "眉（画面右・可視部のみ）",
+      "parentId": "face-parts",
+      "beforeLayerId": "",
+      "visible": true,
+      "opacity": 255,
+      "assetId": "brow_right",
+      "bounds": {
+        "left": 0,
+        "top": 0,
+        "right": 1024,
+        "bottom": 1536
+      }
+    },
+    {
+      "op": "add_layer",
+      "layerId": "mouth",
+      "name": "口",
+      "parentId": "face-parts",
+      "beforeLayerId": "",
+      "visible": true,
+      "opacity": 255,
+      "assetId": "mouth",
+      "bounds": {
+        "left": 0,
+        "top": 0,
+        "right": 1024,
+        "bottom": 1536
+      }
+    },
+    {
+      "op": "add_layer",
+      "layerId": "remainder",
+      "name": "残り（顔パーツ以外・補完なし）",
+      "parentId": "",
+      "beforeLayerId": "{C6DF715A-C69E-489E-9BB6-DF1225FAE1E3}",
+      "visible": true,
+      "opacity": 255,
+      "assetId": "remainder",
+      "bounds": {
+        "left": 0,
+        "top": 0,
+        "right": 1024,
+        "bottom": 1536
+      }
+    }
+  ]
+}

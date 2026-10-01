@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "data": {
+    "pipeName": "AIArtToPSD.3628.{FB1C412F-2AA1-4D14-ACB7-7FD47158B5E3}",
+    "busy": false,
+    "canUndo": true,
+    "canRedo": false,
+    "modified": true,
+    "canEdit": true,
+    "documentId": "{06030FAE-4FA3-43DD-84CC-347B7914B278}",
+    "revision": "1",
+    "job": {
+      "jobId": "{19CB3FC9-5E2B-4770-A238-4A09D230E183}",
+      "directory": "D:\\DelphiProg\\test\\AIArtToPSD\\Exchange\\{19CB3FC9-5E2B-4770-A238-4A09D230E183}",
+      "state": "completed",
+      "progress": 100,
+      "message": "",
+      "documentId": "{06030FAE-4FA3-43DD-84CC-347B7914B278}",
+      "ifRevision": "0",
+      "stale": false
+    }
+  },
+  "requestId": "226c017c-ed4d-4c68-aba4-531a05de7841"
+}

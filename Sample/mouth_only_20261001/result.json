@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "requestId": "{E8D802D4-DB0A-4F89-8D84-6DB18A828125}",
+  "jobId": "{E8D802D4-DB0A-4F89-8D84-6DB18A828125}",
+  "documentId": "{9E57C0EE-3D74-4C04-94AD-B7BEE973F399}",
+  "ifRevision": "4",
+  "assets": [
+    {
+      "colorSpace": "sRGB",
+      "height": 17,
+      "assetId": "mouth-only",
+      "pixelFormat": "RGBA8",
+      "path": "images/mouth_only.png",
+      "width": 45,
+      "sha256": "aa8c9f2badf9b36aa69c5333a4d1a8124ba5d8b6688422bc79a9c791038b75e3"
+    }
+  ],
+  "operations": [
+    {
+      "bounds": {
+        "left": 495,
+        "top": 215,
+        "right": 540,
+        "bottom": 232
+      },
+      "layerId": "{1d6edc9f-3f6e-4df1-a72d-6f4742b011f6}",
+      "assetId": "mouth-only",
+      "op": "replace_layer"
+    }
+  ]
+}

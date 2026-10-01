@@ -1,0 +1,347 @@
+{
+  "canvas": [
+    1024,
+    1536
+  ],
+  "parts": [
+    {
+      "id": "eye_left",
+      "name": "目（画面左）",
+      "pixels": 1278,
+      "polygon": [
+        [
+          446,
+          170
+        ],
+        [
+          453,
+          165
+        ],
+        [
+          465,
+          163
+        ],
+        [
+          475,
+          163
+        ],
+        [
+          484,
+          166
+        ],
+        [
+          493,
+          171
+        ],
+        [
+          497,
+          177
+        ],
+        [
+          496,
+          184
+        ],
+        [
+          491,
+          190
+        ],
+        [
+          482,
+          194
+        ],
+        [
+          471,
+          193
+        ],
+        [
+          462,
+          191
+        ],
+        [
+          453,
+          186
+        ],
+        [
+          446,
+          182
+        ],
+        [
+          442,
+          178
+        ]
+      ]
+    },
+    {
+      "id": "eye_right",
+      "name": "目（画面右）",
+      "pixels": 1134,
+      "polygon": [
+        [
+          524,
+          162
+        ],
+        [
+          531,
+          157
+        ],
+        [
+          539,
+          155
+        ],
+        [
+          546,
+          154
+        ],
+        [
+          549,
+          153
+        ],
+        [
+          549,
+          157
+        ],
+        [
+          553,
+          155
+        ],
+        [
+          555,
+          158
+        ],
+        [
+          560,
+          157
+        ],
+        [
+          563,
+          161
+        ],
+        [
+          568,
+          163
+        ],
+        [
+          568,
+          170
+        ],
+        [
+          565,
+          175
+        ],
+        [
+          561,
+          180
+        ],
+        [
+          553,
+          185
+        ],
+        [
+          544,
+          187
+        ],
+        [
+          535,
+          185
+        ],
+        [
+          530,
+          181
+        ],
+        [
+          526,
+          176
+        ],
+        [
+          523,
+          169
+        ]
+      ]
+    },
+    {
+      "id": "brow_left",
+      "name": "眉（画面左・可視部のみ）",
+      "pixels": 37,
+      "polygon": [
+        [
+          452,
+          147
+        ],
+        [
+          460,
+          144
+        ],
+        [
+          470,
+          144
+        ],
+        [
+          479,
+          146
+        ],
+        [
+          483,
+          149
+        ],
+        [
+          481,
+          151
+        ],
+        [
+          470,
+          149
+        ],
+        [
+          460,
+          149
+        ],
+        [
+          452,
+          150
+        ]
+      ]
+    },
+    {
+      "id": "brow_right",
+      "name": "眉（画面右・可視部のみ）",
+      "pixels": 85,
+      "polygon": [
+        [
+          517,
+          144
+        ],
+        [
+          522,
+          140
+        ],
+        [
+          530,
+          138
+        ],
+        [
+          539,
+          137
+        ],
+        [
+          550,
+          138
+        ],
+        [
+          554,
+          141
+        ],
+        [
+          550,
+          143
+        ],
+        [
+          538,
+          141
+        ],
+        [
+          529,
+          142
+        ],
+        [
+          522,
+          145
+        ],
+        [
+          517,
+          147
+        ]
+      ]
+    },
+    {
+      "id": "mouth",
+      "name": "口",
+      "pixels": 248,
+      "polygon": [
+        [
+          498,
+          220
+        ],
+        [
+          502,
+          221
+        ],
+        [
+          510,
+          222
+        ],
+        [
+          519,
+          222
+        ],
+        [
+          525,
+          220
+        ],
+        [
+          532,
+          217
+        ],
+        [
+          536,
+          217
+        ],
+        [
+          536,
+          221
+        ],
+        [
+          530,
+          225
+        ],
+        [
+          520,
+          228
+        ],
+        [
+          510,
+          228
+        ],
+        [
+          503,
+          226
+        ],
+        [
+          498,
+          225
+        ]
+      ]
+    }
+  ],
+  "visible_rgba_changed_pixels": 0,
+  "alpha_changed_pixels": 0,
+  "automatic_segmentation": false,
+  "inpainting": false,
+  "source_sha256": "58ece460e16d10beba67aa0b239c6e7075200c73dd6afdac6135f6c9bb1fff07",
+  "limitations": [
+    "Source-specific manually reviewed masks",
+    "Part edges include source skin-colored antialiasing",
+    "Left eyebrow is partially hidden by bangs",
+    "Removal leaves transparent holes; no skin fill"
+  ],
+  "live_import": {
+    "pid": 7572,
+    "document_id": "{00F5A9A8-D17E-4CEB-8106-DBD130272701}",
+    "job_id": "{5498490C-6266-4116-B99B-6CABBA007D3D}",
+    "state": "completed",
+    "revision": "1",
+    "can_undo": true,
+    "modified": true,
+    "can_edit": true
+  },
+  "native_saved_psd_isolation": {
+    "source_psd": "PSD/立ち絵.psd",
+    "face_visible_pixels": 2782,
+    "left_eye_visible_pixels": 1278,
+    "visibility_smoke_debug": 48,
+    "visibility_smoke_release": 48,
+    "exchange_ui_smoke_debug": 23,
+    "exchange_ui_smoke_release": 23,
+    "reference_original_hidden": true,
+    "saved_psd_overwritten": false
+  }
+}

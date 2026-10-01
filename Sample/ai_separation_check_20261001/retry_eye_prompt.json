@@ -1,0 +1,6 @@
+{
+  "tool": "built-in image_gen",
+  "transparent_background": true,
+  "input": "../character_neutral.png",
+  "prompt": "Edit the supplied original character PNG into a single registered expression layer. Keep only the eye on the LEFT side of the picture exactly as it appears in the source: same outline, width, height, tilt, eyelash strokes, turquoise iris and pupil location. Delete all other visible content to genuine alpha=0 transparency. Preserve the input 1024x1536 canvas, and keep this eye in precisely its original position, occupying approximately x442..497 and y163..194. Do not relocate or rotate it and do not enlarge it to fill the frame. Treat this as faithful isolation of existing painted content, not a newly drawn or reinterpreted eye. Keep the full eye including eyelash edges and sclera; remove surrounding cheek/forehead skin, hair, brow, other eye, body and all background light. The eye is a tiny isolated element near the top center-left of a very large otherwise empty transparent canvas. No halo, diffuse glow, shadow, black background, colored matte or checkerboard drawing. Every pixel outside the isolated eye must be fully transparent, not merely dark. The PNG will be overlaid at canvas origin (0,0) without rescaling on a skin-filled base. Output one transparent PNG layer only."
+}

@@ -106,6 +106,7 @@
         <DCCReference Include="Source\Lib\UI\DarkComboBox\DarkComboBox.pas"/>
         <DCCReference Include="Source\Shell\ArtLayerList.pas"/>
         <DCCReference Include="Source\Core\ArtDocument.pas"/>
+        <DCCReference Include="Source\Core\ArtRasterTransform.pas"/>
         <DCCReference Include="Source\Persistence\PNG\ArtPng.pas"/>
         <DCCReference Include="Source\Persistence\PSD\ArtPsd.pas"/>
         <DCCReference Include="Source\Shell\AIArtToPSDMainForm.pas">

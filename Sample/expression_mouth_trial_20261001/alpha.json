@@ -1,0 +1,64 @@
+﻿[
+    {
+        "alpha":  [
+                      {
+                          "left":  434,
+                          "bottom":  831,
+                          "top":  157,
+                          "right":  1544,
+                          "threshold":  0,
+                          "count":  32165
+                      },
+                      {
+                          "left":  676,
+                          "bottom":  521,
+                          "top":  380,
+                          "right":  1098,
+                          "threshold":  16,
+                          "count":  29841
+                      },
+                      {
+                          "left":  680,
+                          "bottom":  520,
+                          "top":  382,
+                          "right":  1095,
+                          "threshold":  128,
+                          "count":  28431
+                      }
+                  ],
+        "width":  1774,
+        "file":  "mouth_open_generated.png",
+        "height":  887
+    },
+    {
+        "alpha":  [
+                      {
+                          "left":  3,
+                          "bottom":  12,
+                          "top":  5,
+                          "right":  32,
+                          "threshold":  0,
+                          "count":  105
+                      },
+                      {
+                          "left":  3,
+                          "bottom":  12,
+                          "top":  5,
+                          "right":  32,
+                          "threshold":  16,
+                          "count":  105
+                      },
+                      {
+                          "left":  3,
+                          "bottom":  12,
+                          "top":  5,
+                          "right":  32,
+                          "threshold":  128,
+                          "count":  105
+                      }
+                  ],
+        "width":  45,
+        "file":  "../mouth_only_20261001/mouth_only.png",
+        "height":  17
+    }
+]

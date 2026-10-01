@@ -1,0 +1,17 @@
+{
+  "date": "2026-10-01",
+  "chat_model": "GPT-6 Astra",
+  "reasoning_effort": "high",
+  "tool": "built-in image_gen",
+  "workspace_bounds": {
+    "left": 384,
+    "top": 64,
+    "right": 640,
+    "bottom": 320
+  },
+  "working_size": 1024,
+  "source": "face_square_source.png",
+  "base": "Edit target: supplied 1024x1024 SQUARE FACE WORKSPACE. It is a precisely registered enlargement of a region in a larger character image. Make the skin-filled base by removing BOTH eyes completely (all eyelashes, eyelid outlines, sclera, iris and pupils), BOTH eyebrow strokes including visible fragments between bangs, and the mouth/lips/smile. Fill removed features with natural continuous opaque skin matching the surrounding face. Keep the original nose and subtle blush. Every other part must stay in EXACTLY the same place and shape: face outline, ears, ALL hair including bangs and their occlusions, neck, blouse neckline, framing and outer alpha. Do not crop, zoom, recenter, rotate, change proportions, sharpen/redraw the character or change its design. Keep original 1024x1024 dimensions. The blank skin areas must not have transparent holes or closed-eye traces. Empty space outside the character must be fully transparent alpha=0 with NO background light, halo, haze, shadow, studio background or drawn checkerboard. Keep only the actual character including her own normal shading. Output ONE RGBA PNG of the edited square face workspace. It must overlay the original workspace at (0,0) without any registration adjustment.",
+  "eyes": "Edit the supplied SQUARE FACE WORKSPACE into ONE transparent layer containing BOTH EYES TOGETHER. This square represents a fixed region of the original artwork. Preserve the original square framing and EXACT NORMALIZED positions, scale, spacing, vertical offset and tilt of both eyes within this square. Do not center the eye pair, crop tightly, enlarge the eyes, rotate or symmetrize them. Keep original iris colors, pupils, sclera, eyelashes and eyelid shapes faithfully, not a redesigned expression. Remove every other feature to actual transparency: no skin patches or skin bridge between eyes, no brows, nose, mouth, hair, neck, clothing, background glow, halo, haze or shadow. Keep only both original eye artworks and narrow antialiased edges on a square alpha=0 canvas. Output at 1024x1024 if possible; if the output resolution differs, the entire source coordinate system must scale uniformly to that square with the eyes remaining at the exact same relative locations. Output only ONE paired-eye RGBA layer. It will be mapped onto the original face using the full square bounds, with no manual alignment.",
+  "status": "Stop square image trials after paired eyes changed relative scale and placement; do not generate eyebrows or mouth in this trial."
+}

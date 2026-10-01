@@ -96,7 +96,7 @@ type
     constructor CreateWithHistory(AOwner: TComponent; const HistoryDirectory: string);
     property FileHistory: TArtFileHistory read FHistory;
     destructor Destroy; override;
-    function ExportAiJob(const Prompt,Root: string): string;
+    function ExportAiJob(const Prompt,Root: string; Workspace: TJSONObject = nil): string;
     function PipeName: string;
     function CanUndo: Boolean;
     function CanRedo: Boolean;
@@ -204,6 +204,7 @@ begin FBusy := False; FOperation := ''; Screen.Cursor := crDefault; UpdateActivi
 procedure TMainForm.UpdateActivity;
 var Job: TArtExchangeJob; StateText: string;
 begin
+  if FTree<>nil then FTree.VisibilityEnabled := not FBusy and FCanEdit and (FDocument<>nil);
   if FActivity=nil then Exit;
   StateText := '待機中';
   if FBusy then StateText := FOperation
@@ -268,7 +269,10 @@ begin
     Exit;
   end;
   if Command='export' then begin
-    Path := ExportAiJob(CommandString(Args,'prompt'),TPath.Combine(ExtractFilePath(ParamStr(0)),'Exchange'));
+    if (Args.GetValue('workspace')<>nil) and not (Args.GetValue('workspace') is TJSONObject) then
+      raise EArtFormat.Create('Workspace object expected');
+    Path := ExportAiJob(CommandString(Args,'prompt'),TPath.Combine(ExtractFilePath(ParamStr(0)),'Exchange'),
+      TJSONObject(Args.GetValue('workspace')));
     Exit(JobJson(FExchange.FindJob(ExtractFileName(Path))));
   end;
   if Command='recover' then begin
@@ -658,12 +662,12 @@ begin
   FJobPath.Hint := ''; FJobPath.ShowHint := False; UpdateActivity;
 end;
 
-function TMainForm.ExportAiJob(const Prompt,Root: string): string;
+function TMainForm.ExportAiJob(const Prompt,Root: string; Workspace: TJSONObject): string;
 begin
   if not FCanEdit then raise EArtFormat.Create('編集対応文書を開いてください。');
   FPrompt.Lines.Add('Codex: '+Prompt);
   FTree.FinishRename(True); BeginOperation('AI向け書出し中');
-  try Result := FExchange.ExportJob(FDocument,Prompt,Root); FCurrentJobId := ExtractFileName(Result);
+  try Result := FExchange.ExportJob(FDocument,Prompt,Root,Workspace); FCurrentJobId := ExtractFileName(Result);
   finally EndOperation; end;
   FJobPath.Text := Result; FJobPath.Hint := Result; FJobPath.ShowHint := True;
 end;

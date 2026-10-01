@@ -1,0 +1,11 @@
+{
+  "date": "2026-10-01",
+  "chat_model": "GPT-6 Astra",
+  "reasoning_effort": "high",
+  "configuration_evidence": "confirmed by user",
+  "tool": "built-in image_gen",
+  "generation_calls": 1,
+  "transparent_background": true,
+  "input": "../character_neutral.png",
+  "prompt": "Edit target: supplied ORIGINAL 1024 x 1536 full-body anime character PNG. Extract BOTH EYES TOGETHER as ONE registered transparent expression layer, preserving them as an inseparable pair with their exact original spacing, relative vertical offset, tilt, gaze and shapes. Keep the same 1024 x 1536 canvas and the EXACT ORIGINAL ABSOLUTE POSITIONS: the eyes remain tiny near the top of this large empty canvas. Neither eye may be moved independently and the pair must not be moved, enlarged, centered or rotated. Preserve exactly the source painted eyes including both irises/pupils, white sclera, eyelashes and eyelid lines. Do not redraw, symmetrize, beautify, reinterpret or change the expression. The source eye pair is roughly inside x=442..566, y=153..195; this is only an approximate locator, follow the actual existing eye edges. Isolate BOTH original eyes, leaving the gap between them transparent. Remove ALL other content to genuine alpha=0 transparency: no brows, forehead or cheek skin, no skin bridge between eyes, nose, mouth, hair, body, clothes or background. No diffuse glow, halo, shadow, haze, dark backdrop or drawn checkerboard; these are not eye content. Keep narrow antialiased eye edges. Output ONE RGBA PNG with the paired eyes only, each at its original source position. It will be composited at canvas origin (0,0) onto a skin-filled face base WITHOUT any scaling, alignment, cropping or coordinate correction. Preserve exact source canvas size and registration."
+}

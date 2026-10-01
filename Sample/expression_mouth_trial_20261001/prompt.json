@@ -1,0 +1,9 @@
+{
+  "date": "2026-10-01",
+  "tool": "built-in image_gen",
+  "transparent_background": true,
+  "reference": "../mouth_only_20261001/face_review.png",
+  "edit_target": "../mouth_only_20261001/mouth_only.png",
+  "prompt": "Use case: precise-object-edit, anime PSD facial expression asset. Image 1 is a reference face for the character's drawing style, colors, and mouth tilt. Image 2 is the EDIT TARGET: her isolated original subtle smiling mouth. Make ONE alternative mouth expression: slightly open as if gently speaking 'a', with a small dark warm interior and a restrained pale upper-teeth highlight. Preserve the delicate thin brown lip outline, natural soft pink color, gentle smile, and subtle upward tilt to the viewer's right. This is a small understated anime mouth, not a wide grin, scream, lipstick, glossy 3D lips, or exaggerated expression. Output ONLY the complete open mouth drawing on a genuinely transparent background: no surrounding facial skin patch, no chin, nose, cheeks, hair, eyes, eyebrows, text, checkerboard, glow or shadow outside the lip contour. Opaque white teeth/highlights inside the mouth must remain visible. The only nontransparent pixels should be the mouth itself and its narrow antialiased outline. For this isolated asset you may center the mouth with generous transparent margins on a square canvas; the app will crop the transparent margin and scale/place it on the original face. Keep the mouth roughly 1.6 to 2 times as wide as tall. ONE mouth only, no side-by-side examples, no face, no comparison sheet.",
+  "result": "mouth_open_generated.png"
+}

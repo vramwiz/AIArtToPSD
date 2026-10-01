@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "requestId": "{19CB3FC9-5E2B-4770-A238-4A09D230E183}",
+  "jobId": "{19CB3FC9-5E2B-4770-A238-4A09D230E183}",
+  "documentId": "{06030FAE-4FA3-43DD-84CC-347B7914B278}",
+  "ifRevision": "0",
+  "assets": [
+    {
+      "pixelFormat": "RGBA8",
+      "colorSpace": "sRGB",
+      "sha256": "308592e00c069427f058e423eac22a00bb70dc86aafc158d7eb4401f5ecc7837",
+      "width": 1024,
+      "assetId": "brows-pair",
+      "path": "images/brows-pair.png",
+      "height": 1536
+    },
+    {
+      "pixelFormat": "RGBA8",
+      "colorSpace": "sRGB",
+      "sha256": "d1845d8594c4d358862df105830d78b9b5d82a5b1348e3c2a5d93db919e41889",
+      "width": 1024,
+      "assetId": "eyes-pair",
+      "path": "images/eyes-pair.png",
+      "height": 1536
+    },
+    {
+      "pixelFormat": "RGBA8",
+      "colorSpace": "sRGB",
+      "sha256": "78d0894092a94b56a526915450c1eaf84148cbf546511819ca951991e8853bd8",
+      "width": 1024,
+      "assetId": "mouth",
+      "path": "images/mouth.png",
+      "height": 1536
+    },
+    {
+      "pixelFormat": "RGBA8",
+      "colorSpace": "sRGB",
+      "sha256": "74f109cda0137f1ee6acfd3e957c86ab52dfb4c657a9467b1982ed09a3614432",
+      "width": 1024,
+      "assetId": "base",
+      "path": "images/base.png",
+      "height": 1536
+    }
+  ],
+  "operations": [
+    {
+      "layerId": "{281916C7-6B5A-47F5-B51B-4EA90F499820}",
+      "op": "set_attributes",
+      "visible": false,
+      "opacity": 255
+    },
+    {
+      "layerId": "{281916C7-6B5A-47F5-B51B-4EA90F499820}",
+      "op": "rename_layer",
+      "name": "元画像（比較用）"
+    },
+    {
+      "opacity": 255,
+      "op": "add_group",
+      "name": "AI表情分離（確認用）",
+      "beforeLayerId": "{281916C7-6B5A-47F5-B51B-4EA90F499820}",
+      "parentId": "",
+      "layerId": "{138e6733-a042-4654-972c-437d3e3a90b6}",
+      "visible": true
+    },
+    {
+      "layerId": "{3a95074d-588b-4267-a8b4-8cbdd9325644}",
+      "name": "眉（両眉一組・AI試験）",
+      "opacity": 255,
+      "op": "add_layer",
+      "parentId": "{138e6733-a042-4654-972c-437d3e3a90b6}",
+      "assetId": "brows-pair",
+      "bounds": {
+        "bottom": 1536,
+        "right": 1024,
+        "top": 0,
+        "left": 0
+      },
+      "visible": true,
+      "beforeLayerId": ""
+    },
+    {
+      "layerId": "{62c15cdb-df16-43db-9a17-ecd166d3afdb}",
+      "name": "目（両目一組・AI試験）",
+      "opacity": 255,
+      "op": "add_layer",
+      "parentId": "{138e6733-a042-4654-972c-437d3e3a90b6}",
+      "assetId": "eyes-pair",
+      "bounds": {
+        "bottom": 1536,
+        "right": 1024,
+        "top": 0,
+        "left": 0
+      },
+      "visible": true,
+      "beforeLayerId": ""
+    },
+    {
+      "layerId": "{45d834b0-a8d9-415c-938f-454481d09c92}",
+      "name": "口（AI試験）",
+      "opacity": 255,
+      "op": "add_layer",
+      "parentId": "{138e6733-a042-4654-972c-437d3e3a90b6}",
+      "assetId": "mouth",
+      "bounds": {
+        "bottom": 1536,
+        "right": 1024,
+        "top": 0,
+        "left": 0
+      },
+      "visible": true,
+      "beforeLayerId": ""
+    },
+    {
+      "layerId": "{ff8df264-8863-4daf-ae1b-ba1df615fafa}",
+      "name": "ベース（肌補完・光除去）",
+      "opacity": 255,
+      "op": "add_layer",
+      "parentId": "{138e6733-a042-4654-972c-437d3e3a90b6}",
+      "assetId": "base",
+      "bounds": {
+        "bottom": 1536,
+        "right": 1024,
+        "top": 0,
+        "left": 0
+      },
+      "visible": true,
+      "beforeLayerId": ""
+    }
+  ]
+}

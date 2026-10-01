@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "data": {
+    "jobId": "{7E255760-62B6-4411-9598-6EFC632CC82A}",
+    "directory": "D:\\DelphiProg\\test\\AIArtToPSD\\Sample\\rectangle_face_trial_20261001\\exchange\\{7E255760-62B6-4411-9598-6EFC632CC82A}",
+    "state": "completed",
+    "progress": 100,
+    "message": "",
+    "documentId": "{9E57C0EE-3D74-4C04-94AD-B7BEE973F399}",
+    "ifRevision": "0",
+    "stale": false
+  },
+  "requestId": "adb753a4-801c-4622-9afc-1ee1cf00dad5"
+}
