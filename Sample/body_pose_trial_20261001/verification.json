@@ -1,0 +1,55 @@
+{
+  "status": "imported_verified_awaiting_user_visual_review",
+  "generation_mode": "built-in image_gen edit, one call",
+  "canvas": {
+    "width": 1024,
+    "height": 1536
+  },
+  "generated_size": [
+    1097,
+    1434
+  ],
+  "app_resample_size": [
+    945,
+    1236
+  ],
+  "placement_before_trim": [
+    67,
+    274,
+    1012,
+    1510
+  ],
+  "horizontal_neck_alignment_adjustment_px": 2,
+  "app_layer_bounds": {
+    "left": 109,
+    "top": 274,
+    "right": 847,
+    "bottom": 1497
+  },
+  "app_layer_size": [
+    738,
+    1223
+  ],
+  "neck_top_source_alpha128_interval": [
+    489,
+    548
+  ],
+  "neck_top_variant_alpha128_interval": [
+    489,
+    548
+  ],
+  "lower_body_alpha128_iou_from_canvas_y724": 0.9288253923721452,
+  "existing_images_preserved": 31,
+  "head_and_face_preview_rgba_exact": true,
+  "original_body_retained_hidden": true,
+  "other_existing_attributes_unchanged": true,
+  "image_count": 32,
+  "group_count": 5,
+  "visual_review": "Same body proportions, outfit, stance and style; requested viewer-left hand on hip. Small redraw differences in clothing folds, legs and boots remain. No substantial departure identified; imported under user condition.",
+  "limitations": [
+    "Generated body pixels are not identical to original.",
+    "Neck color/contour continuity and appearance require user visual acceptance.",
+    "No claim of pose-invariant exact geometry."
+  ],
+  "psd_sha256": "b8f71c3fc3ee8762b4783899761aa76baa8d73bb69bab07bb724bbe555039f76"
+}

@@ -1,0 +1,21 @@
+{
+  "status": "user_accepted",
+  "date": "2026-10-01",
+  "approach": "案1：頭部を保持し、体全体を差し替える",
+  "pose": "キャラクターの右手（画面左）を腰に当てる",
+  "user_evaluation": "案1は成功とします",
+  "user_observation": "右半身のポーズを変えても全体的に変化が発生すること",
+  "interpretation": "片側の腕だけを変更する指示でも、生成した体全体の衣服・脚・靴などに描き直しが発生する。別レイヤーの頭部・表情は保持できるが、生成対象内の非対象領域の画素一致は保証されない。",
+  "references": {
+    "prompt": "prompt.json",
+    "verification": "verification.json",
+    "comparison": "app_comparison.png",
+    "psd": "body_pose_review.psd"
+  },
+  "next_approach": "案2：固定した胴体・衣装の素体と独立した手足パーツを組み合わせ、差し替えの影響範囲を局所化する。",
+  "followup_policy": {
+    "user_feedback": "体全体を差し替えるなら、一部位だけでなく全身の連動した姿勢を検討する。案2の背面腕で接続の違和感があり、基本は案1とする。",
+    "original_acceptance": "初回の案1が成功というユーザー評価は維持。",
+    "latest_record": "../full_body_pose_trial_20261001/learning_record.json"
+  }
+}

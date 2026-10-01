@@ -1,0 +1,17 @@
+{
+  "mode": "built-in image_gen edit",
+  "internal_image_model": "unknown",
+  "prompt": "Use case: precise-object-edit.\nCreate ONE isolated replacement right arm (the character's anatomical RIGHT arm, on VIEWER LEFT), wearing the same ivory-white puff sleeve and cuff, in a hand-behind-back pose.\nInput roles: IMAGE 1 is full-body crop CONTEXT ONLY for clothing, proportions and coordinate registration. IMAGE 2 is the EDIT TARGET: isolated original right arm, on a 640x640 transparent workspace. IMAGE 3 is the FIXED TORSO OCCLUDER for alignment reference only. Do not draw any torso, skirt, neck, other arm or body from image 1 or 3 into the output.\nAll images share the same 640x640 workspace and exact coordinates. Do not recenter, zoom, rotate or crop the canvas. Keep the shoulder joint at approximately (158,32) in the 640x640 workspace, matching the top attachment of image 2. Retain identical arm thickness, shoulder height, clothing color, painterly anime linework and shading. Allow a small rounded shoulder-cap extension inward to x=180, which will lie BEHIND the fixed torso.\nPose: the right upper arm descends alongside and slightly behind the ribcage. The elbow is modestly angled backward/outward near (130,225), with natural foreshortening. The forearm bends inward behind the waist toward a relaxed hand near (265,285). This is a relaxed single hand held BEHIND the lower back, not hand-on-front-hip, not crossed across the chest, not a raised arm. The arm and hand should be anatomically continuous even where the torso will later hide them.\nIMPORTANT LAYERING: output only the complete isolated arm with sleeve, cuff and hand. The fixed torso in image 3 will be composited ABOVE it afterwards. Thus the forearm and hand must lie within the torso/skirt silhouette, around x=210..320,y=240..325, so they become hidden. Only the narrow outer shoulder/upper-sleeve/elbow silhouette should remain visible to the left of the torso. The upper sleeve should be broad enough to overlap the existing torso armhole from behind, leaving no gap. Do not copy the torso's armhole cutout as a bite in the arm; provide a continuous underlying sleeve behind that edge.\nUse a genuinely transparent RGBA background. No glow, halo, background shadows, checkerboard, black background pixels, text, guides or borders. Preserve fine antialiased arm contour. Output 640x640 or an exact uniformly scaled square with all coordinate proportions unchanged. Leave unused space transparent; do NOT enlarge the isolated arm to fill the frame.",
+  "references": [
+    "body_context.png",
+    "arm_reference.png",
+    "torso_reference.png"
+  ],
+  "reference_workspace": {
+    "left": 240,
+    "top": 270,
+    "width": 640,
+    "height": 640
+  },
+  "purpose": "Test behind-torso arm layering without changing fixed torso pixels."
+}

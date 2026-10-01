@@ -1,0 +1,61 @@
+{
+  "status": "app_imported_verified_awaiting_user_visual_review",
+  "canvas": {
+    "width": 1024,
+    "height": 1536
+  },
+  "split_y": 274,
+  "resampling": false,
+  "parts": [
+    {
+      "part": "head",
+      "name": "頭部ベース（髪・顔・首上部）",
+      "bounds": {
+        "left": 366,
+        "top": 19,
+        "right": 638,
+        "bottom": 274
+      },
+      "size": [
+        272,
+        255
+      ],
+      "visible_pixels": 47671,
+      "retained_rgba_exact": true,
+      "sha256": "df70938e3254acc108f3b8bf153b0d82f444e7709db6ae7abc66706e5824bf85"
+    },
+    {
+      "part": "body",
+      "name": "体（首下部・衣装・手足）",
+      "bounds": {
+        "left": 65,
+        "top": 274,
+        "right": 1010,
+        "bottom": 1510
+      },
+      "size": [
+        945,
+        1236
+      ],
+      "visible_pixels": 341690,
+      "retained_rgba_exact": true,
+      "sha256": "28c98f5bdac4c57c0947eed44303a93694808888137b85df57ba6b3137ff96d0"
+    }
+  ],
+  "existing_images_unchanged": 29,
+  "existing_attributes_change": "original base visibility true -> false only",
+  "original_base_retained": true,
+  "visible_pixel_coverage_exact": true,
+  "overlapping_visible_pixels": 0,
+  "missing_visible_pixels": 0,
+  "recomposed_base_visible_rgba_exact": true,
+  "application_preview_rgba_exact": true,
+  "image_count": 31,
+  "group_count": 5,
+  "psd_sha256": "3690368d4786255abb3f77e5db11f930577826b40f2e68d42497a48d1d003809",
+  "limitations": [
+    "Fixed-pose separation at neck; no hidden neck/hair completion or pose generation.",
+    "Eyes and brows remain hidden as in the input document.",
+    "Transparent RGB may be discarded by trimming; visible RGBA and alpha coverage are exact."
+  ]
+}

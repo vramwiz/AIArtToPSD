@@ -1,0 +1,83 @@
+{
+  "status": "imported_verified_awaiting_user_visual_review",
+  "date": "2026-10-01",
+  "approach": "案1：頭部固定、体全体の差し替え",
+  "user_request": "一部位だけでなく全体的に姿勢を変え、首の接続点を一致させてアプリへ追加する。",
+  "method": "内蔵image_genの編集を1回実行。両腕・胴体・腰・膝・足を連動させ、アプリの縮小・配置で首幅と中心を補正した。",
+  "pose": "片手を胸元、反対手を腰に置き、胴体をひねり、腰の重心と膝・足、スカートの流れを変えた。",
+  "neck": {
+    "alpha_threshold": 128,
+    "center_x": 518.5,
+    "y": 274,
+    "source_match": true,
+    "interval_x": [
+      489,
+      548
+    ]
+  },
+  "dimensions": {
+    "generated": [
+      1097,
+      1434
+    ],
+    "trimmed": [
+      817,
+      1169
+    ],
+    "trimmed_position": [
+      96,
+      274
+    ],
+    "resampled": [
+      905,
+      1183
+    ]
+  },
+  "preservation": "既存39画像のハッシュ・配置を保持。頭部を表示、案2グループを非表示にした。目・眉・口の表示は変更していない。合計40画像＋7グループ。",
+  "limitations": [
+    "首の位置・幅・中心は一致するが、生成した首の陰影は元画素と同一ではない。",
+    "首幅を基準にほぼ等倍率で縮小。元の体キャンバスに合わせる倍率より約4.2%小さく、姿勢変更でも全体の高さが変化する。",
+    "今回の全身ポーズはユーザーの見た目評価待ち。",
+    "確認用PSDはexportのコピーであり、アプリの通常保存は未実施。"
+  ],
+  "policy": "ポーズ差分は案1を基本とする。案2は服の裁断線等で自然に分離できる衣装で検討する。",
+  "references": {
+    "neck": "neck_review.png",
+    "psd": "full_body_pose_review.psd",
+    "comparison": "app_comparison.png",
+    "verification": "verification.json",
+    "prompt": "prompt.json"
+  },
+  "user_feedback": {
+    "reason_for_whole_body_pose": "体全体を差し替えるにもかかわらず動きが一部位だけなのは違和感がある。",
+    "acceptance_scope": "案1を基本にする方針は確認済み。最新の全身連動画像個別の採用確定は未確認。",
+    "approach_assessment": "案1が有力"
+  },
+  "app_capability_assessment": {
+    "required_additions_for_approach1": [],
+    "conclusion": "現行機能で制作を継続でき、今すぐ必須の追加機能はない。",
+    "implemented": [
+      "画像レイヤーの追加",
+      "切出し・拡縮・配置・透明余白除去",
+      "PSD保存",
+      "同一親の * レイヤーの排他切替"
+    ],
+    "current_workflow": "Codex側で首の位置と幅を測り、倍率・配置を算出して既存APIへ渡す。アプリで拡縮・配置し、取込後に検証する。",
+    "optional_improvements": [
+      "首の接続高さ・左右端の保存",
+      "生成画像側の基準点を指定した等倍率の位置合わせ",
+      "首周辺の拡大・重ね合わせ比較"
+    ],
+    "implementation_status": "改善候補の提案のみ。今回アプリのコード変更は行っていない。",
+    "decision_rule": "既存機能で差分を作り、首合わせが繰り返し負担になる段階で検討する。",
+    "limits": [
+      "排他切替機能は実装済みだが、この試験でポーズの排他設定を追加したわけではない。",
+      "基準点の位置合わせだけでは首の陰影や輪郭の自然さを保証できない。"
+    ],
+    "evidence": [
+      "../../Source/Integrations/AIExchange/ArtExchange.pas",
+      "../../Source/Core/ArtParts.pas",
+      "../../パイプ操作ルール.md"
+    ]
+  }
+}

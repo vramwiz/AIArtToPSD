@@ -1,0 +1,20 @@
+{
+  "status": "user_reviewed_connection_discomfort_conditional_usage",
+  "date": "2026-10-01",
+  "purpose": "人間が描く場合と異なる分離位置の影響を、素体より背面に置く右腕で確認する。",
+  "method": "内蔵image_genでキャラクター右腕（画面左）だけを1回生成。前面の右腕グループを非表示にし、固定素体の直下へ追加。",
+  "result": "袖は体の横に見え、手と前腕は見た目上、胴体・スカートの後ろに隠れる。既存38画像の画素・配置を保持。",
+  "review_points": [
+    "肩上端の接続と、脇から腰へ残る素体側の輪郭線。既存の切断線と新しい袖の線が重なって見える箇所がある。",
+    "元の素体は完全不透明ではなく、手の上に来る領域はalpha=253～254。背面の腕は数学的には完全遮蔽されず、微小な合成色の変化がある。近不透明な重なり領域ではRGB最大5階調、alpha最大5階調の変化を確認した。",
+    "素体は変更していない。今回だけで分離位置が任意のポーズに対応できるとは判断しない。"
+  ],
+  "references": {
+    "prompt": "prompt.json",
+    "comparison": "app_comparison.png",
+    "shoulder": "shoulder_review.png",
+    "verification": "verification.json",
+    "psd": "arm_behind_review.psd"
+  },
+  "user_feedback": "接続点に違和感がある。服の裁断線で区切れる衣装なら検討できるが、基本は案1とする。"
+}

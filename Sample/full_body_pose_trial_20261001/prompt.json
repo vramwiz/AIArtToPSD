@@ -1,0 +1,24 @@
+{
+  "mode": "built-in image_gen edit",
+  "internal_image_model": "unknown",
+  "prompt": "Use case: precise-object-edit.\nEdit the supplied body-only character image into a NEW COORDINATED WHOLE-BODY STANDING POSE. This is not a one-arm variation: BOTH arms, ribcage, waist, pelvis, skirt folds, knees and feet should participate in one natural gesture.\nEDIT TARGET: the input is a 945x1236 pixel body crop. The head is absent because an unchanged head will be placed above this body in a PSD. The body is cut horizontally through the neck at the TOP image edge.\nHARD NECK ANCHOR: preserve the neck's top cut exactly at y=0, with the same left/right contour around x=424..483 (center x=453.5) on the 945-wide image. Keep the first 15 pixels of visible neck skin, its shading, width, location and facing angle as close to the input as possible. Do not add a head, chin or hair; do not extend the neck upward or move its join downward. Keep overall original character scale and the same 945x1236 canvas, or an exactly proportionate larger canvas. The neck join takes precedence over torso pose.\nPOSE: an elegant, relaxed contrapposto with a small coordinated torso twist (about 10-15 degrees) BELOW the fixed neck, a slight shoulder counter-tilt and clear hip weight shift. Anatomical right hand (viewer-left side) is raised lightly to the upper chest/collarbone with relaxed fingers; its elbow bends outward at ribcage height. The other hand rests lightly at the opposite waist/hip with its elbow bending outward. One leg supports the weight while the other knee is softly bent and angled inward, its foot lightly touching down slightly forward/across with a turned toe. Show a clear change in the leg silhouette and boot placement while keeping a stable balanced standing figure. Let blouse folds, waistline, skirt drape and hem tilt follow the coordinated pose. Not dancing, crouching, a dramatic lean or an extreme twist.\nLOCKED APPEARANCE: same adult feminine character body proportions, ivory-white puff-sleeved buttoned blouse with narrow collar and cuffs, dark teal midi skirt, same gold round buckle and hanging belt on viewer-right side, bare lower legs and same brown ankle boots. Preserve fabric weight, palette, anatomy, painterly anime rendering, linework and lighting. No costume redesign, missing buttons, extra limbs or props. Both hands anatomically natural. The original head will stay in exactly its old position.\nTRANSPARENCY: genuinely transparent RGBA background. Input may contain glow RGB hidden in transparent pixels: it is not scenery and must NOT be rendered. No halo, haze, cast shadow, floor, checkerboard, text, border or background.\nOutput ONE body-only transparent image with the exact top neck registration and approximately the same overall full-body scale. Leave room for the elbows and both complete boots.",
+  "source": "body_source.png",
+  "source_size": [
+    945,
+    1236
+  ],
+  "original_placement": [
+    65,
+    274,
+    1010,
+    1510
+  ],
+  "neck_anchor": {
+    "canvas_y": 274,
+    "alpha128_x_in_source": [
+      424,
+      483
+    ]
+  },
+  "scope": "Coordinated whole-body pose; fixed head/neck join. Preserve existing image layers."
+}

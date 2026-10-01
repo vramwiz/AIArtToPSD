@@ -1,0 +1,62 @@
+{
+  "status": "imported_verified_awaiting_user_visual_review",
+  "new_image_generation_calls": 1,
+  "mode": "built-in image_gen edit",
+  "pose": "character right arm (viewer left) behind back",
+  "layer_order": "fixed torso directly above new rear arm",
+  "existing_images_unchanged": 38,
+  "existing_attribute_change": "front right-arm group visibility -> false only",
+  "image_count": 39,
+  "group_count": 7,
+  "generated_size": [
+    1254,
+    1254
+  ],
+  "source_crop": [
+    216,
+    32,
+    610,
+    762
+  ],
+  "app_resample_size": [
+    201,
+    373
+  ],
+  "placement_before_trim": [
+    350,
+    286,
+    551,
+    659
+  ],
+  "app_layer_bounds": {
+    "left": 353,
+    "top": 289,
+    "right": 547,
+    "bottom": 656
+  },
+  "arm_pixels_fully_hidden_by_torso": 0,
+  "arm_pixels_not_fully_hidden_by_torso": 31648,
+  "sampled_hand_pixels": 2945,
+  "sampled_hand_within_near_opaque_torso": true,
+  "sampled_hand_torso_alpha_range": [
+    253,
+    254
+  ],
+  "sampled_hand_fully_occluded": false,
+  "near_opaque_overlap_max_rgba_difference": [
+    5,
+    4,
+    4,
+    5
+  ],
+  "head_and_face_preview_exact": true,
+  "fully_opaque_torso_pixel_count": 0,
+  "opaque_fixed_torso_preview_max_difference": null,
+  "limitations": [
+    "Existing fixed armhole cut remains; shoulder/armpit contour and shading require user visual review.",
+    "Existing torso alpha over the hand is 253-254, so it is visually covered but not mathematically fully occluded; rear color contributes slightly. No existing alpha was changed.",
+    "Only one rear-arm pose tested. No general conclusion about arbitrary limb separation.",
+    "Hand region is inferred by bounded color sampling and visually reviewed, not generic semantic segmentation."
+  ],
+  "psd_sha256": "9b0e38ebe96ee1fe115ac389d0a54617c3d87bbb31df8980f01cd6f19e72c4e7"
+}

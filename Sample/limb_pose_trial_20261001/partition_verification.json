@@ -1,0 +1,181 @@
+{
+  "method": "source-specific original-pixel partition; accepted generated arm reuse",
+  "source_sha256": "28c98f5bdac4c57c0947eed44303a93694808888137b85df57ba6b3137ff96d0",
+  "accepted_pose_sha256": "a1a6f68ce190d8337aada2cd89e17c0f414b7e8465f65ce1956e92e3022cc7c9",
+  "source_canvas": [
+    1024,
+    1536
+  ],
+  "armhole_left": [
+    [
+      398,
+      299
+    ],
+    [
+      398,
+      318
+    ],
+    [
+      402,
+      340
+    ],
+    [
+      410,
+      360
+    ],
+    [
+      419,
+      375
+    ],
+    [
+      414,
+      391
+    ],
+    [
+      410,
+      405
+    ],
+    [
+      412,
+      424
+    ],
+    [
+      418,
+      444
+    ],
+    [
+      426,
+      463
+    ],
+    [
+      434,
+      480
+    ],
+    [
+      429,
+      495
+    ],
+    [
+      426,
+      504
+    ]
+  ],
+  "armhole_right": [
+    [
+      635,
+      301
+    ],
+    [
+      632,
+      320
+    ],
+    [
+      630,
+      340
+    ],
+    [
+      624,
+      362
+    ],
+    [
+      620,
+      380
+    ],
+    [
+      624,
+      397
+    ],
+    [
+      625,
+      414
+    ],
+    [
+      619,
+      435
+    ],
+    [
+      610,
+      456
+    ],
+    [
+      602,
+      478
+    ],
+    [
+      605,
+      495
+    ],
+    [
+      608,
+      505
+    ]
+  ],
+  "original_recomposition_visible_rgba_exact": true,
+  "parts": {
+    "torso": {
+      "alpha_bbox": [
+        65,
+        274,
+        1004,
+        1434
+      ],
+      "visible_pixels": 213347,
+      "sha256": "cfcd450d9c84b8586a62daeaf7c529a4ad3dda397cf52aee97ca720082e1a153"
+    },
+    "right_arm_original": {
+      "alpha_bbox": [
+        289,
+        300,
+        439,
+        828
+      ],
+      "visible_pixels": 31170,
+      "sha256": "3e343b54b6823bffe5698fd9b04eb0feb4987f9e76a24e5e7f420dfcd44a74e7"
+    },
+    "left_arm_original": {
+      "alpha_bbox": [
+        599,
+        302,
+        1010,
+        840
+      ],
+      "visible_pixels": 29950,
+      "sha256": "60ed11e2504f6d8cca8060772f4375c330e2b138282e396b5fc8a9e74e3451f4"
+    },
+    "right_leg_original": {
+      "alpha_bbox": [
+        403,
+        1013,
+        525,
+        1510
+      ],
+      "visible_pixels": 36482,
+      "sha256": "cc50a439803b4b1e28c3e30f18c8d163103a4bdec864ce4635ab4d1d70eb2928"
+    },
+    "left_leg_original": {
+      "alpha_bbox": [
+        525,
+        1030,
+        627,
+        1502
+      ],
+      "visible_pixels": 30741,
+      "sha256": "7ba468a885d0022a4e8b40ebe79e2bacbdba5881d060b4ad1910883be2edc96d"
+    },
+    "right_arm_hip": {
+      "alpha_bbox": [
+        264,
+        302,
+        478,
+        586
+      ],
+      "visible_pixels": 26296,
+      "sha256": "0cfdc353d5274d2ee9cc05f965453baeaba2e4ee6a9b906d92e77b2bf58130cb"
+    }
+  },
+  "limitations": [
+    "Visible original limbs only; hidden upper thighs and sleeves under the skirt are not reconstructed.",
+    "Arm pose is reused from approach 1, not independently regenerated.",
+    "Source-specific masks and coordinates must not be reused on a different illustration."
+  ]
+}

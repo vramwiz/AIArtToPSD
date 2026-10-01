@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "requestId": "{BA5F7E9B-6D00-4F7C-957A-ABDC7EAC844A}",
+  "jobId": "{BA5F7E9B-6D00-4F7C-957A-ABDC7EAC844A}",
+  "documentId": "{9E0B5729-C965-4664-AE6E-48C18B641FC0}",
+  "ifRevision": "0",
+  "assets": [
+    {
+      "colorSpace": "sRGB",
+      "path": "images/arm_behind_generated.png",
+      "width": 1254,
+      "height": 1254,
+      "assetId": "right-arm-behind",
+      "sha256": "646fb9e7d9fb1316379bb85ff9d8baa4d55db9bdd2bb92c0ddc7cec537cb201c",
+      "pixelFormat": "RGBA8"
+    }
+  ],
+  "operations": [
+    {
+      "opacity": 255,
+      "op": "add_layer",
+      "trimTransparent": true,
+      "layerId": "{94f93a0d-67d6-46b7-b12c-8771a2bd16ac}",
+      "visible": true,
+      "assetId": "right-arm-behind",
+      "parentId": "{49BC40CF-443E-42BB-80EA-576167E8EBE5}",
+      "name": "03 右腕を後ろに回す（素体の背面・確認用）",
+      "sourceBounds": {
+        "left": 216,
+        "top": 32,
+        "right": 610,
+        "bottom": 762
+      },
+      "beforeLayerId": "{238BB1AB-42BF-4ABC-B76E-BA7EA85E369C}",
+      "resample": true,
+      "bounds": {
+        "left": 350,
+        "top": 286,
+        "right": 551,
+        "bottom": 659
+      }
+    },
+    {
+      "visible": false,
+      "layerId": "{57D726E1-144D-48BA-8CC2-EF4813D56F72}",
+      "opacity": 255,
+      "op": "set_attributes"
+    }
+  ]
+}

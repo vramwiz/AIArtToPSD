@@ -1,0 +1,17 @@
+{
+  "mode": "built-in image_gen edit",
+  "internal_image_model": "unknown",
+  "prompt": "Use case: precise-object-edit.\nAsset: one transparent PNG body-pose replacement layer for an existing anime standing-character PSD.\nImage 1 is the EDIT TARGET, a 945 x 1236 pixel body-only crop. It begins at a horizontal cut through the lower neck at the top edge, and ends just below the brown boots. Preserve this exact canvas, subject scale, placement, neck cut position, and entire lower-body position.\nPrimary edit: change ONLY the arm on the VIEWER'S LEFT from hanging down to a natural one-hand-on-hip pose. Bend that elbow outward and place that hand against the left waist, with anatomically coherent fingers and wrist. Keep the other arm hanging exactly as before. Minimal necessary changes to the left shoulder, left puff sleeve, and adjoining blouse folds are allowed for this movement. This is the side opposite the gold belt buckle, so the buckle stays unobstructed.\nLOCKED INVARIANTS: identical character proportions, front-facing torso orientation, shoulder height, neckline and collar, top cut through the neck (must touch top edge, no head, no extra neck), white blouse design/color/material, center buttons, dark teal skirt silhouette and pleats, waist height, gold buckle and hanging belt at viewer right, skirt hem, bare legs stance and spacing, brown boot shape and position. Do not move, rotate, zoom, recenter, widen or slim the torso or legs. Keep original hand-painted anime linework and shading. Preserve everything outside the changed left arm and its sleeve as closely as possible.\nTRANSPARENCY: actual transparent background, preserve the subject's alpha. The source may carry glow/gray/black RGB in transparent pixels: that is NOT part of the scene. Do not draw any glow, aura, haze, drop shadow, background color, checkerboard, floor or background. Keep only the opaque character and natural antialiased contour.\nOutput: one body-only RGBA PNG, same 945 x 1236 dimensions and coordinate registration as the input. Do not add a face, head, hair, captions, border or labels.",
+  "source": "current export input/source-29.png",
+  "sourceSize": [
+    945,
+    1236
+  ],
+  "canvasPlacement": {
+    "left": 65,
+    "top": 274,
+    "right": 1010,
+    "bottom": 1510
+  },
+  "stop_condition": "Stop without importing if generated image differs substantially from source beyond requested arm-pose change."
+}

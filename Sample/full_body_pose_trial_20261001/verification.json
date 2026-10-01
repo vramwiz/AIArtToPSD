@@ -1,0 +1,59 @@
+{
+  "status": "imported_verified_awaiting_user_visual_review",
+  "mode": "built-in image_gen edit",
+  "generation_calls": 1,
+  "pose": "both arms, torso twist, hip weight shift, skirt drape, bent knee and changed feet",
+  "generated_size": [
+    1097,
+    1434
+  ],
+  "app_resample_size": [
+    905,
+    1183
+  ],
+  "scale_x": 0.8249772105742935,
+  "scale_y": 0.8249651324965133,
+  "placement_before_trim": [
+    54,
+    274,
+    959,
+    1457
+  ],
+  "app_layer_bounds": {
+    "left": 96,
+    "top": 274,
+    "right": 913,
+    "bottom": 1443
+  },
+  "app_layer_size": [
+    817,
+    1169
+  ],
+  "neck_y": 274,
+  "neck_alpha128_interval": [
+    489,
+    548
+  ],
+  "neck_center_x": 518.5,
+  "neck_alpha128_exact_match": true,
+  "existing_images_unchanged": 39,
+  "image_count": 40,
+  "group_count": 7,
+  "attribute_changes": [
+    {
+      "name": "案2 素体＋手足（確認用）",
+      "visible": false
+    },
+    {
+      "name": "頭部ベース（髪・顔・首上部）",
+      "visible": true
+    }
+  ],
+  "head_pixels_and_position_unchanged": true,
+  "limitations": [
+    "Geometric seam registration is verified at alpha>128; generated neck shading is not pixel-identical to the source.",
+    "Body is scaled uniformly to the neck width (approximately 4.2% smaller than scaling output to the original body canvas); changed stance also changes overall silhouette height.",
+    "User visual acceptance is pending."
+  ],
+  "psd_sha256": "56a6286fde8f9e4d1bb1f33d170c4970ecc73662263e8bc64ce58752de853e81"
+}

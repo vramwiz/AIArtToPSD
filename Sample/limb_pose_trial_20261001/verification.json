@@ -1,0 +1,117 @@
+{
+  "status": "imported_verified_awaiting_user_visual_review",
+  "approach": "fixed original torso and independent original limbs; reuse accepted bent arm",
+  "new_image_generation_calls": 0,
+  "initial_import_issue": "Initial hole-filling mask accidentally selected the whole body; import was undone at unchanged revision 21. Corrected bounded hand-hole fill and arm-extent validation before fresh export/import.",
+  "existing_images_unchanged": 32,
+  "all_existing_attributes_and_visibility_unchanged": true,
+  "image_count": 38,
+  "group_count": 7,
+  "original_limb_recomposition_visible_rgba_exact": true,
+  "fixed_region_outside_swapped_arm_rgba_exact": true,
+  "changed_pixels_outside_arm_coverage": 0,
+  "changed_pixels_total": 45942,
+  "head_and_face_preview_unchanged": true,
+  "head_visible_at_input": false,
+  "app_preview_alpha_matches_trial_exactly": true,
+  "app_preview_vs_pillow_max_rgb_error": 1,
+  "app_preview_vs_pillow_differing_pixels": 22,
+  "parts": [
+    {
+      "part": "right_arm_hip",
+      "bounds": {
+        "left": 264,
+        "top": 302,
+        "right": 478,
+        "bottom": 586
+      },
+      "size": [
+        214,
+        284
+      ],
+      "visible": true,
+      "rgba_preserved": true
+    },
+    {
+      "part": "right_arm_original",
+      "bounds": {
+        "left": 289,
+        "top": 300,
+        "right": 439,
+        "bottom": 828
+      },
+      "size": [
+        150,
+        528
+      ],
+      "visible": false,
+      "rgba_preserved": true
+    },
+    {
+      "part": "left_arm_original",
+      "bounds": {
+        "left": 599,
+        "top": 302,
+        "right": 1010,
+        "bottom": 840
+      },
+      "size": [
+        411,
+        538
+      ],
+      "visible": true,
+      "rgba_preserved": true
+    },
+    {
+      "part": "torso",
+      "bounds": {
+        "left": 65,
+        "top": 274,
+        "right": 1004,
+        "bottom": 1434
+      },
+      "size": [
+        939,
+        1160
+      ],
+      "visible": true,
+      "rgba_preserved": true
+    },
+    {
+      "part": "right_leg_original",
+      "bounds": {
+        "left": 403,
+        "top": 1013,
+        "right": 525,
+        "bottom": 1510
+      },
+      "size": [
+        122,
+        497
+      ],
+      "visible": true,
+      "rgba_preserved": true
+    },
+    {
+      "part": "left_leg_original",
+      "bounds": {
+        "left": 525,
+        "top": 1030,
+        "right": 627,
+        "bottom": 1502
+      },
+      "size": [
+        102,
+        472
+      ],
+      "visible": true,
+      "rgba_preserved": true
+    }
+  ],
+  "limitations": [
+    "No newly generated standalone limb; bent arm is from the accepted approach-1 output.",
+    "Legs are visible original regions only; hidden thighs and other leg poses are untested.",
+    "Masks are specific to this illustration and fixed placement."
+  ],
+  "psd_sha256": "bb54113e879d895230e7e78e40776ecb8ba4ec8b003d22897338517dd15bf504"
+}

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "requestId": "{A4AD5031-A3DD-49D7-80EC-23DED6D1693F}",
+  "jobId": "{A4AD5031-A3DD-49D7-80EC-23DED6D1693F}",
+  "documentId": "{9E0B5729-C965-4664-AE6E-48C18B641FC0}",
+  "ifRevision": "16",
+  "assets": [
+    {
+      "height": 1434,
+      "width": 1097,
+      "pixelFormat": "RGBA8",
+      "sha256": "409ef5d775d95d0c539c22ff863a41c6a709ebcc10386ce414e94047c82a1b1c",
+      "assetId": "whole-body-pose",
+      "colorSpace": "sRGB",
+      "path": "images/pose_generated.png"
+    }
+  ],
+  "operations": [
+    {
+      "assetId": "whole-body-pose",
+      "resample": true,
+      "visible": true,
+      "beforeLayerId": "{49BC40CF-443E-42BB-80EA-576167E8EBE5}",
+      "opacity": 255,
+      "layerId": "{f631c17f-59b9-4b46-8a3a-43a9596c747f}",
+      "trimTransparent": true,
+      "op": "add_layer",
+      "bounds": {
+        "bottom": 1457,
+        "right": 959,
+        "left": 54,
+        "top": 274
+      },
+      "parentId": "{7883FE9B-1BEC-4A7F-B84B-2A59E14E7DC8}",
+      "name": "体差分02（全身連動・首位置合わせ・確認用）"
+    },
+    {
+      "layerId": "{49BC40CF-443E-42BB-80EA-576167E8EBE5}",
+      "visible": false,
+      "op": "set_attributes",
+      "opacity": 255
+    },
+    {
+      "layerId": "{A607C7E2-CC72-4C84-A611-C5A429A948EA}",
+      "visible": true,
+      "op": "set_attributes",
+      "opacity": 255
+    }
+  ]
+}

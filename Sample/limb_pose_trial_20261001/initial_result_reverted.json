@@ -1,0 +1,185 @@
+{
+  "schemaVersion": 1,
+  "requestId": "{83CE46F1-57D7-4A14-9544-EFBCBE81301D}",
+  "jobId": "{83CE46F1-57D7-4A14-9544-EFBCBE81301D}",
+  "documentId": "{C2367FE1-09D2-405C-8254-77AC1958FF9F}",
+  "ifRevision": "20",
+  "assets": [
+    {
+      "sha256": "fd685d4d58868e77bbf15ab86592b84b4150dfbfc7ccce23c0b6754e334c5669",
+      "path": "images/right_arm_hip.png",
+      "colorSpace": "sRGB",
+      "pixelFormat": "RGBA8",
+      "width": 1024,
+      "height": 1536,
+      "assetId": "right_arm_hip"
+    },
+    {
+      "sha256": "3e343b54b6823bffe5698fd9b04eb0feb4987f9e76a24e5e7f420dfcd44a74e7",
+      "path": "images/right_arm_original.png",
+      "colorSpace": "sRGB",
+      "pixelFormat": "RGBA8",
+      "width": 1024,
+      "height": 1536,
+      "assetId": "right_arm_original"
+    },
+    {
+      "sha256": "60ed11e2504f6d8cca8060772f4375c330e2b138282e396b5fc8a9e74e3451f4",
+      "path": "images/left_arm_original.png",
+      "colorSpace": "sRGB",
+      "pixelFormat": "RGBA8",
+      "width": 1024,
+      "height": 1536,
+      "assetId": "left_arm_original"
+    },
+    {
+      "sha256": "cfcd450d9c84b8586a62daeaf7c529a4ad3dda397cf52aee97ca720082e1a153",
+      "path": "images/torso.png",
+      "colorSpace": "sRGB",
+      "pixelFormat": "RGBA8",
+      "width": 1024,
+      "height": 1536,
+      "assetId": "torso"
+    },
+    {
+      "sha256": "cc50a439803b4b1e28c3e30f18c8d163103a4bdec864ce4635ab4d1d70eb2928",
+      "path": "images/right_leg_original.png",
+      "colorSpace": "sRGB",
+      "pixelFormat": "RGBA8",
+      "width": 1024,
+      "height": 1536,
+      "assetId": "right_leg_original"
+    },
+    {
+      "sha256": "7ba468a885d0022a4e8b40ebe79e2bacbdba5881d060b4ad1910883be2edc96d",
+      "path": "images/left_leg_original.png",
+      "colorSpace": "sRGB",
+      "pixelFormat": "RGBA8",
+      "width": 1024,
+      "height": 1536,
+      "assetId": "left_leg_original"
+    }
+  ],
+  "operations": [
+    {
+      "parentId": "{2e678478-227f-467c-855a-50df713664b7}",
+      "name": "案2 素体＋手足（確認用）",
+      "op": "add_group",
+      "opacity": 255,
+      "visible": true,
+      "layerId": "{f4107a00-1e2e-4578-9960-18ad160a65df}",
+      "beforeLayerId": "{b82070e3-1a58-42d7-bfc8-c84665e9aa56}"
+    },
+    {
+      "parentId": "{f4107a00-1e2e-4578-9960-18ad160a65df}",
+      "name": "右腕（画面左・一つずつ表示）",
+      "op": "add_group",
+      "opacity": 255,
+      "visible": true,
+      "layerId": "{20d3be2c-b6bc-41a0-a2b6-31b60bcaeba3}",
+      "beforeLayerId": ""
+    },
+    {
+      "trimTransparent": true,
+      "bounds": {
+        "right": 1024,
+        "left": 0,
+        "bottom": 1536,
+        "top": 0
+      },
+      "visible": true,
+      "parentId": "{20d3be2c-b6bc-41a0-a2b6-31b60bcaeba3}",
+      "assetId": "right_arm_hip",
+      "layerId": "{ae110d90-0de7-4858-84fd-fc87710b81ea}",
+      "beforeLayerId": "",
+      "op": "add_layer",
+      "name": "02 腰に当てる（案1から腕のみ再利用）",
+      "opacity": 255
+    },
+    {
+      "trimTransparent": true,
+      "bounds": {
+        "right": 1024,
+        "left": 0,
+        "bottom": 1536,
+        "top": 0
+      },
+      "visible": false,
+      "parentId": "{20d3be2c-b6bc-41a0-a2b6-31b60bcaeba3}",
+      "assetId": "right_arm_original",
+      "layerId": "{7e0afee5-aa25-4776-8ad7-306d42915c9e}",
+      "beforeLayerId": "",
+      "op": "add_layer",
+      "name": "01 下ろす（元画素）",
+      "opacity": 255
+    },
+    {
+      "trimTransparent": true,
+      "bounds": {
+        "right": 1024,
+        "left": 0,
+        "bottom": 1536,
+        "top": 0
+      },
+      "visible": true,
+      "parentId": "{f4107a00-1e2e-4578-9960-18ad160a65df}",
+      "assetId": "left_arm_original",
+      "layerId": "{f2942ac2-fd99-45df-a588-dc61f008afee}",
+      "beforeLayerId": "",
+      "op": "add_layer",
+      "name": "左腕（画面右・元画素）",
+      "opacity": 255
+    },
+    {
+      "trimTransparent": true,
+      "bounds": {
+        "right": 1024,
+        "left": 0,
+        "bottom": 1536,
+        "top": 0
+      },
+      "visible": true,
+      "parentId": "{f4107a00-1e2e-4578-9960-18ad160a65df}",
+      "assetId": "torso",
+      "layerId": "{923f355f-a7a0-4608-9301-071f75bad113}",
+      "beforeLayerId": "",
+      "op": "add_layer",
+      "name": "固定素体（首・胴体・衣装／手足なし）",
+      "opacity": 255
+    },
+    {
+      "trimTransparent": true,
+      "bounds": {
+        "right": 1024,
+        "left": 0,
+        "bottom": 1536,
+        "top": 0
+      },
+      "visible": true,
+      "parentId": "{f4107a00-1e2e-4578-9960-18ad160a65df}",
+      "assetId": "right_leg_original",
+      "layerId": "{d2d93456-a2fb-48e3-b5f2-db06f23970cd}",
+      "beforeLayerId": "",
+      "op": "add_layer",
+      "name": "右脚（画面左・見えている範囲）",
+      "opacity": 255
+    },
+    {
+      "trimTransparent": true,
+      "bounds": {
+        "right": 1024,
+        "left": 0,
+        "bottom": 1536,
+        "top": 0
+      },
+      "visible": true,
+      "parentId": "{f4107a00-1e2e-4578-9960-18ad160a65df}",
+      "assetId": "left_leg_original",
+      "layerId": "{1a1c9fc5-611b-4a12-86d0-eced2767b867}",
+      "beforeLayerId": "",
+      "op": "add_layer",
+      "name": "左脚（画面右・見えている範囲）",
+      "opacity": 255
+    }
+  ]
+}
