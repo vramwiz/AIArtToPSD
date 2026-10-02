@@ -1,0 +1,695 @@
+{
+  "result": "passed",
+  "canvas": [
+    752,
+    1344
+  ],
+  "images": 29,
+  "groups": 4,
+  "generated_states": {
+    "mouths": 9,
+    "eyes": 5,
+    "brows": 7
+  },
+  "original_copies": 3,
+  "saved_psd": "D:\\DelphiProg\\test\\AIArtToPSD\\Sample\\syncroh2_expressions_20261002\\blonde_expressions_review.psd",
+  "managed_psd": "D:\\Users\\take6\\Syncroh2\\PSD\\Generated\\新規PSD_37CD86B2-8040-4E66-8FC7-78AF2B6C3881.psd",
+  "sha256": "e582637239d47e521f49c9ccba7ae8aadf66b2abf3ec81fb9f02052c1ea4f511",
+  "all_five_existing_layers_rgba_and_nonvisibility_attributes_unchanged": [
+    "元画像（比較用・原寸）",
+    "ベース（背景透過・目眉口補完）",
+    "口（原画画素）",
+    "両眉（原画画素）",
+    "両目（原画画素）"
+  ],
+  "original_composite_exactly_unchanged": true,
+  "originals_hidden_except_selected_copies": true,
+  "all_21_variants_preserve_background_alpha_and_body": [
+    "*01 両目 閉じ",
+    "*02 両目 少し伏せる",
+    "*03 両目 笑顔閉じ",
+    "*04 両目 ほぼ閉じ",
+    "*05 両目 見開き",
+    "*01 両眉 喜",
+    "*02 両眉 怒",
+    "*03 両眉 哀",
+    "*04 両眉 楽",
+    "*05 両眉 困る",
+    "*06 両眉 画面左上げ",
+    "*07 両眉 画面右上げ",
+    "*01 口 閉じ",
+    "*02 口 半開き",
+    "*03 口 開き",
+    "*04 口 あ",
+    "*05 口 い",
+    "*06 口 う",
+    "*07 口 え",
+    "*08 口 お",
+    "*09 口 ん"
+  ],
+  "merged_alpha_matches_base": true,
+  "merged_rgb_uses_white_matte": true,
+  "merged_white_matte_max_difference": 0,
+  "merged_white_matte_pixel_differences": 0,
+  "transparent_pixels": 689301,
+  "opaque_pixels": 319206,
+  "partial_alpha_pixels": 2181,
+  "sample_rgba": {
+    "background": [
+      255,
+      255,
+      255,
+      0
+    ],
+    "leg_gap": [
+      255,
+      255,
+      255,
+      0
+    ],
+    "dress": [
+      255,
+      254,
+      255,
+      255
+    ],
+    "sock": [
+      250,
+      249,
+      251,
+      255
+    ],
+    "shoe": [
+      252,
+      252,
+      252,
+      255
+    ]
+  },
+  "exclusive_selections_passed": 24,
+  "final_state": "original expression",
+  "saved_and_not_busy": true,
+  "quality_status": "review version; user visual acceptance pending",
+  "parts": [
+    {
+      "name": "*00 両目（原画）",
+      "original": true,
+      "bounds": {
+        "left": 293,
+        "top": 167,
+        "right": 448,
+        "bottom": 208
+      },
+      "size": [
+        155,
+        41
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "nonzero_alpha_pixels": 2783,
+      "prepared_vs_saved_max_rgba_difference": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "*01 両目 閉じ",
+      "original": false,
+      "bounds": {
+        "right": 444,
+        "left": 297,
+        "top": 185,
+        "bottom": 200
+      },
+      "size": [
+        147,
+        15
+      ],
+      "alpha_range": [
+        0,
+        253
+      ],
+      "nonzero_alpha_pixels": 576,
+      "prepared_vs_saved_max_rgba_difference": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "*02 両目 少し伏せる",
+      "original": false,
+      "bounds": {
+        "right": 449,
+        "left": 293,
+        "top": 178,
+        "bottom": 208
+      },
+      "size": [
+        156,
+        30
+      ],
+      "alpha_range": [
+        0,
+        254
+      ],
+      "nonzero_alpha_pixels": 2378,
+      "prepared_vs_saved_max_rgba_difference": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "*03 両目 笑顔閉じ",
+      "original": false,
+      "bounds": {
+        "right": 444,
+        "left": 297,
+        "top": 181,
+        "bottom": 199
+      },
+      "size": [
+        147,
+        18
+      ],
+      "alpha_range": [
+        0,
+        252
+      ],
+      "nonzero_alpha_pixels": 710,
+      "prepared_vs_saved_max_rgba_difference": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "*04 両目 ほぼ閉じ",
+      "original": false,
+      "bounds": {
+        "right": 449,
+        "left": 293,
+        "top": 187,
+        "bottom": 206
+      },
+      "size": [
+        156,
+        19
+      ],
+      "alpha_range": [
+        0,
+        253
+      ],
+      "nonzero_alpha_pixels": 1557,
+      "prepared_vs_saved_max_rgba_difference": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "*05 両目 見開き",
+      "original": false,
+      "bounds": {
+        "right": 449,
+        "left": 293,
+        "top": 170,
+        "bottom": 211
+      },
+      "size": [
+        156,
+        41
+      ],
+      "alpha_range": [
+        0,
+        253
+      ],
+      "nonzero_alpha_pixels": 3080,
+      "prepared_vs_saved_max_rgba_difference": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "*00 両眉（原画）",
+      "original": true,
+      "bounds": {
+        "left": 299,
+        "top": 142,
+        "right": 439,
+        "bottom": 166
+      },
+      "size": [
+        140,
+        24
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "nonzero_alpha_pixels": 291,
+      "prepared_vs_saved_max_rgba_difference": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "*01 両眉 喜",
+      "original": false,
+      "bounds": {
+        "right": 442,
+        "left": 299,
+        "top": 140,
+        "bottom": 158
+      },
+      "size": [
+        143,
+        18
+      ],
+      "alpha_range": [
+        0,
+        249
+      ],
+      "nonzero_alpha_pixels": 62,
+      "prepared_vs_saved_max_rgba_difference": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "*02 両眉 怒",
+      "original": false,
+      "bounds": {
+        "right": 437,
+        "left": 305,
+        "top": 145,
+        "bottom": 167
+      },
+      "size": [
+        132,
+        22
+      ],
+      "alpha_range": [
+        0,
+        252
+      ],
+      "nonzero_alpha_pixels": 149,
+      "prepared_vs_saved_max_rgba_difference": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "*03 両眉 哀",
+      "original": false,
+      "bounds": {
+        "right": 441,
+        "left": 301,
+        "top": 142,
+        "bottom": 163
+      },
+      "size": [
+        140,
+        21
+      ],
+      "alpha_range": [
+        0,
+        252
+      ],
+      "nonzero_alpha_pixels": 99,
+      "prepared_vs_saved_max_rgba_difference": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "*04 両眉 楽",
+      "original": false,
+      "bounds": {
+        "right": 441,
+        "left": 300,
+        "top": 149,
+        "bottom": 158
+      },
+      "size": [
+        141,
+        9
+      ],
+      "alpha_range": [
+        0,
+        251
+      ],
+      "nonzero_alpha_pixels": 114,
+      "prepared_vs_saved_max_rgba_difference": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "*05 両眉 困る",
+      "original": false,
+      "bounds": {
+        "right": 438,
+        "left": 303,
+        "top": 143,
+        "bottom": 164
+      },
+      "size": [
+        135,
+        21
+      ],
+      "alpha_range": [
+        0,
+        252
+      ],
+      "nonzero_alpha_pixels": 103,
+      "prepared_vs_saved_max_rgba_difference": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "*06 両眉 画面左上げ",
+      "original": false,
+      "bounds": {
+        "right": 441,
+        "left": 301,
+        "top": 141,
+        "bottom": 164
+      },
+      "size": [
+        140,
+        23
+      ],
+      "alpha_range": [
+        0,
+        250
+      ],
+      "nonzero_alpha_pixels": 83,
+      "prepared_vs_saved_max_rgba_difference": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "*07 両眉 画面右上げ",
+      "original": false,
+      "bounds": {
+        "right": 442,
+        "left": 300,
+        "top": 141,
+        "bottom": 164
+      },
+      "size": [
+        142,
+        23
+      ],
+      "alpha_range": [
+        0,
+        251
+      ],
+      "nonzero_alpha_pixels": 95,
+      "prepared_vs_saved_max_rgba_difference": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "*00 口（原画）",
+      "original": true,
+      "bounds": {
+        "left": 358,
+        "top": 233,
+        "right": 386,
+        "bottom": 243
+      },
+      "size": [
+        28,
+        10
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "nonzero_alpha_pixels": 85,
+      "prepared_vs_saved_max_rgba_difference": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "*01 口 閉じ",
+      "original": false,
+      "bounds": {
+        "right": 384,
+        "left": 358,
+        "top": 235,
+        "bottom": 241
+      },
+      "size": [
+        26,
+        6
+      ],
+      "alpha_range": [
+        0,
+        199
+      ],
+      "nonzero_alpha_pixels": 54,
+      "prepared_vs_saved_max_rgba_difference": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "*02 口 半開き",
+      "original": false,
+      "bounds": {
+        "right": 384,
+        "left": 358,
+        "top": 233,
+        "bottom": 243
+      },
+      "size": [
+        26,
+        10
+      ],
+      "alpha_range": [
+        0,
+        253
+      ],
+      "nonzero_alpha_pixels": 165,
+      "prepared_vs_saved_max_rgba_difference": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "*03 口 開き",
+      "original": false,
+      "bounds": {
+        "right": 387,
+        "left": 356,
+        "top": 225,
+        "bottom": 251
+      },
+      "size": [
+        31,
+        26
+      ],
+      "alpha_range": [
+        0,
+        253
+      ],
+      "nonzero_alpha_pixels": 578,
+      "prepared_vs_saved_max_rgba_difference": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "*04 口 あ",
+      "original": false,
+      "bounds": {
+        "right": 385,
+        "left": 358,
+        "top": 222,
+        "bottom": 255
+      },
+      "size": [
+        27,
+        33
+      ],
+      "alpha_range": [
+        0,
+        253
+      ],
+      "nonzero_alpha_pixels": 669,
+      "prepared_vs_saved_max_rgba_difference": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "*05 口 い",
+      "original": false,
+      "bounds": {
+        "right": 388,
+        "left": 354,
+        "top": 232,
+        "bottom": 244
+      },
+      "size": [
+        34,
+        12
+      ],
+      "alpha_range": [
+        0,
+        254
+      ],
+      "nonzero_alpha_pixels": 290,
+      "prepared_vs_saved_max_rgba_difference": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "*06 口 う",
+      "original": false,
+      "bounds": {
+        "right": 379,
+        "left": 364,
+        "top": 230,
+        "bottom": 246
+      },
+      "size": [
+        15,
+        16
+      ],
+      "alpha_range": [
+        0,
+        254
+      ],
+      "nonzero_alpha_pixels": 168,
+      "prepared_vs_saved_max_rgba_difference": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "*07 口 え",
+      "original": false,
+      "bounds": {
+        "right": 390,
+        "left": 352,
+        "top": 228,
+        "bottom": 248
+      },
+      "size": [
+        38,
+        20
+      ],
+      "alpha_range": [
+        0,
+        253
+      ],
+      "nonzero_alpha_pixels": 543,
+      "prepared_vs_saved_max_rgba_difference": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "*08 口 お",
+      "original": false,
+      "bounds": {
+        "right": 383,
+        "left": 360,
+        "top": 223,
+        "bottom": 253
+      },
+      "size": [
+        23,
+        30
+      ],
+      "alpha_range": [
+        0,
+        253
+      ],
+      "nonzero_alpha_pixels": 517,
+      "prepared_vs_saved_max_rgba_difference": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "*09 口 ん",
+      "original": false,
+      "bounds": {
+        "right": 383,
+        "left": 360,
+        "top": 236,
+        "bottom": 240
+      },
+      "size": [
+        23,
+        4
+      ],
+      "alpha_range": [
+        0,
+        195
+      ],
+      "nonzero_alpha_pixels": 44,
+      "prepared_vs_saved_max_rgba_difference": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ]
+}

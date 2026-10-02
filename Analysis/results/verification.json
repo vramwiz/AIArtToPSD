@@ -1,6 +1,0 @@
-{
-  "parser_boundary_and_packbits_checks": "passed",
-  "pillow_small_merged_checks": 7,
-  "pillow_warning_check": 1,
-  "reference_reader_hash_checks": 7
-}

@@ -1,5 +1,7 @@
 # 前髪1パーツの分離再試験（2026-10-01）
 
+この記録内のPSD・PNG・中間データ・作業スクリプトはローカル資料で、GitHubへの同期対象外。[資料の管理方針](../README.md)を参照。
+
 確認対象は `front_hair_trial_v3.psd` と `comparison.png`。元画像は `../character_neutral.png`。元画像・既存PSD原本は変更していない。
 
 ## 現在の結果

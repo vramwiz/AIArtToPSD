@@ -1,8 +1,11 @@
+# Delphi build products and IDE-local settings
 *.~*
 __history/
 __recovery/
 
 *.dcu
+*.dcp
+*.obj
 *.local
 *.identcache
 *.exe
@@ -18,23 +21,29 @@ Win64/
 
 .DS_Store
 
-# Local exchange smoke-test resources and generated jobs/outputs
-/Tests/ExchangeSmoke.res
-/Tests/ExchangeUiSmoke.res
-/Tests/output/recovery_debug/
-/Tests/output/recovery_release/
-/Tests/output/stage13*/
-/Tests/Stage14Smoke.res
-/Tests/output/stage14*/
+# The application resource is required; smoke-test/tool resources are generated.
+/Tests/*.res
+/Tools/*.res
+
+# Generated test, inspection and AI exchange data stay local.
+/Tests/output/
+/Analysis/results/
 /Exchange/
+/PSD/
 
-/Tests/ViewerSmoke.res
+# Keep reusable records in Git, while PSDs, images, session responses,
+# snapshots and one-off preparation scripts remain local.
+/Sample/**
+!/Sample/**/
+!/Sample/**/README.md
+!/Sample/**/learning_record.json
+!/Sample/**/*prompt*.json
+!/Sample/**/verification.json
 
-/Tools/BuildVisiblePartPsd.res
-/Tools/PrepareExchangeJob.res
-/Tests/VisibilitySmoke.res
-/Tests/output/visibility*/
-/Tests/TransformSmoke.res
-/Tests/output/transform*/
-/Tests/DropFileSmoke.res
-/Tests/output/drop*/
+# Python caches and temporary files
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+*.tmp
+*.log

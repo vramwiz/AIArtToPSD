@@ -1,0 +1,132 @@
+{
+  "status": "review version; user visual acceptance pending",
+  "tool": "built-in image_gen.imagegen",
+  "date": "2026-10-02",
+  "transparentBackground": true,
+  "records": [
+    {
+      "generation": {
+        "tool": "built-in image_gen.imagegen",
+        "use_case": "stylized-concept",
+        "intent": "generate_with_reference_images",
+        "transparent_background": true,
+        "layout": "3x3",
+        "verified_size": [
+          1254,
+          1254
+        ],
+        "verified_mode": "RGBA",
+        "cell_size": [
+          418,
+          418
+        ],
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "alpha_preparation_note": "Generated gutters contain scattered alpha=1 pixels. Normalize alpha<=1 to 0 during technical PSD asset preparation; preserve antialiasing alpha>=2 and all RGB colors including white teeth and pink tongue.",
+        "order": [
+          "閉じ",
+          "半開き",
+          "開き",
+          "あ",
+          "い",
+          "う",
+          "え",
+          "お",
+          "ん"
+        ],
+        "reference_images": [
+          "D:/DelphiProg/test/AIArtToPSD/Sample/syncroh2_blonde_native_20261002/background-alpha-fix/saved-composite.png",
+          "D:/DelphiProg/test/AIArtToPSD/Sample/syncroh2_blonde_native_20261002/prepared/mouth.png"
+        ],
+        "generated_source": "C:/Users/vramw/.codex/generated_images/01a0fac3-4ee3-7f81-8def-6ff1d67b3962/exec-988d7e8c-86fc-4afa-b172-0f714c3155dd.png",
+        "workspace_file": "D:/DelphiProg/test/AIArtToPSD/Sample/syncroh2_expressions_20261002/generated-mouths.png",
+        "prompt": "Use case: stylized-concept.\nAsset type: production anime character mouth expression sprite sheet for separate PSD layers.\nImage 1 is ONLY the character identity/style reference: a delicate young blonde blue-eyed anime character in front view. Image 2 is ONLY the original tiny mouth line style reference. Do not reproduce either full picture.\nCreate ONE square transparent PNG sprite sheet containing exactly NINE isolated mouth sprites in a perfectly regular 3 x 3 grid. Read left to right, top to bottom:\nrow 1: closed gentle mouth; half-open mouth; fully-open mouth.\nrow 2: phoneme A (あ), phoneme I (い), phoneme U (う).\nrow 3: phoneme E (え), phoneme O (お), phoneme N (ん).\nAll are the SAME character, front-facing, same shared scale and visual center, delicate anime fine warm brown-red linework. Each sprite is centered in its cell with large completely transparent gutters. Each mouth takes roughly 30 percent of its cell width; the open variants may vary height naturally but keep consistent face scale.\nClosed gentle mouth and N: ONLY a thin delicate warm brown closed-mouth line, a tiny calm curve; ABSOLUTELY no pink lip fill, no tongue, no mouth cavity, no skin blob. N may be a tiny flat/pressed closed line.\nHalf-open: a very small slightly parted narrow opening with dark mouth interior and a tiny muted pink tongue.\nFully-open: cheerful open oval with opaque dark reddish mouth interior and subtle tongue, small white upper tooth area.\nA: larger open tall oval with opaque dark cavity and tongue, clear open speaking mouth.\nI: wider shallow horizontal mouth, upper and lower WHITE TEETH lightly clenched, very tiny gap, visibly much flatter than E; no broad black open cavity.\nU: small pursed round opening, delicate curve outline, dark opaque interior.\nE: wide and moderately open horizontal mouth, substantial dark cavity, upper teeth and tongue, clearly different from the clenched teeth of I.\nO: rounded vertical open mouth, opaque dark cavity, subtle tongue.\nThe character has no prominent realistic lips or lipstick. Match the reference's understated mouth style at high drawing quality. White teeth and pink tongue are opaque legitimate parts of each sprite. KEEP THE REST TRULY ALPHA TRANSPARENT, no matte or checkerboard painted in image.\nOnly mouth marks and interiors may be visible: no face, no cheek, no skin-colored ellipse, no nose, no chin, no hair, no eyes, no labels, no numbers, no grid lines, no text, no watermark. Do not put broad shadows/glows around sprites. Render crisp antialiased isolated edges.",
+        "initial_visual_review": "Nine mouths are isolated and arranged in 3x3. Closed and N are line only; I has opaque clenched teeth and differs visibly from E. No facial skin, nose, eyes, hair, labels or grid lines. There may be subtle edge coloration from antialiasing at large zoom; evaluate at final native scale."
+      },
+      "record": "mouth-prompt.json",
+      "sha256": "72959700e42e32c06115b7376a192afbe63e78b81c775253d6de215d5087e495"
+    },
+    {
+      "generation": {
+        "tool": "image_gen.imagegen",
+        "mode": "built-in",
+        "transparent_background": true,
+        "layout": {
+          "columns": 2,
+          "rows": 3
+        },
+        "order": [
+          "通常",
+          "閉じ",
+          "半開き",
+          "笑顔閉じ",
+          "ほぼ閉じ",
+          "見開き"
+        ],
+        "prompt": "Use case: identity-preserve.\nAsset type: transparent anime eye-expression sprite sheet for a layered PSD character, six PAIRS of eyes, no face.\nInput image 1 is the full character and is a style/identity reference only. Input image 2 is the actual original pair of eyes and is the strict geometry, color, eyelash and eye-corner reference.\nCreate ONE landscape 1536 x 1024 PNG with genuine alpha transparency, a clean 2-column x 3-row layout. Six equal grid cells with generous completely transparent gutters. Reading order, left to right then top to bottom:\n1 top-left: neutral original open eyes.\n2 top-right: closed relaxed eyes, a pair of thin downward-curving closed eyelid/eyelash lines.\n3 middle-left: half-open eyes, relaxed upper lids descending halfway, blue irises partly visible.\n4 middle-right: smiling closed eyes, a pair of thin upward-curving happy eyelid/eyelash lines.\n5 bottom-left: almost-closed eyes, narrow slits and only tiny visible blue iris sections.\n6 bottom-right: wide-open surprised eyes, larger visible eye opening while retaining the same eye corners and iris size/identity.\n\nEvery cell must contain exactly ONE matched PAIR of left and right eyes, front-facing, same scale, same horizontal spacing, same baseline anchors, same fixed outer and inner eye corners. Each pair centered in its grid cell. Strictly preserve the source slightly asymmetric eye shapes and the source's pale cyan-to-deep-blue irises, large pupils, white reflections, dark plum/brown thin upper eyelash lines, soft delicate anime line style. The source native eye bounding box is 155 pixels wide x 41 pixels high, and iris-center separation is about 81 pixels. In the sheet render these magnified to around 520 pixels pair width so all six pairs have the identical proportional geometry; the full neutral pair occupies roughly 520 x 140. Opening/closing changes eyelid curves and visible amount of iris/sclera only, not eye center positions, horizontal proportions, pupil size, gaze, perspective, eyelash character, or spacing. Eye whites and reflections remain opaque inside open eyes. Closed and smiling-closed pairs are ONLY fine dark eyelid and eyelash strokes, absolutely no skin-colored filling.\n\nAll surrounding pixels, including space between the eyes, must be truly transparent alpha 0. Include ONLY the eye components: eyelashes, eyelid line, iris, pupil, white sclera and eye highlight. NO skin, NO blonde hair or stray hair strands, NO eyebrows, NO nose, NO mouth, NO under-eye bags, NO cheeks, NO pink shadows, NO eyelid crease separate from the main eye contour. No color halos, no white patch around eyes, no facelike cutout, no soft rectangular opacity, no backdrop, no checkerboard baked into the pixels, no labels, no numbers, no text, no frames, no shadows, no watermark. The transparent sheet must be ready to crop into registered pair-of-eye PSD layers.",
+        "references": [
+          "D:/DelphiProg/test/AIArtToPSD/Sample/syncroh2_blonde_native_20261002/background-alpha-fix/saved-composite.png",
+          "D:/DelphiProg/test/AIArtToPSD/Sample/syncroh2_blonde_native_20261002/prepared/eyes.png"
+        ],
+        "generated_source": "C:/Users/vramw/.codex/generated_images/01a0fac3-97ce-7170-9066-263cc75cf917/exec-d90e24dc-2568-471c-89ef-4dc957a509f6.png",
+        "output": "generated-eyes.png",
+        "dimensions": [
+          1536,
+          1024
+        ],
+        "inspection": {
+          "min_alpha": 0,
+          "max_alpha": 254,
+          "nontransparent_pixels": 237259,
+          "total_pixels": 1572864
+        }
+      },
+      "record": "eye-prompt.json",
+      "sha256": "623732c04724afdb2efbae9c9f6eb7bdc588a47b25d2d077d5269789d7e10ab1"
+    },
+    {
+      "generation": {
+        "tool": "built-in image_gen.imagegen",
+        "mode": "identity-preserve reference generation",
+        "transparent_background": true,
+        "layout": {
+          "columns": 2,
+          "rows": 4,
+          "width": 1536,
+          "height": 1024,
+          "reading_order": "left-to-right then top-to-bottom"
+        },
+        "order": [
+          "通常",
+          "喜",
+          "怒",
+          "哀",
+          "楽",
+          "困る",
+          "画面左上げ",
+          "画面右上げ"
+        ],
+        "references": [
+          "D:/DelphiProg/test/AIArtToPSD/Sample/syncroh2_blonde_native_20261002/background-alpha-fix/saved-composite.png",
+          "D:/DelphiProg/test/AIArtToPSD/Sample/syncroh2_blonde_native_20261002/prepared/brows.png"
+        ],
+        "generated_source": "C:/Users/vramw/.codex/generated_images/01a0fac3-e17a-7203-a3ab-28d88e8b41bc/exec-636100ab-440b-4d83-a59c-e190431f9a32.png",
+        "output": "D:/DelphiProg/test/AIArtToPSD/Sample/syncroh2_expressions_20261002/generated-brows.png",
+        "prompt": "Use case: identity-preserve\nAsset type: transparent anime eyebrow expression sprite sheet for PSD facial parts.\nInput image 1 is STYLE AND CHARACTER reference only (a frontal blonde anime girl). Input image 2 is LINE COLOR AND THINNESS reference only (original tiny eyebrows, with hair pixels around them that MUST NOT be included). Generate a new isolated eyebrow sheet, NOT a character portrait.\n\nDeliver ONE landscape RGBA transparent image, preferably 1536 x 1024 pixels. Layout EXACTLY 2 columns x 4 rows, eight equally sized grid cells. Every cell contains only TWO eyebrows together, one screen-left brow and one screen-right brow, facing straight forward. No cell borders, no text, no labels, no numbers. All eight pairs must have the same overall anatomical scale, the same left/right brow centers, and the same inter-brow distance. Entire brow pair spans about 400 pixels in each 768-wide cell, centered near the cell center. Leave extensive truly transparent margins between every pair, enough for independent rectangular crops. Each eyebrow is a SINGLE incredibly delicate smooth tapered arc, about 3–4 pixels at its thickest at this large sheet scale, approaching a fine point at both ends. Match the reference anime illustration: pale muted WARM gray-tan / light warm taupe eyebrow strokes, soft hand-painted antialiasing, very light and restrained. Do NOT draw thick or black eyebrows. Draw the complete eyebrow curves even where the reference character's bangs normally conceal them; we will apply hair occlusion later. Each eyebrow must be uninterrupted, no double stroke, no stray lines.\n\nExact reading order, left to right then top to bottom:\nRow 1 left: ordinary neutral calm, softly curved balanced eyebrow pair; useful as scale reference.\nRow 1 right: happy/pleased, both brows lifted slightly with gentle friendly arches.\nRow 2 left: anger, inner ends lowered strongly toward the nose and outer ends lifted; clear inward/downward slant.\nRow 2 right: sadness, inner ends lifted and outer ends dropping; clearly inverted relative to anger.\nRow 3 left: relaxed contentment, soft flatter gentle arcs, lower relaxed posture.\nRow 3 right: worried/troubled, raised pinched inner ends with mild asymmetric wavering arcs, distinct from ordinary sadness.\nRow 4 left: only SCREEN-LEFT eyebrow raised noticeably with a questioning arch; screen-right brow neutral.\nRow 4 right: only SCREEN-RIGHT eyebrow raised noticeably with a questioning arch; screen-left brow neutral.\nExpressions must be visually distinguishable yet stay delicate, subtle, and suitable for this reference character's fine face. Mirror side distinction in the last row must be correct.\n\nOutput pixels must include ONLY the eyebrow strokes with clean alpha. EVERYTHING ELSE transparent alpha = 0. NO face, NO skin-colored patch or halo, NO forehead, NO hair, NO eyes, NO eyelids, NO lashes, NO nose, NO facial wrinkles, NO mouth, NO white background, NO checkerboard pixels, NO shadows, NO decorative items, NO signature. True transparent image, not a picture of transparency.",
+        "qa": {
+          "actual_width": 1536,
+          "actual_height": 1024,
+          "actual_format": "Format32bppArgb",
+          "background_alpha_zero_at_probed_corners": true,
+          "visible_brow_shapes": true,
+          "low_alpha_speckles": "Nonzero alpha below 32 spans large margins; alpha >= 32 isolates expected pairs. Do not crop solely using alpha > 0 bounds.",
+          "notes": "8 eyebrow pairs with emotion order correct, no visible eye/hair/skin regions. Background RGB contains dark/glow-like irrelevant values where alpha=0. Appearance must be checked using actual alpha, not raw RGB preview."
+        }
+      },
+      "record": "brow-prompt.json",
+      "sha256": "ccce409f95c425e922312818479a6941ff5bfea15d46a5a8c41797e23fd7be99"
+    }
+  ]
+}
