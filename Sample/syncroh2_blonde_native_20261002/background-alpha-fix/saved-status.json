@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "data": {
+    "pipeName": "PSDArtEditor.30208.{6EFB0B03-E653-4006-A817-C8B9EDFA445D}",
+    "busy": false,
+    "canUndo": false,
+    "canRedo": false,
+    "modified": false,
+    "canEdit": true,
+    "managed": true,
+    "fileName": "D:\\Users\\take6\\Syncroh2\\PSD\\Generated\\新規PSD_37CD86B2-8040-4E66-8FC7-78AF2B6C3881.psd",
+    "supportedCommands": [
+      "status",
+      "document",
+      "update-layer",
+      "save",
+      "rename-file",
+      "new-from-png",
+      "import-png",
+      "replace-png",
+      "move-layer",
+      "create-group",
+      "select-part",
+      "export",
+      "import",
+      "progress",
+      "cancel",
+      "recover",
+      "undo",
+      "redo"
+    ],
+    "exchangeRoot": "D:\\Users\\take6\\Syncroh2\\PSD\\Editor\\Exchange",
+    "pendingFileName": "",
+    "documentId": "{ED171470-7119-4AD8-9DA9-0B78A0F332A4}",
+    "revision": "0"
+  },
+  "requestId": "92f23c5a-3462-4abe-a8c6-a6dad628c64d"
+}

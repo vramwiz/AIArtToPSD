@@ -1,0 +1,142 @@
+{
+  "result": "passed",
+  "saved_psd": "D:\\DelphiProg\\test\\AIArtToPSD\\Sample\\syncroh2_blonde_native_20261002\\blonde_face_layers_review.psd",
+  "managed_psd": "D:\\Users\\take6\\Syncroh2\\PSD\\Generated\\新規PSD_37CD86B2-8040-4E66-8FC7-78AF2B6C3881.psd",
+  "sha256": "23a373964b3a8009b1f7c00284cf3ad6a88518e2f6585e85844200a94bb9bce7",
+  "canvas": [
+    752,
+    1344
+  ],
+  "source_sha256": "e0fe85a187b089fee9e2c4a8dce715f1491e93d4e33c382f49175a3c5504f95a",
+  "image_layer_count": 5,
+  "group_count": 1,
+  "layers": {
+    "original": {
+      "name": "元画像（比較用・原寸）",
+      "bounds": [
+        0,
+        0,
+        752,
+        1344
+      ],
+      "size": [
+        752,
+        1344
+      ],
+      "visible": false,
+      "rgba_matches_asset": true,
+      "alpha_range": [
+        255,
+        255
+      ]
+    },
+    "base": {
+      "name": "ベース（目眉口を肌・髪で補完）",
+      "bounds": [
+        0,
+        0,
+        752,
+        1344
+      ],
+      "size": [
+        752,
+        1344
+      ],
+      "visible": true,
+      "rgba_matches_asset": true,
+      "alpha_range": [
+        255,
+        255
+      ]
+    },
+    "mouth": {
+      "name": "口（原画画素）",
+      "bounds": [
+        358,
+        233,
+        386,
+        243
+      ],
+      "size": [
+        28,
+        10
+      ],
+      "visible": true,
+      "rgba_matches_asset": true,
+      "alpha_range": [
+        0,
+        255
+      ],
+      "rgb_matches_original_crop": true,
+      "visible_bounds_local": [
+        1,
+        2,
+        26,
+        10
+      ]
+    },
+    "brows": {
+      "name": "両眉（原画画素）",
+      "bounds": [
+        299,
+        142,
+        439,
+        166
+      ],
+      "size": [
+        140,
+        24
+      ],
+      "visible": true,
+      "rgba_matches_asset": true,
+      "alpha_range": [
+        0,
+        255
+      ],
+      "rgb_matches_original_crop": true,
+      "visible_bounds_local": [
+        2,
+        4,
+        139,
+        22
+      ]
+    },
+    "eyes": {
+      "name": "両目（原画画素）",
+      "bounds": [
+        293,
+        167,
+        448,
+        208
+      ],
+      "size": [
+        155,
+        41
+      ],
+      "visible": true,
+      "rgba_matches_asset": true,
+      "alpha_range": [
+        0,
+        255
+      ],
+      "rgb_matches_original_crop": true,
+      "visible_bounds_local": [
+        1,
+        2,
+        154,
+        40
+      ]
+    }
+  },
+  "merged_vs_prepared_composite": {
+    "changed_pixels": 0,
+    "max_channel_difference": 0
+  },
+  "base_changed_pixels": 8912,
+  "base_changes_outside_face_regions": 0,
+  "merged_changes_outside_face_regions": 0,
+  "body_and_background_unchanged": true,
+  "saved_and_not_busy": true,
+  "quality_status": "review version; user acceptance pending",
+  "remaining_scope": "hair, clothing and limbs remain together in the base layer"
+}

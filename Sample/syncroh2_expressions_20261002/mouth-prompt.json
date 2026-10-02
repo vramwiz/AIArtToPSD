@@ -1,0 +1,31 @@
+{
+  "tool": "built-in image_gen.imagegen",
+  "use_case": "stylized-concept",
+  "intent": "generate_with_reference_images",
+  "transparent_background": true,
+  "layout": "3x3",
+  "verified_size": [1254, 1254],
+  "verified_mode": "RGBA",
+  "cell_size": [418, 418],
+  "alpha_extrema": [0, 255],
+  "alpha_preparation_note": "Generated gutters contain scattered alpha=1 pixels. Normalize alpha<=1 to 0 during technical PSD asset preparation; preserve antialiasing alpha>=2 and all RGB colors including white teeth and pink tongue.",
+  "order": [
+    "閉じ",
+    "半開き",
+    "開き",
+    "あ",
+    "い",
+    "う",
+    "え",
+    "お",
+    "ん"
+  ],
+  "reference_images": [
+    "D:/DelphiProg/test/AIArtToPSD/Sample/syncroh2_blonde_native_20261002/background-alpha-fix/saved-composite.png",
+    "D:/DelphiProg/test/AIArtToPSD/Sample/syncroh2_blonde_native_20261002/prepared/mouth.png"
+  ],
+  "generated_source": "C:/Users/vramw/.codex/generated_images/01a0fac3-4ee3-7f81-8def-6ff1d67b3962/exec-988d7e8c-86fc-4afa-b172-0f714c3155dd.png",
+  "workspace_file": "D:/DelphiProg/test/AIArtToPSD/Sample/syncroh2_expressions_20261002/generated-mouths.png",
+  "prompt": "Use case: stylized-concept.\nAsset type: production anime character mouth expression sprite sheet for separate PSD layers.\nImage 1 is ONLY the character identity/style reference: a delicate young blonde blue-eyed anime character in front view. Image 2 is ONLY the original tiny mouth line style reference. Do not reproduce either full picture.\nCreate ONE square transparent PNG sprite sheet containing exactly NINE isolated mouth sprites in a perfectly regular 3 x 3 grid. Read left to right, top to bottom:\nrow 1: closed gentle mouth; half-open mouth; fully-open mouth.\nrow 2: phoneme A (あ), phoneme I (い), phoneme U (う).\nrow 3: phoneme E (え), phoneme O (お), phoneme N (ん).\nAll are the SAME character, front-facing, same shared scale and visual center, delicate anime fine warm brown-red linework. Each sprite is centered in its cell with large completely transparent gutters. Each mouth takes roughly 30 percent of its cell width; the open variants may vary height naturally but keep consistent face scale.\nClosed gentle mouth and N: ONLY a thin delicate warm brown closed-mouth line, a tiny calm curve; ABSOLUTELY no pink lip fill, no tongue, no mouth cavity, no skin blob. N may be a tiny flat/pressed closed line.\nHalf-open: a very small slightly parted narrow opening with dark mouth interior and a tiny muted pink tongue.\nFully-open: cheerful open oval with opaque dark reddish mouth interior and subtle tongue, small white upper tooth area.\nA: larger open tall oval with opaque dark cavity and tongue, clear open speaking mouth.\nI: wider shallow horizontal mouth, upper and lower WHITE TEETH lightly clenched, very tiny gap, visibly much flatter than E; no broad black open cavity.\nU: small pursed round opening, delicate curve outline, dark opaque interior.\nE: wide and moderately open horizontal mouth, substantial dark cavity, upper teeth and tongue, clearly different from the clenched teeth of I.\nO: rounded vertical open mouth, opaque dark cavity, subtle tongue.\nThe character has no prominent realistic lips or lipstick. Match the reference's understated mouth style at high drawing quality. White teeth and pink tongue are opaque legitimate parts of each sprite. KEEP THE REST TRULY ALPHA TRANSPARENT, no matte or checkerboard painted in image.\nOnly mouth marks and interiors may be visible: no face, no cheek, no skin-colored ellipse, no nose, no chin, no hair, no eyes, no labels, no numbers, no grid lines, no text, no watermark. Do not put broad shadows/glows around sprites. Render crisp antialiased isolated edges.",
+  "initial_visual_review": "Nine mouths are isolated and arranged in 3x3. Closed and N are line only; I has opaque clenched teeth and differs visibly from E. No facial skin, nose, eyes, hair, labels or grid lines. There may be subtle edge coloration from antialiasing at large zoom; evaluate at final native scale."
+}

@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "data": {
+    "documentId": "{209241BC-BDA5-4976-AEB9-EEC47D9B48A1}",
+    "revision": "1",
+    "fileName": "D:\\Users\\take6\\Syncroh2\\PSD\\Generated\\新規PSD_37CD86B2-8040-4E66-8FC7-78AF2B6C3881.psd",
+    "managed": true,
+    "canEdit": true,
+    "modified": true,
+    "width": 752,
+    "height": 1344,
+    "layerOrder": "topmost-first",
+    "selectedLayerId": "{D9064CCC-08DB-4E68-99D5-E701EB57205F}",
+    "layers": [
+      {
+        "id": "{D9064CCC-08DB-4E68-99D5-E701EB57205F}",
+        "parentId": "",
+        "name": "original",
+        "kind": 0,
+        "visible": true,
+        "opacity": 255,
+        "bounds": {
+          "left": 0,
+          "top": 0,
+          "right": 752,
+          "bottom": 1344
+        },
+        "hasMask": false
+      }
+    ]
+  },
+  "requestId": "a73b6fd8-ca67-4145-b3b5-9089c1e70d15"
+}

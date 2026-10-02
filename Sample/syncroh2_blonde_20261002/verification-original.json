@@ -1,0 +1,36 @@
+{
+  "original_size": [
+    752,
+    1344
+  ],
+  "rgba_size": [
+    752,
+    1344
+  ],
+  "original_rgb_preserved": true,
+  "rgba_alpha_range": [
+    255,
+    255
+  ],
+  "psd_valid": true,
+  "psd_size": [
+    1024,
+    1024
+  ],
+  "layer_count": 1,
+  "layer_size": [
+    573,
+    1024
+  ],
+  "layer_matches_merged": true,
+  "left_margin_alpha": [
+    0,
+    0
+  ],
+  "right_margin_alpha": [
+    0,
+    0
+  ],
+  "white_background_preserved": true,
+  "psd_sha256": "f0dbe514073220636ee74f192a8803a40fc700fffb2477f013fd83ae72df88da"
+}

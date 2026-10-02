@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "data": {
+    "documentId": "{ED171470-7119-4AD8-9DA9-0B78A0F332A4}",
+    "revision": "0",
+    "fileName": "D:\\Users\\take6\\Syncroh2\\PSD\\Generated\\新規PSD_37CD86B2-8040-4E66-8FC7-78AF2B6C3881.psd",
+    "managed": true,
+    "canEdit": true,
+    "modified": false,
+    "width": 752,
+    "height": 1344,
+    "layerOrder": "topmost-first",
+    "selectedLayerId": "{55E49F83-D06D-4652-B8A9-1368D84E58CF}",
+    "layers": [
+      {
+        "id": "{55E49F83-D06D-4652-B8A9-1368D84E58CF}",
+        "parentId": "",
+        "name": "顔パーツ分離（確認用）",
+        "kind": 1,
+        "visible": true,
+        "opacity": 255,
+        "bounds": {
+          "left": 0,
+          "top": 0,
+          "right": 0,
+          "bottom": 0
+        },
+        "hasMask": false
+      },
+      {
+        "id": "{CB87B481-CB0D-4F3F-B454-7D857C04594A}",
+        "parentId": "{55E49F83-D06D-4652-B8A9-1368D84E58CF}",
+        "name": "両目（原画画素）",
+        "kind": 0,
+        "visible": true,
+        "opacity": 255,
+        "bounds": {
+          "left": 293,
+          "top": 167,
+          "right": 448,
+          "bottom": 208
+        },
+        "hasMask": false
+      },
+      {
+        "id": "{D704A692-879B-4949-A111-A94B366C0924}",
+        "parentId": "{55E49F83-D06D-4652-B8A9-1368D84E58CF}",
+        "name": "両眉（原画画素）",
+        "kind": 0,
+        "visible": true,
+        "opacity": 255,
+        "bounds": {
+          "left": 299,
+          "top": 142,
+          "right": 439,
+          "bottom": 166
+        },
+        "hasMask": false
+      },
+      {
+        "id": "{ABE24D01-55C5-40FC-A1DE-242533EFA761}",
+        "parentId": "{55E49F83-D06D-4652-B8A9-1368D84E58CF}",
+        "name": "口（原画画素）",
+        "kind": 0,
+        "visible": true,
+        "opacity": 255,
+        "bounds": {
+          "left": 358,
+          "top": 233,
+          "right": 386,
+          "bottom": 243
+        },
+        "hasMask": false
+      },
+      {
+        "id": "{802B95D5-7B7F-4234-9AC1-CCC63D487D60}",
+        "parentId": "{55E49F83-D06D-4652-B8A9-1368D84E58CF}",
+        "name": "ベース（背景透過・目眉口補完）",
+        "kind": 0,
+        "visible": true,
+        "opacity": 255,
+        "bounds": {
+          "left": 0,
+          "top": 0,
+          "right": 752,
+          "bottom": 1344
+        },
+        "hasMask": false
+      },
+      {
+        "id": "{B7A78D09-8FD3-49B1-9A49-79CC2F22AAAF}",
+        "parentId": "",
+        "name": "元画像（比較用・原寸）",
+        "kind": 0,
+        "visible": false,
+        "opacity": 255,
+        "bounds": {
+          "left": 0,
+          "top": 0,
+          "right": 752,
+          "bottom": 1344
+        },
+        "hasMask": false
+      }
+    ]
+  },
+  "requestId": "4c998705-8718-4df1-9597-6a2c9ed56414"
+}

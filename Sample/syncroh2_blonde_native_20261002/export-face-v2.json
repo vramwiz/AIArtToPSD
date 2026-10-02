@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "data": {
+    "jobId": "{2D996235-5F4A-43D4-A523-7CE5D8E674D2}",
+    "directory": "D:\\Users\\take6\\Syncroh2\\PSD\\Editor\\Exchange\\{2D996235-5F4A-43D4-A523-7CE5D8E674D2}",
+    "state": "queued",
+    "progress": 0,
+    "message": "",
+    "documentId": "{CBB4B66B-C84D-45DE-A17A-196DE4439B2C}",
+    "ifRevision": "0",
+    "stale": false
+  },
+  "requestId": "93aa272a-e4e4-4fe9-b5c4-0b23c52b62a1"
+}

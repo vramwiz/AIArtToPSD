@@ -1,0 +1,567 @@
+{
+  "path": "D:\\DelphiProg\\test\\AIArtToPSD\\Sample\\syncroh2_blonde_native_20261002\\blonde_face_layers_review.psd",
+  "relative_path": "blonde_face_layers_review.psd",
+  "size": 7126332,
+  "sha256": "23a373964b3a8009b1f7c00284cf3ad6a88518e2f6585e85844200a94bb9bce7",
+  "status": "ok",
+  "warnings": [],
+  "header": {
+    "version": 1,
+    "channels": 4,
+    "width": 752,
+    "height": 1344,
+    "depth": 8,
+    "color_mode": 3,
+    "reserved_zero": true
+  },
+  "sections": [
+    {
+      "kind": "color_mode",
+      "offset": 26,
+      "payload_start": 30,
+      "end": 30,
+      "length": 0
+    },
+    {
+      "kind": "resources",
+      "offset": 30,
+      "payload_start": 34,
+      "end": 34,
+      "length": 0
+    },
+    {
+      "kind": "layer_mask",
+      "offset": 34,
+      "payload_start": 38,
+      "end": 4761354,
+      "length": 4761316
+    }
+  ],
+  "layers": [
+    {
+      "index": 0,
+      "offset": 44,
+      "end": 168,
+      "rect": [
+        0,
+        0,
+        1344,
+        752
+      ],
+      "name": "元画像（比較用・原寸）",
+      "legacy_hex": "",
+      "section_type": 0,
+      "blend": "norm",
+      "opacity": 255,
+      "clipping": 0,
+      "flags": 2,
+      "visible": false,
+      "mask": {
+        "length": 0
+      },
+      "blending_ranges_length": 0,
+      "channels": [
+        {
+          "id": 0,
+          "length": 777387,
+          "offset": 890,
+          "end": 778277,
+          "compression": 1,
+          "row_lengths_sum": 774697,
+          "validation": "rle-length-table-checked"
+        },
+        {
+          "id": 1,
+          "length": 787615,
+          "offset": 778277,
+          "end": 1565892,
+          "compression": 1,
+          "row_lengths_sum": 784925,
+          "validation": "rle-length-table-checked"
+        },
+        {
+          "id": 2,
+          "length": 781133,
+          "offset": 1565892,
+          "end": 2347025,
+          "compression": 1,
+          "row_lengths_sum": 778443,
+          "validation": "rle-length-table-checked"
+        },
+        {
+          "id": -1,
+          "length": 18818,
+          "offset": 2347025,
+          "end": 2365843,
+          "compression": 1,
+          "row_lengths_sum": 16128,
+          "validation": "rle-length-table-checked"
+        }
+      ],
+      "tags": [
+        {
+          "offset": 114,
+          "signature": "8BIM",
+          "key": "luni",
+          "length": 26,
+          "name": "元画像（比較用・原寸）",
+          "end": 152
+        },
+        {
+          "offset": 152,
+          "signature": "8BIM",
+          "key": "lyid",
+          "length": 4,
+          "layer_id": 1,
+          "end": 168
+        }
+      ],
+      "depth": 0
+    },
+    {
+      "index": 1,
+      "offset": 168,
+      "end": 290,
+      "rect": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "name": "</Layer group>",
+      "legacy_hex": "",
+      "section_type": 3,
+      "blend": "norm",
+      "opacity": 255,
+      "clipping": 0,
+      "flags": 2,
+      "visible": false,
+      "mask": {
+        "length": 0
+      },
+      "blending_ranges_length": 0,
+      "channels": [],
+      "tags": [
+        {
+          "offset": 214,
+          "signature": "8BIM",
+          "key": "luni",
+          "length": 32,
+          "name": "</Layer group>",
+          "end": 258
+        },
+        {
+          "offset": 258,
+          "signature": "8BIM",
+          "key": "lyid",
+          "length": 4,
+          "layer_id": 2,
+          "end": 274
+        },
+        {
+          "offset": 274,
+          "signature": "8BIM",
+          "key": "lsct",
+          "length": 4,
+          "section_type": 3,
+          "end": 290
+        }
+      ],
+      "depth": 0
+    },
+    {
+      "index": 2,
+      "offset": 290,
+      "end": 422,
+      "rect": [
+        0,
+        0,
+        1344,
+        752
+      ],
+      "name": "ベース（目眉口を肌・髪で補完）",
+      "legacy_hex": "",
+      "section_type": 0,
+      "blend": "norm",
+      "opacity": 255,
+      "clipping": 0,
+      "flags": 0,
+      "visible": true,
+      "mask": {
+        "length": 0
+      },
+      "blending_ranges_length": 0,
+      "channels": [
+        {
+          "id": 0,
+          "length": 776996,
+          "offset": 2365843,
+          "end": 3142839,
+          "compression": 1,
+          "row_lengths_sum": 774306,
+          "validation": "rle-length-table-checked"
+        },
+        {
+          "id": 1,
+          "length": 787119,
+          "offset": 3142839,
+          "end": 3929958,
+          "compression": 1,
+          "row_lengths_sum": 784429,
+          "validation": "rle-length-table-checked"
+        },
+        {
+          "id": 2,
+          "length": 780624,
+          "offset": 3929958,
+          "end": 4710582,
+          "compression": 1,
+          "row_lengths_sum": 777934,
+          "validation": "rle-length-table-checked"
+        },
+        {
+          "id": -1,
+          "length": 18818,
+          "offset": 4710582,
+          "end": 4729400,
+          "compression": 1,
+          "row_lengths_sum": 16128,
+          "validation": "rle-length-table-checked"
+        }
+      ],
+      "tags": [
+        {
+          "offset": 360,
+          "signature": "8BIM",
+          "key": "luni",
+          "length": 34,
+          "name": "ベース（目眉口を肌・髪で補完）",
+          "end": 406
+        },
+        {
+          "offset": 406,
+          "signature": "8BIM",
+          "key": "lyid",
+          "length": 4,
+          "layer_id": 3,
+          "end": 422
+        }
+      ],
+      "depth": 1
+    },
+    {
+      "index": 3,
+      "offset": 422,
+      "end": 538,
+      "rect": [
+        233,
+        358,
+        243,
+        386
+      ],
+      "name": "口（原画画素）",
+      "legacy_hex": "",
+      "section_type": 0,
+      "blend": "norm",
+      "opacity": 255,
+      "clipping": 0,
+      "flags": 0,
+      "visible": true,
+      "mask": {
+        "length": 0
+      },
+      "blending_ranges_length": 0,
+      "channels": [
+        {
+          "id": 0,
+          "length": 253,
+          "offset": 4729400,
+          "end": 4729653,
+          "compression": 1,
+          "row_lengths_sum": 231,
+          "validation": "rle-length-table-checked"
+        },
+        {
+          "id": 1,
+          "length": 275,
+          "offset": 4729653,
+          "end": 4729928,
+          "compression": 1,
+          "row_lengths_sum": 253,
+          "validation": "rle-length-table-checked"
+        },
+        {
+          "id": 2,
+          "length": 273,
+          "offset": 4729928,
+          "end": 4730201,
+          "compression": 1,
+          "row_lengths_sum": 251,
+          "validation": "rle-length-table-checked"
+        },
+        {
+          "id": -1,
+          "length": 139,
+          "offset": 4730201,
+          "end": 4730340,
+          "compression": 1,
+          "row_lengths_sum": 117,
+          "validation": "rle-length-table-checked"
+        }
+      ],
+      "tags": [
+        {
+          "offset": 492,
+          "signature": "8BIM",
+          "key": "luni",
+          "length": 18,
+          "name": "口（原画画素）",
+          "end": 522
+        },
+        {
+          "offset": 522,
+          "signature": "8BIM",
+          "key": "lyid",
+          "length": 4,
+          "layer_id": 4,
+          "end": 538
+        }
+      ],
+      "depth": 1
+    },
+    {
+      "index": 4,
+      "offset": 538,
+      "end": 656,
+      "rect": [
+        142,
+        299,
+        166,
+        439
+      ],
+      "name": "両眉（原画画素）",
+      "legacy_hex": "",
+      "section_type": 0,
+      "blend": "norm",
+      "opacity": 255,
+      "clipping": 0,
+      "flags": 0,
+      "visible": true,
+      "mask": {
+        "length": 0
+      },
+      "blending_ranges_length": 0,
+      "channels": [
+        {
+          "id": 0,
+          "length": 3213,
+          "offset": 4730340,
+          "end": 4733553,
+          "compression": 1,
+          "row_lengths_sum": 3163,
+          "validation": "rle-length-table-checked"
+        },
+        {
+          "id": 1,
+          "length": 3328,
+          "offset": 4733553,
+          "end": 4736881,
+          "compression": 1,
+          "row_lengths_sum": 3278,
+          "validation": "rle-length-table-checked"
+        },
+        {
+          "id": 2,
+          "length": 3376,
+          "offset": 4736881,
+          "end": 4740257,
+          "compression": 1,
+          "row_lengths_sum": 3326,
+          "validation": "rle-length-table-checked"
+        },
+        {
+          "id": -1,
+          "length": 449,
+          "offset": 4740257,
+          "end": 4740706,
+          "compression": 1,
+          "row_lengths_sum": 399,
+          "validation": "rle-length-table-checked"
+        }
+      ],
+      "tags": [
+        {
+          "offset": 608,
+          "signature": "8BIM",
+          "key": "luni",
+          "length": 20,
+          "name": "両眉（原画画素）",
+          "end": 640
+        },
+        {
+          "offset": 640,
+          "signature": "8BIM",
+          "key": "lyid",
+          "length": 4,
+          "layer_id": 5,
+          "end": 656
+        }
+      ],
+      "depth": 1
+    },
+    {
+      "index": 5,
+      "offset": 656,
+      "end": 774,
+      "rect": [
+        167,
+        293,
+        208,
+        448
+      ],
+      "name": "両目（原画画素）",
+      "legacy_hex": "",
+      "section_type": 0,
+      "blend": "norm",
+      "opacity": 255,
+      "clipping": 0,
+      "flags": 0,
+      "visible": true,
+      "mask": {
+        "length": 0
+      },
+      "blending_ranges_length": 0,
+      "channels": [
+        {
+          "id": 0,
+          "length": 6013,
+          "offset": 4740706,
+          "end": 4746719,
+          "compression": 1,
+          "row_lengths_sum": 5929,
+          "validation": "rle-length-table-checked"
+        },
+        {
+          "id": 1,
+          "length": 6279,
+          "offset": 4746719,
+          "end": 4752998,
+          "compression": 1,
+          "row_lengths_sum": 6195,
+          "validation": "rle-length-table-checked"
+        },
+        {
+          "id": 2,
+          "length": 6284,
+          "offset": 4752998,
+          "end": 4759282,
+          "compression": 1,
+          "row_lengths_sum": 6200,
+          "validation": "rle-length-table-checked"
+        },
+        {
+          "id": -1,
+          "length": 2067,
+          "offset": 4759282,
+          "end": 4761349,
+          "compression": 1,
+          "row_lengths_sum": 1983,
+          "validation": "rle-length-table-checked"
+        }
+      ],
+      "tags": [
+        {
+          "offset": 726,
+          "signature": "8BIM",
+          "key": "luni",
+          "length": 20,
+          "name": "両目（原画画素）",
+          "end": 758
+        },
+        {
+          "offset": 758,
+          "signature": "8BIM",
+          "key": "lyid",
+          "length": 4,
+          "layer_id": 6,
+          "end": 774
+        }
+      ],
+      "depth": 1
+    },
+    {
+      "index": 6,
+      "offset": 774,
+      "end": 890,
+      "rect": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "name": "顔パーツ分離（確認用）",
+      "legacy_hex": "",
+      "section_type": 1,
+      "blend": "pass",
+      "opacity": 255,
+      "clipping": 0,
+      "flags": 0,
+      "visible": true,
+      "mask": {
+        "length": 0
+      },
+      "blending_ranges_length": 0,
+      "channels": [],
+      "tags": [
+        {
+          "offset": 820,
+          "signature": "8BIM",
+          "key": "luni",
+          "length": 26,
+          "name": "顔パーツ分離（確認用）",
+          "end": 858
+        },
+        {
+          "offset": 858,
+          "signature": "8BIM",
+          "key": "lyid",
+          "length": 4,
+          "layer_id": 7,
+          "end": 874
+        },
+        {
+          "offset": 874,
+          "signature": "8BIM",
+          "key": "lsct",
+          "length": 4,
+          "section_type": 1,
+          "end": 890
+        }
+      ],
+      "depth": 0,
+      "group_boundary_index": 1
+    }
+  ],
+  "resources": [],
+  "layer_info": {
+    "offset": 38,
+    "payload_start": 42,
+    "end": 4761350,
+    "length": 4761308,
+    "trailing_bytes": 1,
+    "trailing_zero": true
+  },
+  "signed_layer_count": -7,
+  "global_mask_length": 0,
+  "global_tags": [],
+  "merged": {
+    "offset": 4761354,
+    "end": 7126332,
+    "compression": 1,
+    "row_count": 5376,
+    "encoded_bytes": 2354224,
+    "payload_start": 4772108,
+    "expected_end": 7126332
+  },
+  "decode_selected": false
+}

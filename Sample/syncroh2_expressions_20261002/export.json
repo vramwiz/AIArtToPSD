@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "data": {
+    "jobId": "{FCF3FF57-31C4-46C9-B4C8-C2679FD47530}",
+    "directory": "D:\\Users\\take6\\Syncroh2\\PSD\\Editor\\Exchange\\{FCF3FF57-31C4-46C9-B4C8-C2679FD47530}",
+    "state": "queued",
+    "progress": 0,
+    "message": "",
+    "documentId": "{5424201D-5A0A-4791-8A3D-CF2408554769}",
+    "ifRevision": "0",
+    "stale": false
+  },
+  "requestId": "e42b8dd8-6c7c-4091-a8ca-4b90e845d2e4"
+}

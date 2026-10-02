@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "data": {
+    "documentId": "{46A33EFD-52FF-486B-8CAA-C8A5BC412324}",
+    "revision": "0",
+    "fileName": "D:\\Users\\take6\\Syncroh2\\PSD\\Generated\\新規PSD_37CD86B2-8040-4E66-8FC7-78AF2B6C3881.psd",
+    "managed": true,
+    "canEdit": true,
+    "modified": false,
+    "width": 1024,
+    "height": 1024,
+    "layerOrder": "topmost-first",
+    "selectedLayerId": "{259E1387-A6FB-4231-A8CA-DB6A16175E0A}",
+    "layers": [
+      {
+        "id": "{259E1387-A6FB-4231-A8CA-DB6A16175E0A}",
+        "parentId": "",
+        "name": "原画（白背景・全身）",
+        "kind": 0,
+        "visible": true,
+        "opacity": 255,
+        "bounds": {
+          "left": 225,
+          "top": 0,
+          "right": 798,
+          "bottom": 1024
+        },
+        "hasMask": false
+      }
+    ]
+  },
+  "requestId": "1e8667ea-16d8-43bd-b23d-0cc9c3547db5"
+}

@@ -1,0 +1,34 @@
+{
+  "date": "2026-10-02",
+  "application": "Syncroh2 PSDArtEditor",
+  "connectionConfirmed": true,
+  "commandsVerified": [
+    "status",
+    "document",
+    "export",
+    "progress",
+    "import",
+    "save"
+  ],
+  "source": "original.png",
+  "sourceDimensions": [
+    752,
+    1344
+  ],
+  "managedSavedPsd": "D:\\Users\\take6\\Syncroh2\\PSD\\Generated\\新規PSD_37CD86B2-8040-4E66-8FC7-78AF2B6C3881.psd",
+  "reviewPsd": "blonde_original_review.psd",
+  "canvas": [
+    1024,
+    1024
+  ],
+  "placedImage": {
+    "top": 0,
+    "height": 1024,
+    "left": 225,
+    "width": 573
+  },
+  "stage": "原画1レイヤー。白背景保持。顔パーツ分離は未実施。",
+  "limitation": "PNG原寸のNewFromPng APIは存在するが現行組込み版ではメニュー・パイプ・D&Dに公開されていない。現行1024正方形内へアプリ側resampleで配置。",
+  "verification": "verification-original.json",
+  "jobDirectory": "D:\\Users\\take6\\Syncroh2\\PSD\\Editor\\Exchange\\{B0D6DAA3-9B6D-40A5-A938-FFB43AEEBC42}"
+}

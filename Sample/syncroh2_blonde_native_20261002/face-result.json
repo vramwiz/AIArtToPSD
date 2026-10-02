@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "requestId": "{2D996235-5F4A-43D4-A523-7CE5D8E674D2}",
+  "jobId": "{2D996235-5F4A-43D4-A523-7CE5D8E674D2}",
+  "documentId": "{CBB4B66B-C84D-45DE-A17A-196DE4439B2C}",
+  "ifRevision": "0",
+  "assets": [
+    {
+      "path": "images/eyes.png",
+      "sha256": "b2c476fce296dfd266644988d7d1674dd84b2ad9e149a04a930288979c53d81e",
+      "width": 155,
+      "height": 41,
+      "pixelFormat": "RGBA8",
+      "colorSpace": "sRGB",
+      "assetId": "eyes"
+    },
+    {
+      "path": "images/brows.png",
+      "sha256": "23cefb4d728a7d3bc62d0216a4bb09138392f46b92d8b0de3f369a0e0ac97b94",
+      "width": 140,
+      "height": 24,
+      "pixelFormat": "RGBA8",
+      "colorSpace": "sRGB",
+      "assetId": "brows"
+    },
+    {
+      "path": "images/mouth.png",
+      "sha256": "e67f27587122f9e4bbcc2e4fa27218fc2c8ee91ac2cb21ba95e63865798aa265",
+      "width": 28,
+      "height": 10,
+      "pixelFormat": "RGBA8",
+      "colorSpace": "sRGB",
+      "assetId": "mouth"
+    },
+    {
+      "path": "images/base.png",
+      "sha256": "681541dbe57ab436193f6db9c098f03d78724cf5575e073c70c8d8baf14d3ec1",
+      "width": 752,
+      "height": 1344,
+      "pixelFormat": "RGBA8",
+      "colorSpace": "sRGB",
+      "assetId": "base"
+    }
+  ],
+  "operations": [
+    {
+      "name": "元画像（比較用・原寸）",
+      "op": "rename_layer",
+      "layerId": "{A6E98EC8-6642-499A-8A28-9D13892A5016}"
+    },
+    {
+      "opacity": 255,
+      "op": "set_attributes",
+      "layerId": "{A6E98EC8-6642-499A-8A28-9D13892A5016}",
+      "visible": false
+    },
+    {
+      "beforeLayerId": "{A6E98EC8-6642-499A-8A28-9D13892A5016}",
+      "layerId": "{8908123b-b793-488d-bbbb-7b8e2174d643}",
+      "op": "add_group",
+      "visible": true,
+      "name": "顔パーツ分離（確認用）",
+      "opacity": 255,
+      "parentId": ""
+    },
+    {
+      "parentId": "{8908123b-b793-488d-bbbb-7b8e2174d643}",
+      "bounds": {
+        "bottom": 208,
+        "left": 293,
+        "top": 167,
+        "right": 448
+      },
+      "name": "両目（原画画素）",
+      "op": "add_layer",
+      "opacity": 255,
+      "assetId": "eyes",
+      "beforeLayerId": "",
+      "layerId": "{d4820d38-4108-482d-ad14-ace6f84b2f0d}",
+      "visible": true
+    },
+    {
+      "parentId": "{8908123b-b793-488d-bbbb-7b8e2174d643}",
+      "bounds": {
+        "bottom": 166,
+        "left": 299,
+        "top": 142,
+        "right": 439
+      },
+      "name": "両眉（原画画素）",
+      "op": "add_layer",
+      "opacity": 255,
+      "assetId": "brows",
+      "beforeLayerId": "",
+      "layerId": "{6ed52480-43a4-4659-8498-66d1aecbb02e}",
+      "visible": true
+    },
+    {
+      "parentId": "{8908123b-b793-488d-bbbb-7b8e2174d643}",
+      "bounds": {
+        "bottom": 243,
+        "left": 358,
+        "top": 233,
+        "right": 386
+      },
+      "name": "口（原画画素）",
+      "op": "add_layer",
+      "opacity": 255,
+      "assetId": "mouth",
+      "beforeLayerId": "",
+      "layerId": "{2bc964d7-1f96-4f42-b21f-24c59f53e68c}",
+      "visible": true
+    },
+    {
+      "parentId": "{8908123b-b793-488d-bbbb-7b8e2174d643}",
+      "bounds": {
+        "bottom": 1344,
+        "left": 0,
+        "top": 0,
+        "right": 752
+      },
+      "name": "ベース（目眉口を肌・髪で補完）",
+      "op": "add_layer",
+      "opacity": 255,
+      "assetId": "base",
+      "beforeLayerId": "",
+      "layerId": "{7397a81d-f82e-47f7-b2e2-5074a7c37c89}",
+      "visible": true
+    }
+  ]
+}

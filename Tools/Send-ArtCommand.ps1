@@ -1,7 +1,7 @@
 #requires -Version 7.0
 param(
     [Parameter(Mandatory=$true)][string]$PipeName,
-    [Parameter(Mandatory=$true)][ValidateSet('status','export','import','progress','cancel','undo','redo','recover')][string]$Command,
+    [Parameter(Mandatory=$true)][ValidateSet('status','document','update-layer','save','rename-file','export','import','progress','cancel','undo','redo','recover')][string]$Command,
     [string]$ArgsJson = '{}',
     [ValidateRange(1,60000)][int]$TimeoutMs = 5000
 )

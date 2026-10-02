@@ -1,0 +1,38 @@
+{
+  "tool": "built-in image_gen.imagegen",
+  "mode": "identity-preserve reference generation",
+  "transparent_background": true,
+  "layout": {
+    "columns": 2,
+    "rows": 4,
+    "width": 1536,
+    "height": 1024,
+    "reading_order": "left-to-right then top-to-bottom"
+  },
+  "order": [
+    "通常",
+    "喜",
+    "怒",
+    "哀",
+    "楽",
+    "困る",
+    "画面左上げ",
+    "画面右上げ"
+  ],
+  "references": [
+    "D:/DelphiProg/test/AIArtToPSD/Sample/syncroh2_blonde_native_20261002/background-alpha-fix/saved-composite.png",
+    "D:/DelphiProg/test/AIArtToPSD/Sample/syncroh2_blonde_native_20261002/prepared/brows.png"
+  ],
+  "generated_source": "C:/Users/vramw/.codex/generated_images/01a0fac3-e17a-7203-a3ab-28d88e8b41bc/exec-636100ab-440b-4d83-a59c-e190431f9a32.png",
+  "output": "D:/DelphiProg/test/AIArtToPSD/Sample/syncroh2_expressions_20261002/generated-brows.png",
+  "prompt": "Use case: identity-preserve\nAsset type: transparent anime eyebrow expression sprite sheet for PSD facial parts.\nInput image 1 is STYLE AND CHARACTER reference only (a frontal blonde anime girl). Input image 2 is LINE COLOR AND THINNESS reference only (original tiny eyebrows, with hair pixels around them that MUST NOT be included). Generate a new isolated eyebrow sheet, NOT a character portrait.\n\nDeliver ONE landscape RGBA transparent image, preferably 1536 x 1024 pixels. Layout EXACTLY 2 columns x 4 rows, eight equally sized grid cells. Every cell contains only TWO eyebrows together, one screen-left brow and one screen-right brow, facing straight forward. No cell borders, no text, no labels, no numbers. All eight pairs must have the same overall anatomical scale, the same left/right brow centers, and the same inter-brow distance. Entire brow pair spans about 400 pixels in each 768-wide cell, centered near the cell center. Leave extensive truly transparent margins between every pair, enough for independent rectangular crops. Each eyebrow is a SINGLE incredibly delicate smooth tapered arc, about 3–4 pixels at its thickest at this large sheet scale, approaching a fine point at both ends. Match the reference anime illustration: pale muted WARM gray-tan / light warm taupe eyebrow strokes, soft hand-painted antialiasing, very light and restrained. Do NOT draw thick or black eyebrows. Draw the complete eyebrow curves even where the reference character's bangs normally conceal them; we will apply hair occlusion later. Each eyebrow must be uninterrupted, no double stroke, no stray lines.\n\nExact reading order, left to right then top to bottom:\nRow 1 left: ordinary neutral calm, softly curved balanced eyebrow pair; useful as scale reference.\nRow 1 right: happy/pleased, both brows lifted slightly with gentle friendly arches.\nRow 2 left: anger, inner ends lowered strongly toward the nose and outer ends lifted; clear inward/downward slant.\nRow 2 right: sadness, inner ends lifted and outer ends dropping; clearly inverted relative to anger.\nRow 3 left: relaxed contentment, soft flatter gentle arcs, lower relaxed posture.\nRow 3 right: worried/troubled, raised pinched inner ends with mild asymmetric wavering arcs, distinct from ordinary sadness.\nRow 4 left: only SCREEN-LEFT eyebrow raised noticeably with a questioning arch; screen-right brow neutral.\nRow 4 right: only SCREEN-RIGHT eyebrow raised noticeably with a questioning arch; screen-left brow neutral.\nExpressions must be visually distinguishable yet stay delicate, subtle, and suitable for this reference character's fine face. Mirror side distinction in the last row must be correct.\n\nOutput pixels must include ONLY the eyebrow strokes with clean alpha. EVERYTHING ELSE transparent alpha = 0. NO face, NO skin-colored patch or halo, NO forehead, NO hair, NO eyes, NO eyelids, NO lashes, NO nose, NO facial wrinkles, NO mouth, NO white background, NO checkerboard pixels, NO shadows, NO decorative items, NO signature. True transparent image, not a picture of transparency.",
+  "qa": {
+    "actual_width": 1536,
+    "actual_height": 1024,
+    "actual_format": "Format32bppArgb",
+    "background_alpha_zero_at_probed_corners": true,
+    "visible_brow_shapes": true,
+    "low_alpha_speckles": "Nonzero alpha below 32 spans large margins; alpha >= 32 isolates expected pairs. Do not crop solely using alpha > 0 bounds.",
+    "notes": "8 eyebrow pairs with emotion order correct, no visible eye/hair/skin regions. Background RGB contains dark/glow-like irrelevant values where alpha=0. Appearance must be checked using actual alpha, not raw RGB preview."
+  }
+}

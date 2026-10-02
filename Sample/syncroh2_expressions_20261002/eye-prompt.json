@@ -1,0 +1,34 @@
+{
+  "tool": "image_gen.imagegen",
+  "mode": "built-in",
+  "transparent_background": true,
+  "layout": {
+    "columns": 2,
+    "rows": 3
+  },
+  "order": [
+    "通常",
+    "閉じ",
+    "半開き",
+    "笑顔閉じ",
+    "ほぼ閉じ",
+    "見開き"
+  ],
+  "prompt": "Use case: identity-preserve.\nAsset type: transparent anime eye-expression sprite sheet for a layered PSD character, six PAIRS of eyes, no face.\nInput image 1 is the full character and is a style/identity reference only. Input image 2 is the actual original pair of eyes and is the strict geometry, color, eyelash and eye-corner reference.\nCreate ONE landscape 1536 x 1024 PNG with genuine alpha transparency, a clean 2-column x 3-row layout. Six equal grid cells with generous completely transparent gutters. Reading order, left to right then top to bottom:\n1 top-left: neutral original open eyes.\n2 top-right: closed relaxed eyes, a pair of thin downward-curving closed eyelid/eyelash lines.\n3 middle-left: half-open eyes, relaxed upper lids descending halfway, blue irises partly visible.\n4 middle-right: smiling closed eyes, a pair of thin upward-curving happy eyelid/eyelash lines.\n5 bottom-left: almost-closed eyes, narrow slits and only tiny visible blue iris sections.\n6 bottom-right: wide-open surprised eyes, larger visible eye opening while retaining the same eye corners and iris size/identity.\n\nEvery cell must contain exactly ONE matched PAIR of left and right eyes, front-facing, same scale, same horizontal spacing, same baseline anchors, same fixed outer and inner eye corners. Each pair centered in its grid cell. Strictly preserve the source slightly asymmetric eye shapes and the source's pale cyan-to-deep-blue irises, large pupils, white reflections, dark plum/brown thin upper eyelash lines, soft delicate anime line style. The source native eye bounding box is 155 pixels wide x 41 pixels high, and iris-center separation is about 81 pixels. In the sheet render these magnified to around 520 pixels pair width so all six pairs have the identical proportional geometry; the full neutral pair occupies roughly 520 x 140. Opening/closing changes eyelid curves and visible amount of iris/sclera only, not eye center positions, horizontal proportions, pupil size, gaze, perspective, eyelash character, or spacing. Eye whites and reflections remain opaque inside open eyes. Closed and smiling-closed pairs are ONLY fine dark eyelid and eyelash strokes, absolutely no skin-colored filling.\n\nAll surrounding pixels, including space between the eyes, must be truly transparent alpha 0. Include ONLY the eye components: eyelashes, eyelid line, iris, pupil, white sclera and eye highlight. NO skin, NO blonde hair or stray hair strands, NO eyebrows, NO nose, NO mouth, NO under-eye bags, NO cheeks, NO pink shadows, NO eyelid crease separate from the main eye contour. No color halos, no white patch around eyes, no facelike cutout, no soft rectangular opacity, no backdrop, no checkerboard baked into the pixels, no labels, no numbers, no text, no frames, no shadows, no watermark. The transparent sheet must be ready to crop into registered pair-of-eye PSD layers.",
+  "references": [
+    "D:/DelphiProg/test/AIArtToPSD/Sample/syncroh2_blonde_native_20261002/background-alpha-fix/saved-composite.png",
+    "D:/DelphiProg/test/AIArtToPSD/Sample/syncroh2_blonde_native_20261002/prepared/eyes.png"
+  ],
+  "generated_source": "C:/Users/vramw/.codex/generated_images/01a0fac3-97ce-7170-9066-263cc75cf917/exec-d90e24dc-2568-471c-89ef-4dc957a509f6.png",
+  "output": "generated-eyes.png",
+  "dimensions": [
+    1536,
+    1024
+  ],
+  "inspection": {
+    "min_alpha": 0,
+    "max_alpha": 254,
+    "nontransparent_pixels": 237259,
+    "total_pixels": 1572864
+  }
+}

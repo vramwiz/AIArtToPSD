@@ -1,0 +1,316 @@
+[
+  {
+    "path": "D:\\DelphiProg\\test\\AIArtToPSD\\Sample\\syncroh2_blonde_native_20261002\\before-native.psd",
+    "relative_path": "before-native.psd",
+    "size": 2789045,
+    "sha256": "f0dbe514073220636ee74f192a8803a40fc700fffb2477f013fd83ae72df88da",
+    "status": "ok",
+    "warnings": [],
+    "header": {
+      "version": 1,
+      "channels": 4,
+      "width": 1024,
+      "height": 1024,
+      "depth": 8,
+      "color_mode": 3,
+      "reserved_zero": true
+    },
+    "sections": [
+      {
+        "kind": "color_mode",
+        "offset": 26,
+        "payload_start": 30,
+        "end": 30,
+        "length": 0
+      },
+      {
+        "kind": "resources",
+        "offset": 30,
+        "payload_start": 34,
+        "end": 34,
+        "length": 0
+      },
+      {
+        "kind": "layer_mask",
+        "offset": 34,
+        "payload_start": 38,
+        "end": 1379992,
+        "length": 1379954
+      }
+    ],
+    "layers": [
+      {
+        "index": 0,
+        "offset": 44,
+        "end": 166,
+        "rect": [
+          0,
+          225,
+          1024,
+          798
+        ],
+        "name": "原画（白背景・全身）",
+        "legacy_hex": "",
+        "section_type": 0,
+        "blend": "norm",
+        "opacity": 255,
+        "clipping": 0,
+        "flags": 0,
+        "visible": true,
+        "mask": {
+          "length": 0
+        },
+        "blending_ranges_length": 0,
+        "channels": [
+          {
+            "id": 0,
+            "length": 456142,
+            "offset": 166,
+            "end": 456308,
+            "compression": 1,
+            "row_lengths_sum": 454092,
+            "validation": "decoded-size-checked",
+            "expanded_bytes": 586752,
+            "expanded_sha256": "700de9a112d7db04fa1d8626b7ab5218d834fa38f8cbdb1d28b158af72e7375b"
+          },
+          {
+            "id": 1,
+            "length": 452567,
+            "offset": 456308,
+            "end": 908875,
+            "compression": 1,
+            "row_lengths_sum": 450517,
+            "validation": "decoded-size-checked",
+            "expanded_bytes": 586752,
+            "expanded_sha256": "43d4b9d41d69e99588cc6a04fb3231dacda27a2e3dcd1ef845fe019ff7fcf62b"
+          },
+          {
+            "id": 2,
+            "length": 458823,
+            "offset": 908875,
+            "end": 1367698,
+            "compression": 1,
+            "row_lengths_sum": 456773,
+            "validation": "decoded-size-checked",
+            "expanded_bytes": 586752,
+            "expanded_sha256": "4ac25ac9a7b3f7596ceefa3175a41dbd24b871d04755a5617aa83a5d35031612"
+          },
+          {
+            "id": -1,
+            "length": 12290,
+            "offset": 1367698,
+            "end": 1379988,
+            "compression": 1,
+            "row_lengths_sum": 10240,
+            "validation": "decoded-size-checked",
+            "expanded_bytes": 586752,
+            "expanded_sha256": "9487df3d92159fb2a9de5a366348d458dbcef48b5630e00c55b63e69928d1511"
+          }
+        ],
+        "tags": [
+          {
+            "offset": 114,
+            "signature": "8BIM",
+            "key": "luni",
+            "length": 24,
+            "name": "原画（白背景・全身）",
+            "end": 150
+          },
+          {
+            "offset": 150,
+            "signature": "8BIM",
+            "key": "lyid",
+            "length": 4,
+            "layer_id": 1,
+            "end": 166
+          }
+        ],
+        "depth": 0
+      }
+    ],
+    "resources": [],
+    "layer_info": {
+      "offset": 38,
+      "payload_start": 42,
+      "end": 1379988,
+      "length": 1379946,
+      "trailing_bytes": 0,
+      "trailing_zero": true
+    },
+    "signed_layer_count": -1,
+    "global_mask_length": 0,
+    "global_tags": [],
+    "merged": {
+      "offset": 1379992,
+      "end": 2789045,
+      "compression": 1,
+      "row_count": 4096,
+      "encoded_bytes": 1400859,
+      "payload_start": 1388186,
+      "expected_end": 2789045,
+      "validation": "decoded-size-checked",
+      "expanded_bytes": 4194304,
+      "expanded_sha256": "67a72d2394373ddfe39830d24f6c7c4cc8a3306f23bfa9c2b5a56aedd90f940c",
+      "preview": "D:\\DelphiProg\\test\\AIArtToPSD\\Sample\\syncroh2_blonde_native_20261002\\native-inspection\\previews\\f0dbe51407322063.png",
+      "preview_note": "raw planes; no ICC transform; fourth plane treated as alpha provisionally"
+    },
+    "decode_selected": true
+  },
+  {
+    "path": "D:\\DelphiProg\\test\\AIArtToPSD\\Sample\\syncroh2_blonde_native_20261002\\native_original.psd",
+    "relative_path": "native_original.psd",
+    "size": 4730067,
+    "sha256": "4a13ee5fde0a2efab52ecbacc026ada5f1f279e154d3e350dc501b7132be0783",
+    "status": "ok",
+    "warnings": [],
+    "header": {
+      "version": 1,
+      "channels": 4,
+      "width": 752,
+      "height": 1344,
+      "depth": 8,
+      "color_mode": 3,
+      "reserved_zero": true
+    },
+    "sections": [
+      {
+        "kind": "color_mode",
+        "offset": 26,
+        "payload_start": 30,
+        "end": 30,
+        "length": 0
+      },
+      {
+        "kind": "resources",
+        "offset": 30,
+        "payload_start": 34,
+        "end": 34,
+        "length": 0
+      },
+      {
+        "kind": "layer_mask",
+        "offset": 34,
+        "payload_start": 38,
+        "end": 2365120,
+        "length": 2365082
+      }
+    ],
+    "layers": [
+      {
+        "index": 0,
+        "offset": 44,
+        "end": 162,
+        "rect": [
+          0,
+          0,
+          1344,
+          752
+        ],
+        "name": "original",
+        "legacy_hex": "",
+        "section_type": 0,
+        "blend": "norm",
+        "opacity": 255,
+        "clipping": 0,
+        "flags": 0,
+        "visible": true,
+        "mask": {
+          "length": 0
+        },
+        "blending_ranges_length": 0,
+        "channels": [
+          {
+            "id": 0,
+            "length": 777387,
+            "offset": 162,
+            "end": 777549,
+            "compression": 1,
+            "row_lengths_sum": 774697,
+            "validation": "decoded-size-checked",
+            "expanded_bytes": 1010688,
+            "expanded_sha256": "e4cc4500e98eb5b64a9c562f91dc03f76abe23cd9cfba9d93a574189dc24a3bd"
+          },
+          {
+            "id": 1,
+            "length": 787615,
+            "offset": 777549,
+            "end": 1565164,
+            "compression": 1,
+            "row_lengths_sum": 784925,
+            "validation": "decoded-size-checked",
+            "expanded_bytes": 1010688,
+            "expanded_sha256": "0f355dac4d2391382b9f9f58ce452b510b85df2b8919b280dba4795b8c99d477"
+          },
+          {
+            "id": 2,
+            "length": 781133,
+            "offset": 1565164,
+            "end": 2346297,
+            "compression": 1,
+            "row_lengths_sum": 778443,
+            "validation": "decoded-size-checked",
+            "expanded_bytes": 1010688,
+            "expanded_sha256": "6c2777939a461ef334ee0d25b16467b485b4368113ccb3a32a0dcda46fda0863"
+          },
+          {
+            "id": -1,
+            "length": 18818,
+            "offset": 2346297,
+            "end": 2365115,
+            "compression": 1,
+            "row_lengths_sum": 16128,
+            "validation": "decoded-size-checked",
+            "expanded_bytes": 1010688,
+            "expanded_sha256": "7f53b89e9d723165da603057fcb8a835e43ddbee2527077d5edfaf8df8321c7d"
+          }
+        ],
+        "tags": [
+          {
+            "offset": 114,
+            "signature": "8BIM",
+            "key": "luni",
+            "length": 20,
+            "name": "original",
+            "end": 146
+          },
+          {
+            "offset": 146,
+            "signature": "8BIM",
+            "key": "lyid",
+            "length": 4,
+            "layer_id": 1,
+            "end": 162
+          }
+        ],
+        "depth": 0
+      }
+    ],
+    "resources": [],
+    "layer_info": {
+      "offset": 38,
+      "payload_start": 42,
+      "end": 2365116,
+      "length": 2365074,
+      "trailing_bytes": 1,
+      "trailing_zero": true
+    },
+    "signed_layer_count": -1,
+    "global_mask_length": 0,
+    "global_tags": [],
+    "merged": {
+      "offset": 2365120,
+      "end": 4730067,
+      "compression": 1,
+      "row_count": 5376,
+      "encoded_bytes": 2354193,
+      "payload_start": 2375874,
+      "expected_end": 4730067,
+      "validation": "decoded-size-checked",
+      "expanded_bytes": 4042752,
+      "expanded_sha256": "fdedc0963a17857050ec1c7bdf701e7ad201ac5155e9ed506db55bf525eb62fc",
+      "preview": "D:\\DelphiProg\\test\\AIArtToPSD\\Sample\\syncroh2_blonde_native_20261002\\native-inspection\\previews\\4a13ee5fde0a2efa.png",
+      "preview_note": "raw planes; no ICC transform; fourth plane treated as alpha provisionally"
+    },
+    "decode_selected": true
+  }
+]
