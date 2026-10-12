@@ -1,0 +1,32 @@
+{
+  "createdUtc": "2026-10-07T23:36:25.0439419Z",
+  "sourceRepository": "D:\\DelphiProg\\SYNC_MusicStudio",
+  "sourceHead": "31c62479553370e558d05268bb21d145c3350779",
+  "documentsAndReferences": [
+    {
+      "source": "D:\\DelphiProg\\SYNC_MusicStudio\\aviutl2_music_performance_editor_spec.md",
+      "copy": "D:\\DelphiProg\\AIArtToPSD\\WorkMaterials\\SYNC_MusicStudio\\aviutl2_music_performance_editor_spec.md",
+      "sha256": "F38E9D17B552090EB3F0B8F1ADAF02B75D44819F3C2CC92084593572F0219518"
+    },
+    {
+      "source": "D:\\DelphiProg\\SYNC_MusicStudio\\music_performance_instrument_layers_spec.md",
+      "copy": "D:\\DelphiProg\\AIArtToPSD\\WorkMaterials\\SYNC_MusicStudio\\music_performance_instrument_layers_spec.md",
+      "sha256": "38AD80915AAA0D262C2268C0B3C53A685BF809BBEF600EB52FFDA44F8B38DA93"
+    },
+    {
+      "source": "D:\\DelphiProg\\AIArtToPSD\\Win64\\Release\\Exchange\\{F8CFE414-C2A2-4841-81F1-16F937048403}\\input\\source-56.png",
+      "copy": "D:\\DelphiProg\\AIArtToPSD\\Win64\\WorkMaterials\\SYNC_MusicStudio\\reference-original.png",
+      "sha256": "31AFBC9ED80ADF76DD0516F78CF18812BE67CCAC37B7B3EE6105BF4C45CB58C6"
+    },
+    {
+      "source": "D:\\DelphiProg\\AIArtToPSD\\Win64\\Release\\Exchange\\{F8CFE414-C2A2-4841-81F1-16F937048403}\\preview.png",
+      "copy": "D:\\DelphiProg\\AIArtToPSD\\Win64\\WorkMaterials\\SYNC_MusicStudio\\reference-composite.png",
+      "sha256": "2615AC2F8C0955F6E518634F5FCD0A56BF53579C4AA74486C58E03C3ABF313E6"
+    }
+  ],
+  "referenceFilesAreGitIgnored": true,
+  "attributePsdCount": 0,
+  "imageGenerationStarted": false,
+  "blocker": "Built-in image generation rejected this host's Windows referenced_image_paths: AbsolutePathBuf deserialized without a base path at line 1 column 144",
+  "apiKeysOrCredentialChanges": false
+}

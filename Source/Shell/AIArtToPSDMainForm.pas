@@ -4,12 +4,13 @@ interface
 
 uses System.Types, System.Classes, System.SysUtils, System.Generics.Collections,
   Vcl.Controls, Vcl.Forms, Vcl.StdCtrls, Vcl.ExtCtrls, DropFile,
-  Vcl.Dialogs, Vcl.Menus, Vcl.Samples.Spin, Vcl.Graphics, ArtDocument, ArtLayerList, ArtFileHistory, DarkComboBox, ArtExchange, ArtUndo, ArtPipeBridge, ArtPipeProtocol, System.JSON;
+  Vcl.Dialogs, Vcl.Menus, Vcl.Samples.Spin, Vcl.Graphics, ArtDocument, ArtLayerList, ArtFileHistory, DarkComboBox, ArtExchange, ArtUndo, ArtPipeBridge, ArtPipeProtocol, ArtPipeImages, System.JSON;
 
 type
   TMainForm = class(TForm)
   private
     FExchange: TArtExchange;
+    FImages: TArtPipeImages;
     FUndo: TArtUndo;
     FPipe: TArtPipeBridge;
     FProtocol: TArtPipeProtocol;
@@ -50,6 +51,7 @@ type
     FDragStart: TPoint;
     procedure PreviewWheel(Sender: TObject; Shift: TShiftState; WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
     function DispatchCommand(const Command: string; Args: TJSONObject): TJSONObject;
+    function DocumentJson(Args: TJSONObject): TJSONObject;
     function JobJson(Job: TArtExchangeJob): TJSONObject;
     procedure UpdateActivity;
     procedure BeginOperation(const Name: string);
@@ -137,7 +139,7 @@ var MainForm: TMainForm;
 
 implementation
 
-uses System.Math, System.IOUtils, System.UITypes, Winapi.Windows, ArtPsd, ArtPng, ArtLayerName, ArtParts;
+uses System.Math, System.IOUtils, System.UITypes, Winapi.Windows, ArtPsd, ArtPng, ArtLayerName, ArtParts, ArtPipeInspection;
 
 {$R *.dfm}
 type
@@ -242,7 +244,7 @@ begin
   Job := FExchange.FindJob(Id);
   // Cancellation also works after local edits have made the result stale.
   if Job.State='completed' then raise EArtFormat.Create('取り込み済みです。Undoで戻してください。');
-  FExchange.CancelJob(Id); UpdateActivity;
+  FExchange.CancelJob(Id); FImages.AbortJob(Id); UpdateActivity;
 end;
 procedure TMainForm.CancelAiClick(Sender: TObject);
 begin try CancelAiJob(FCurrentJobId); except on E: Exception do MessageDlg(E.Message,mtError,[mbOK],0); end; end;
@@ -254,13 +256,42 @@ begin
   Result.AddPair('documentId',Job.DocumentId); Result.AddPair('ifRevision',UIntToStr(Job.Revision));
   Result.AddPair('stale',TJSONBool.Create((Job.State<>'completed') and ((FDocument=nil) or (FDocument.SessionId<>Job.DocumentId) or (FDocument.Revision<>Job.Revision))));
 end;
+function TMainForm.DocumentJson(Args: TJSONObject): TJSONObject;
+var SelectedId: string;
+begin
+  SelectedId := '';
+  if FTree.Selected<>nil then SelectedId := FTree.Selected.Id;
+  Result := InspectArtDocument(FDocument,Args,FFileName,SelectedId,FCanEdit,FModified);
+end;
 function TMainForm.DispatchCommand(const Command: string; Args: TJSONObject): TJSONObject;
-var Id,Path: string; Job: TArtExchangeJob;
+var Id,Path: string; Job: TArtExchangeJob; Version: UInt64; Commands: TJSONArray;
 begin
   if FBusy then raise EArtFormat.Create('Application is busy');
+  if (Command='image-begin') or (Command='image-chunk') or (Command='image-status') or
+    (Command='image-commit') or (Command='image-abort') then
+    Exit(FImages.Execute(Command,Args,FExchange,FDocument));
+  if Command='document' then Exit(DocumentJson(Args));
+  if Command='save' then begin
+    if FDocument=nil then raise EArtFormat.Create('No PSD is open');
+    if CommandString(Args,'documentId')<>FDocument.SessionId then
+      raise EArtFormat.Create('Stale document');
+    if not TryStrToUInt64(CommandString(Args,'ifRevision'),Version) or
+      (Version<>FDocument.Revision) then raise EArtFormat.Create('Stale revision');
+    Path := TPath.GetFullPath(CommandString(Args,'fileName'));
+    if not SameText(ExtractFileExt(Path),'.psd') then raise EArtFormat.Create('PSD destination required');
+    if not TDirectory.Exists(ExtractFilePath(Path)) then raise EArtFormat.Create('Destination directory is missing');
+    // パイプ保存は新しい名前への保存だけを許し、元PSD・既存ファイルを上書きしない。
+    if TFile.Exists(Path) then raise EArtFormat.Create('Destination already exists; choose a new PSD path');
+    if FModified and not FCanEdit then raise EArtFormat.Create('This document cannot be edited');
+    SavePsdFile(Path); Exit(DocumentJson(Args));
+  end;
   if Command='status' then begin
     Result := TJSONObject.Create;
     Result.AddPair('pipeName',PipeName); Result.AddPair('busy',TJSONBool.Create(FBusy));
+    Result.AddPair('fileName',FFileName);
+    Commands := TJSONArray.Create; Result.AddPair('commands',Commands);
+    for var Supported in ['status','document','save','export','import','progress','cancel','undo','redo','recover',
+      'image-begin','image-chunk','image-status','image-commit','image-abort'] do Commands.Add(Supported);
     Result.AddPair('canUndo',TJSONBool.Create(CanUndo)); Result.AddPair('canRedo',TJSONBool.Create(CanRedo));
     Result.AddPair('modified',TJSONBool.Create(FModified)); Result.AddPair('canEdit',TJSONBool.Create(FCanEdit));
     if FDocument<>nil then begin Result.AddPair('documentId',FDocument.SessionId); Result.AddPair('revision',UIntToStr(FDocument.Revision)); end;
@@ -292,7 +323,7 @@ begin
   UpdateActivity; Result := JobJson(Job);
 end;
 constructor TMainForm.Create(AOwner: TComponent);
-begin CreateWithHistory(AOwner,''); end;
+begin CreateWithHistory(AOwner,GetEnvironmentVariable('AIARTTOPSD_HISTORY_DIR')); end;
 constructor TMainForm.CreateWithHistory(AOwner: TComponent; const HistoryDirectory: string);
 var RightPanel, StatusPanel, PositionPanel, PartsPanel, AiPanel, AiButtons, PreviewPanel: TPanel; FileMenu, LayerMenu, Item: TMenuItem; LabelControl: TLabel;
     Splitter: TSplitter; EditMenu: TMenuItem;
@@ -375,6 +406,7 @@ begin
   FRecoveryDialog := TOpenDialog.Create(Self); FRecoveryDialog.Filter := 'AI再開情報 (recovery.json)|recovery.json'; FRecoveryDialog.Options := [ofFileMustExist,ofPathMustExist,ofEnableSizing,ofNoChangeDir];
   FZoom := 1; OnMouseWheel := PreviewWheel;
   OnCloseQuery := CheckClose;
+  FImages := TArtPipeImages.Create;
   FProtocol := TArtPipeProtocol.Create(DispatchCommand); FPipe := TArtPipeBridge.Create(FProtocol.Handle);
   FExchange.PipeName := FPipe.Name; UpdateActivity;
   FDropFile := TDropFile.Create;
@@ -389,7 +421,7 @@ end;
 destructor TMainForm.Destroy;
 begin
   FDropFile.Free;
-  FPipe.Free; FProtocol.Free; FUndo.Free;
+  FPipe.Free; FProtocol.Free; FImages.Free; FUndo.Free;
   if FTree<>nil then begin FTree.OnSelect := nil; FTree.SetRoots(nil); end;
   FDocument.Free; FBitmap.Free; FHistory.Free; FExchange.Free;
   inherited;
@@ -669,6 +701,7 @@ begin
 end;
 procedure TMainForm.ResetAiJobs;
 begin
+  FImages.Clear;
   FCurrentJobId := ''; FExchange.ClearJobs; FJobPath.Text := 'AIジョブのフォルダーがここに表示されます。';
   FJobPath.Hint := ''; FJobPath.ShowHint := False; UpdateActivity;
 end;

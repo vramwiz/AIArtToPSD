@@ -47,3 +47,7 @@ __pycache__/
 .venv/
 *.tmp
 *.log
+
+# Local LayerSplitTrial generated files
+/Tests/SampleLayerTrial.res
+/Sample/LayerSplitTrial/history/

@@ -529,6 +529,9 @@ begin
       end else if Op='select_part' then SelectExclusive(Current,Target(Id))
       else raise EArtFormat.Create('Unsupported operation: '+Op);
     end;
+    // Operations run in array order. Only the final candidate must be exclusive;
+    // do not silently select a winner for conflicting raw attribute/add operations.
+    ValidateExclusiveSelections(Current);
     RenderPsdLayers(Current); Current.Changed;
     Result := Current; Current := nil;
   finally Current.Free; Data.Free; Value.Free; end;

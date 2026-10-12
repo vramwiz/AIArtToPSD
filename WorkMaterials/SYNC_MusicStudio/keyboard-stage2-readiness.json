@@ -1,0 +1,268 @@
+﻿{
+  "scope": "keyboard-stage2-readonly-preparation",
+  "sourceHash": "AA539ACDA6B21C01A9686E5928ED61499397B36CEC20B8AD00C26407096D0D5F",
+  "manualPngSaveConfirmed": false,
+  "stage1PsdCompleted": false,
+  "stage2AssemblyStarted": false,
+  "imageGenerationByThisHost": false,
+  "finalFileName": "東北きりたん_キーボード.psd",
+  "exactSourceTree": "vocal-source-full-tree.json",
+  "prefixRule": "ParseLayerName(...).Prefix = * exactly; exclusive set is marked siblings of one parent",
+  "sourceHasBangOrFlipModifiers": false,
+  "noNewMarkersOrInventedNames": true,
+  "minimumGenerationUnits": [
+    {
+      "role": "顔素体",
+      "exactNames": [
+        "顔（額・耳の補完）"
+      ],
+      "minimum": "キーボード顔の角度で、目眉口と髪を含まない連続した肌の顔・額・耳を1単位。鼻・顎・首等の維持可能画素は元完成人物を保持。隠れ部分だけ親が補完。"
+    },
+    {
+      "role": "髪とアクセサリー",
+      "exactNames": [
+        "髪（前）/前髪",
+        "髪（前）/横髪 画面左",
+        "髪（前）/横髪 画面右",
+        "髪（前）/アホ毛",
+        "髪（前）/髪飾り 画面左",
+        "髪（前）/髪飾り 画面右",
+        "後ろ髪（左右の付け根補完）"
+      ],
+      "minimum": "可視部は元完成人物の切抜き。単独時に欠ける髪の付け根・隠れ部分だけ親が補完。元ボーカルでは7画像単位。新姿勢の実髪型を見て必要数を決め、無関係な独立髪を増やさない。"
+    },
+    {
+      "role": "目",
+      "exactNames": [
+        "目/*通常",
+        "目/*閉じ",
+        "目/*やや閉じ",
+        "目/*笑顔閉じ",
+        "目/*半開き",
+        "目/*やさしい目"
+      ],
+      "minimum": "左右1組を1単位。通常は元完成人物から切抜き、必要な他5形を新顔角度で生成。歴史的学習シートの「ほぼ閉じ」「見開き」は元ボーカルのこの6名とは違うので自動追加・改名しない。"
+    },
+    {
+      "role": "眉",
+      "exactNames": [
+        "眉/*通常",
+        "眉/*喜",
+        "眉/*怒",
+        "眉/*哀",
+        "眉/*楽",
+        "眉/*困る",
+        "眉/*画面左上げ",
+        "眉/*画面右上げ"
+      ],
+      "minimum": "左右1組を1単位。通常を原画から分離し、最大7形を新顔角度で生成。左右は画面基準。前髪の遮蔽を現配置から再計算。"
+    },
+    {
+      "role": "口",
+      "exactNames": [
+        "口/*通常",
+        "口/*閉じ",
+        "口/*半開き",
+        "口/*開き",
+        "口/*あ",
+        "口/*い",
+        "口/*う",
+        "口/*え",
+        "口/*お",
+        "口/*ん"
+      ],
+      "minimum": "原画の口は通常として切抜き保持。9差分は口1つずつが単位で、既存9セル方式を使う場合も新顔角度・寸法・中心を測る。閉じが既に同じ必要形なら再生成不要。いの歯を軽く食いしばる形は学習記録上は改善提案で未検証。"
+    },
+    {
+      "role": "顔色",
+      "exactNames": [
+        "顔色/*なし",
+        "顔色/*青ざめ",
+        "顔色/*黒い影",
+        "顔色/*赤い顔",
+        "顔色/*照れ",
+        "顔色/*汗",
+        "顔色/*落ち込み（三本線）"
+      ],
+      "minimum": "同じ部位に重なる各効果を別単位。なしは既存の透明な無効果状態。顔の形と角度が変わるため元PNGやマスクを無条件移植しない。"
+    },
+    {
+      "role": "記号",
+      "exactNames": [
+        "記号/*なし",
+        "記号/*！",
+        "記号/*？",
+        "記号/*！？",
+        "記号/*ビックリ",
+        "記号/*怒り",
+        "記号/*汗",
+        "記号/*喜び（キラキラ）",
+        "記号/*哀しみ（涙）",
+        "記号/*音符"
+      ],
+      "minimum": "既存名の各記号を単独に保持。汎用形状を再利用できても、新人物に対する位置・寸法を確認。元PSDでは全記号が1つの排他群であり、独立記号同時使用要件との優先順位確認が必要。"
+    },
+    {
+      "role": "喜怒哀楽プリセット",
+      "exactNames": [
+        "通常",
+        "喜",
+        "怒",
+        "哀",
+        "楽"
+      ],
+      "minimum": "顔全体の画像を5枚生成しない。既存目・眉・口の組合せとして扱う。元PSDと現行APIに5プリセットの保存・連動切替・瞬き口パク用の定義はないため、画像名や階層を独自追加して代用しない。"
+    },
+    {
+      "role": "体と楽器",
+      "exactNames": [
+        "体（ポーズ）/*通常",
+        "キーボード/鍵盤/キーボード/本体",
+        "キーボード/鍵盤/キーボード/スタンド"
+      ],
+      "minimum": "第1段階の同姿勢を保持。体・左右腕を必要に応じて分離するだけで演奏差分は生成しない。本体・スタンドの画素・位置・角度を維持し再生成しない。"
+    }
+  ],
+  "requirementAudit": [
+    {
+      "requirement": "同群最大1、差分ONで他OFF、無関係群不変",
+      "current": "select_part/SelectExclusiveは同じ親のPrefixが厳密に*の兄弟だけを対象とし、同親の通常名を巻き込まない。",
+      "status": "2026-10-08にimportの全操作後候補へ共通検証を追加。最終同親*競合は一括拒否し、既存select_partは同親だけを切替。31ケースの隔離fixture・実パイプで確認済み。実キーボード第2段階データは未組立。"
+    },
+    {
+      "requirement": "左右目・眉各群。ただし既存左右一体優先",
+      "current": "元PSDの目6種・眉8種は左右一組。左目/右目/左眉/右眉という名前・別群はない。",
+      "status": "左右一体を優先し、独自の左右群を作らない。"
+    },
+    {
+      "requirement": "頬顔色は同部位置換、記号は競合役割だけ排他",
+      "current": "顔色7種は同群*。記号10種も同群*で、汗と音符等も同時選択不可。顔色/*汗と記号/*汗は別群の別画像。",
+      "status": "記号の独立同時可は元PSDとの相違点。既存優先なので勝手に*を外す・新群名を作ることはしない。"
+    },
+    {
+      "requirement": "表情5プリセット、選択後も瞬き口パク可能",
+      "current": "眉に喜怒哀楽は存在。表情プリセットの確定マッピング/保存状態/連動切替/APIやMIDI同期はない。importで複数部位select_partを同一トランザクションにすることは可能。",
+      "status": "画像の再生成なしで組合せ切替の操作は可能だが、プリセット機能と独立瞬き口パク機能の完成とは報告できない。"
+    },
+    {
+      "requirement": "体・顔素体・髪・アクセ・本体・スタンド・独立記号は相互排他外",
+      "current": "顔・髪・アクセ・後ろ髪等は*なしで独立。体（ポーズ）は元PSD内で各姿勢が*の排他群。",
+      "status": "基礎部位同士は排他にしない。元ボーカルの体ポーズ選択は別スコープの既存規則として保持。"
+    },
+    {
+      "requirement": "初期通常表情、開眼、通常眉、閉じ口、記号OFF",
+      "current": "元PSDは目/*通常、眉/*楽、口/*あ、記号/*なし、体/*通常がON。顔色は全OFF。",
+      "status": "元原本は変更しない。新キーボードPSDでは目/*通常、眉/*通常、口/*閉じ、追加記号OFF、基本部位と楽器ONへ設定する必要あり。"
+    },
+    {
+      "requirement": "保存再読込で群構造・初期状態保持、既存アプリ正しく識別",
+      "current": "PSD層の名前/順序/親/visible/opacityは保存可能。AIArtToPSDのUpdatePartsは同親*群を認識。MusicStudioにPSD登録や群分類実装はない。",
+      "status": "第1段階を保全してから実データ検証が必要。現在は準備のみで保存済み完成としない。"
+    }
+  ],
+  "learningResources": [
+    {
+      "directory": "Sample/face_foundation_fix_20261002",
+      "availableFiles": [
+        "learning_record.json",
+        "prompt.json",
+        "README.md",
+        "verification.json"
+      ],
+      "mediaAndScriptsReferencedByRecordsMustBeCheckedBeforeUse": true
+    },
+    {
+      "directory": "Sample/hair_separation_trial_20261002",
+      "availableFiles": [
+        "learning_record.json",
+        "prompt.json",
+        "README.md",
+        "verification.json"
+      ],
+      "mediaAndScriptsReferencedByRecordsMustBeCheckedBeforeUse": true
+    },
+    {
+      "directory": "Sample/mouth_sheet_retry_20261001",
+      "availableFiles": [
+        "learning_record.json",
+        "prompt.json",
+        "README.md",
+        "verification.json"
+      ],
+      "mediaAndScriptsReferencedByRecordsMustBeCheckedBeforeUse": true
+    },
+    {
+      "directory": "Sample/eyes_sheet_trial_20261001",
+      "availableFiles": [
+        "learning_record.json",
+        "prompt.json",
+        "README.md",
+        "verification.json"
+      ],
+      "mediaAndScriptsReferencedByRecordsMustBeCheckedBeforeUse": true
+    },
+    {
+      "directory": "Sample/brows_sheet_trial_20261001",
+      "availableFiles": [
+        "learning_record.json",
+        "prompt.json",
+        "README.md",
+        "verification.json"
+      ],
+      "mediaAndScriptsReferencedByRecordsMustBeCheckedBeforeUse": true
+    },
+    {
+      "directory": "Sample/head_body_split_20261001",
+      "availableFiles": [
+        "verification.json"
+      ],
+      "mediaAndScriptsReferencedByRecordsMustBeCheckedBeforeUse": true
+    },
+    {
+      "directory": "Sample/syncroh2_blonde_native_20261002/background-alpha-fix",
+      "availableFiles": [
+        "imagegen-prompt.json",
+        "learning_record.json",
+        "verification.json"
+      ],
+      "mediaAndScriptsReferencedByRecordsMustBeCheckedBeforeUse": true
+    }
+  ],
+  "reusableApi": [
+    "document:階層・座標・属性・RGBAハッシュ",
+    "export:原寸PNG・request.json・preview・snapshot",
+    "add_group/add_layer/replace_layer:JSON交換によるレイヤー登録",
+    "sourceBounds + resample=false:同寸法の矩形切抜き",
+    "trimTransparent:透明余白の除去と座標補正。輪郭抽出ではない",
+    "select_part:既存同親*群だけの排他選択",
+    "set_attributes:可視・opacity。全import操作後に同親*の最大1枚ONをアプリが検査",
+    "undo/redo",
+    "save:新規名保存と再読込"
+  ],
+  "missingApi": [
+    "汎用的な人物/髪/顔輪郭自動分離",
+    "不可視部AI補完のアプリ内実行",
+    "喜怒哀楽プリセット登録・保持・自動切替",
+    "瞬き・音声口パク・MIDI同期",
+    "MusicStudioの実PSD登録"
+  ],
+  "preconditions": [
+    "正規経路による2 PNGのWindows実パスとSHA256を確認する。ユーザー手動保存へ依存しない",
+    "第1段階を完成・検証し、そのPSDとPNGを保全する",
+    "新姿勢の顔角度・部位中心・寸法・遮蔽を確認する",
+    "生成は親が行い、こちらは原画素分離とPSD組立・検証のみ",
+    "記号独立性と元の*群、未実装プリセットの相違を親へ報告する"
+  ],
+  "exclusiveImportGuard": {
+    "implemented": true,
+    "validation": "whole final candidate after all operations",
+    "order": "array order",
+    "conflictPolicy": "reject entire batch with parent and layer IDs; no implicit winner",
+    "zeroSelectionAllowed": true,
+    "verification": "../../排他import検証_20261008.md",
+    "fixedExpressionMappingDefined": false,
+    "namedPresetPersistenceImplemented": false
+  },
+  "userManualSaveRequired": false,
+  "localChunkReceiveVerified": true
+}

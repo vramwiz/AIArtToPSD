@@ -1,0 +1,440 @@
+{
+  "sourcePsd": "C:\\Users\\zan12\\Documents\\SYNC_MusicStudio\\Characters\\PSD\\東北きりたん_立ち絵.psd",
+  "sourceSha256": "AA539ACDA6B21C01A9686E5928ED61499397B36CEC20B8AD00C26407096D0D5F",
+  "sourceBytes": 13739427,
+  "width": 1024,
+  "height": 1536,
+  "logicalLayers": 63,
+  "imageLayers": 56,
+  "groups": 7,
+  "psdVersion": 1,
+  "channels": 4,
+  "depth": 8,
+  "colorMode": "RGB",
+  "rawPsdLayerRecords": 70,
+  "inspectionEvidence": "D:\\DelphiProg\\AIArtToPSD\\Win64\\Validation\\PipeAutomation\\Release-20261007T232116Z-e71a3203\\document-before.json",
+  "sourceUnchanged": true,
+  "aiArtToPsdCanEdit": true,
+  "expressionGroups": [
+    {
+      "name": "目",
+      "count": 6,
+      "uniquePixelHashes": 6,
+      "parts": [
+        {
+          "name": "*通常",
+          "visible": true,
+          "bounds": {
+            "left": 323,
+            "top": 381,
+            "right": 678,
+            "bottom": 499
+          },
+          "pixelSha256": "d6094f39abed105ba4ef90d7ca923fcc7d12c3010203f9f18ecc4feabb0f2580",
+          "hasNontransparentPixels": true
+        },
+        {
+          "name": "*閉じ",
+          "visible": false,
+          "bounds": {
+            "left": 341,
+            "top": 424,
+            "right": 673,
+            "bottom": 472
+          },
+          "pixelSha256": "97ffd39535554d4623237e23fcf042d691ab6cdee9cb624a7953a9d843f05dd8",
+          "hasNontransparentPixels": true
+        },
+        {
+          "name": "*やや閉じ",
+          "visible": false,
+          "bounds": {
+            "left": 339,
+            "top": 397,
+            "right": 674,
+            "bottom": 497
+          },
+          "pixelSha256": "738427c8dbe4ace956d15f00fac0055950849134bf259ab8765a5711bdc87dda",
+          "hasNontransparentPixels": true
+        },
+        {
+          "name": "*笑顔閉じ",
+          "visible": false,
+          "bounds": {
+            "left": 342,
+            "top": 418,
+            "right": 671,
+            "bottom": 471
+          },
+          "pixelSha256": "60b6dbb934599f0ab268bb3f4ddd4365bd869e1440a0a25854f3a16071cc9e6d",
+          "hasNontransparentPixels": true
+        },
+        {
+          "name": "*半開き",
+          "visible": false,
+          "bounds": {
+            "left": 340,
+            "top": 418,
+            "right": 673,
+            "bottom": 475
+          },
+          "pixelSha256": "d66a30d7e7fc5c0da076bfbca067174cf8b7dbf8abd653e331de0dbca6837536",
+          "hasNontransparentPixels": true
+        },
+        {
+          "name": "*やさしい目",
+          "visible": false,
+          "bounds": {
+            "left": 340,
+            "top": 409,
+            "right": 672,
+            "bottom": 494
+          },
+          "pixelSha256": "0bbb30a3b6436f8c05e81d51d6bc2dcf6943ae0cc637ba687b0c6e8c7a4b96eb",
+          "hasNontransparentPixels": true
+        }
+      ]
+    },
+    {
+      "name": "眉",
+      "count": 8,
+      "uniquePixelHashes": 8,
+      "parts": [
+        {
+          "name": "*通常",
+          "visible": false,
+          "bounds": {
+            "left": 378,
+            "top": 336,
+            "right": 624,
+            "bottom": 354
+          },
+          "pixelSha256": "4322eb639ac7c9283e9f6df6f04da9c35e0b396552f8218106d9f982246f45c5",
+          "hasNontransparentPixels": true
+        },
+        {
+          "name": "*喜",
+          "visible": false,
+          "bounds": {
+            "left": 360,
+            "top": 323,
+            "right": 619,
+            "bottom": 358
+          },
+          "pixelSha256": "4bda6a8e8675cd150dc88c5103590cef030984114956b955831e97da1a1acd19",
+          "hasNontransparentPixels": true
+        },
+        {
+          "name": "*怒",
+          "visible": false,
+          "bounds": {
+            "left": 403,
+            "top": 331,
+            "right": 618,
+            "bottom": 365
+          },
+          "pixelSha256": "b182dcc876f7f944fd07d6421b2b41983bad1bb3e9fdea071d20e8fec6f11034",
+          "hasNontransparentPixels": true
+        },
+        {
+          "name": "*哀",
+          "visible": false,
+          "bounds": {
+            "left": 360,
+            "top": 326,
+            "right": 622,
+            "bottom": 365
+          },
+          "pixelSha256": "ffa5d1d27881886af901ddb84fc25f780ed030b76ee2143e661e036e846d883f",
+          "hasNontransparentPixels": true
+        },
+        {
+          "name": "*楽",
+          "visible": true,
+          "bounds": {
+            "left": 361,
+            "top": 340,
+            "right": 621,
+            "bottom": 358
+          },
+          "pixelSha256": "89ea402399b9c0b0aea6d516a969dc58bb57f084c6fa50d31cef803967312635",
+          "hasNontransparentPixels": true
+        },
+        {
+          "name": "*困る",
+          "visible": false,
+          "bounds": {
+            "left": 360,
+            "top": 326,
+            "right": 622,
+            "bottom": 366
+          },
+          "pixelSha256": "916cd2fe357fc839b2b69daf4901edec031c9039cb4354e30f71559e8df8596b",
+          "hasNontransparentPixels": true
+        },
+        {
+          "name": "*画面左上げ",
+          "visible": false,
+          "bounds": {
+            "left": 362,
+            "top": 318,
+            "right": 623,
+            "bottom": 363
+          },
+          "pixelSha256": "30f444701e542060bd554d51d9408d54404bdea80ed0f39ba84615560e353676",
+          "hasNontransparentPixels": true
+        },
+        {
+          "name": "*画面右上げ",
+          "visible": false,
+          "bounds": {
+            "left": 360,
+            "top": 327,
+            "right": 619,
+            "bottom": 360
+          },
+          "pixelSha256": "eb1140386745bfe8b9dca5015c5af56793f21ff4793500dda518db67f8ce58d0",
+          "hasNontransparentPixels": true
+        }
+      ]
+    },
+    {
+      "name": "口",
+      "count": 10,
+      "uniquePixelHashes": 10,
+      "parts": [
+        {
+          "name": "*通常",
+          "visible": false,
+          "bounds": {
+            "left": 488,
+            "top": 539,
+            "right": 539,
+            "bottom": 551
+          },
+          "pixelSha256": "eebad97656f4c159659f0cde59905698f0b3b4e8f876c14d9e6dc1ef6f5c240e",
+          "hasNontransparentPixels": true
+        },
+        {
+          "name": "*閉じ",
+          "visible": false,
+          "bounds": {
+            "left": 488,
+            "top": 539,
+            "right": 540,
+            "bottom": 551
+          },
+          "pixelSha256": "fe7a637241e86b3ab5a2844dc1ae8f2c128587eb26126aab89a434992d0fe2fd",
+          "hasNontransparentPixels": true
+        },
+        {
+          "name": "*半開き",
+          "visible": false,
+          "bounds": {
+            "left": 493,
+            "top": 536,
+            "right": 534,
+            "bottom": 553
+          },
+          "pixelSha256": "21dd0b10c83f8ddf79110b5210f3d2085a071c72b87e9abd419ea65ada9a9dce",
+          "hasNontransparentPixels": true
+        },
+        {
+          "name": "*開き",
+          "visible": false,
+          "bounds": {
+            "left": 491,
+            "top": 533,
+            "right": 536,
+            "bottom": 557
+          },
+          "pixelSha256": "3562248d7ef2a9e11713225ef4ce6dffeb3d30d3b08454b78f8a1d6f5ccca773",
+          "hasNontransparentPixels": true
+        },
+        {
+          "name": "*あ",
+          "visible": true,
+          "bounds": {
+            "left": 494,
+            "top": 527,
+            "right": 534,
+            "bottom": 564
+          },
+          "pixelSha256": "4c75c7d7500bf1c7fc0e2a4584b85527886dad7aaa6ebd55933d42a091de37d0",
+          "hasNontransparentPixels": true
+        },
+        {
+          "name": "*い",
+          "visible": false,
+          "bounds": {
+            "left": 489,
+            "top": 536,
+            "right": 538,
+            "bottom": 554
+          },
+          "pixelSha256": "b7c01810d1697cc894b2111bbc44eefa7cce08017ef716fbe3ca8cd2dca0a4bb",
+          "hasNontransparentPixels": true
+        },
+        {
+          "name": "*う",
+          "visible": false,
+          "bounds": {
+            "left": 502,
+            "top": 532,
+            "right": 526,
+            "bottom": 558
+          },
+          "pixelSha256": "0365d1076346475e124a75483a4e139e59a25979513e0f606f918512de86164c",
+          "hasNontransparentPixels": true
+        },
+        {
+          "name": "*え",
+          "visible": false,
+          "bounds": {
+            "left": 488,
+            "top": 532,
+            "right": 540,
+            "bottom": 558
+          },
+          "pixelSha256": "6bb366ea45c1ed1338386456e94b87948c9ed7d82a76f050d501cee8390c6898",
+          "hasNontransparentPixels": true
+        },
+        {
+          "name": "*お",
+          "visible": false,
+          "bounds": {
+            "left": 498,
+            "top": 528,
+            "right": 528,
+            "bottom": 562
+          },
+          "pixelSha256": "52cd085ba2350f0d4f5959aab83b58545234c0f94388a51a590e777afd3b8d6d",
+          "hasNontransparentPixels": true
+        },
+        {
+          "name": "*ん",
+          "visible": false,
+          "bounds": {
+            "left": 490,
+            "top": 544,
+            "right": 538,
+            "bottom": 547
+          },
+          "pixelSha256": "86808eca66e0df414536e8784ece11197db6c3f924860f8feb829e752ee132a6",
+          "hasNontransparentPixels": true
+        }
+      ]
+    },
+    {
+      "name": "体（ポーズ）",
+      "count": 6,
+      "uniquePixelHashes": 6,
+      "parts": [
+        {
+          "name": "*通常",
+          "visible": true,
+          "bounds": {
+            "left": 196,
+            "top": 595,
+            "right": 840,
+            "bottom": 1525
+          },
+          "pixelSha256": "f9339acb1646323c7004f3936e3680768549eddf1922c91ce259332facf50c81",
+          "hasNontransparentPixels": true
+        },
+        {
+          "name": "*左上を指さす",
+          "visible": false,
+          "bounds": {
+            "left": 85,
+            "top": 320,
+            "right": 837,
+            "bottom": 1525
+          },
+          "pixelSha256": "5123294861e4eb2867c3d508478776f2e5477a384b7985db1eed3c34e6b96e5f",
+          "hasNontransparentPixels": true
+        },
+        {
+          "name": "*右上を指さす",
+          "visible": false,
+          "bounds": {
+            "left": 199,
+            "top": 360,
+            "right": 870,
+            "bottom": 1526
+          },
+          "pixelSha256": "76dcf8ab0fed0272e83dda0a9a0d8c5d9b5a282c4f7ef0dcb960c56a3ff6a649",
+          "hasNontransparentPixels": true
+        },
+        {
+          "name": "*手のひらで紹介",
+          "visible": false,
+          "bounds": {
+            "left": 28,
+            "top": 587,
+            "right": 841,
+            "bottom": 1525
+          },
+          "pixelSha256": "ddd1d6cf9aa458cc84a1d78455ba845e3201387ba6b2a845a7c4d72c9db35a04",
+          "hasNontransparentPixels": true
+        },
+        {
+          "name": "*腕組み",
+          "visible": false,
+          "bounds": {
+            "left": 283,
+            "top": 587,
+            "right": 742,
+            "bottom": 1525
+          },
+          "pixelSha256": "58bce9410c941241d0ccfaaf52270f20f7713906a29f75c8c0d6e095f54e81f4",
+          "hasNontransparentPixels": true
+        },
+        {
+          "name": "*胸に手を添える",
+          "visible": false,
+          "bounds": {
+            "left": 245,
+            "top": 588,
+            "right": 841,
+            "bottom": 1525
+          },
+          "pixelSha256": "b633d91c6e4152ee23f78baed24dfa39c81ae0b880919ca94f50fca6f77d6e43",
+          "hasNontransparentPixels": true
+        }
+      ]
+    }
+  ],
+  "requiredDedicatedStartPosePresent": false,
+  "requiredDedicatedEndPosePresent": false,
+  "currentVisibleParts": {
+    "mouth": "*あ",
+    "body": "*通常",
+    "eyes": "*通常",
+    "eyebrows": "*楽"
+  },
+  "duplicateNamesMustUseHierarchy": true,
+  "musicStudioRegistrationExecuted": false,
+  "musicStudioRegistrationUiImplemented": false,
+  "readyForFullVocalRequirement": false,
+  "limitations": [
+    "専用の開始・終了ポーズが未制作。通常の体ポーズ6種を完成した開始・終了ポーズとは扱わない。",
+    "MusicStudioの現行Filterは設定JSONとファイル参照保持の段階。PSD登録・実再生は未検証。",
+    "AIArtToPSDのcanEditは対応形式の編集可能判定。Syncroh2の管理文書署名を移植・検証した結果ではない。"
+  ],
+  "currentProjectJsonValidation": {
+    "sourceUnit": "Source/Common/Project/SYNC_MusicStudio_ProjectData.pas",
+    "function": "TryNormalizeMusicStudioJSON",
+    "schemaVersion": 1,
+    "requiredArrays": [
+      "materials",
+      "characters",
+      "tracks"
+    ],
+    "previewAudio": "null or object with string filePath/displayName",
+    "normalizedJsonMaxLength": 32767,
+    "validatesCharacterEntrySchema": false,
+    "opensOrValidatesPsd": false,
+    "registrationCanBeConcludedFromJsonAcceptance": false
+  }
+}

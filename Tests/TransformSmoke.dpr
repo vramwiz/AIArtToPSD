@@ -11,6 +11,8 @@ uses System.JSON, System.Math, System.Types, System.SysUtils, System.Classes, Sy
   ArtUndo in '..\Source\Editor\ArtUndo.pas',
   ArtPipeBridge in '..\Source\Integrations\Pipe\ArtPipeBridge.pas',
   ArtPipeProtocol in '..\Source\Integrations\Pipe\ArtPipeProtocol.pas',
+  ArtPipeInspection in '..\Source\Integrations\Pipe\ArtPipeInspection.pas',
+  ArtPipeImages in '..\Source\Integrations\Pipe\ArtPipeImages.pas',
   ArtExchange in '..\Source\Integrations\AIExchange\ArtExchange.pas',
   ArtParts in '..\Source\Core\ArtParts.pas',
   DarkComboBox in '..\Source\Lib\UI\DarkComboBox\DarkComboBox.pas',

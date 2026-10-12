@@ -175,9 +175,11 @@ begin
         O.AddPair('parentId',''); O.AddPair('beforeLayerId',''); O.AddPair('visible',TJSONBool.Create(True));
         O.AddPair('opacity',TJSONNumber.Create(255)); O.AddPair('assetId','source-1');
         O.AddPair('bounds',TJSONObject.ParseJSONValue('{"left":0,"top":0,"right":2,"bottom":2}'));
+        Operation('select_part','generated');
         WriteResult; C := E.PrepareResult(D,TPath.Combine(Path,'result.json'),Job,Digest);
         try
           Check(C.Roots.Count=2,'PNG layer not added');
+          Check(not C.Roots[0].Visible and C.FindLayer('generated').Visible,'Added root exclusive selection failed');
           Check(C.FindLayer('generated').Pixels[0]=255,'PNG pixels lost');
           Check((C.FindLayer('generated').Pixels[4]=40) and (C.FindLayer('generated').Pixels[7]=128),'PNG color or alpha lost');
           WriteNewPsd(C,TPath.Combine(Path,'roundtrip.psd'));

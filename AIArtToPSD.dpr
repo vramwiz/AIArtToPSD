@@ -15,6 +15,8 @@ uses
   ArtUndo in 'Source\Editor\ArtUndo.pas',
   ArtPipeBridge in 'Source\Integrations\Pipe\ArtPipeBridge.pas',
   ArtPipeProtocol in 'Source\Integrations\Pipe\ArtPipeProtocol.pas',
+  ArtPipeInspection in 'Source\Integrations\Pipe\ArtPipeInspection.pas',
+  ArtPipeImages in 'Source\Integrations\Pipe\ArtPipeImages.pas',
   ArtExchange in 'Source\Integrations\AIExchange\ArtExchange.pas',
   ArtParts in 'Source\Core\ArtParts.pas',
   DarkComboBox in 'Source\Lib\UI\DarkComboBox\DarkComboBox.pas',
@@ -35,7 +37,9 @@ begin
   Application.Title := 'AI立ち絵メーカー';
   Application.CreateForm(TMainForm, MainForm);
   if (ParamCount=1) and FileExists(ParamStr(1)) then
-    try MainForm.OpenPsdFile(ParamStr(1));
-    except on E: Exception do ShowMessage('PSDを開けませんでした。'+sLineBreak+E.Message); end;
+    try
+      if SameText(ExtractFileExt(ParamStr(1)),'.png') then MainForm.NewFromPng(ParamStr(1))
+      else MainForm.OpenPsdFile(ParamStr(1));
+    except on E: Exception do ShowMessage('画像を開けませんでした。'+sLineBreak+E.Message); end;
   Application.Run;
 end.

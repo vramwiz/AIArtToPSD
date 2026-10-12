@@ -1,0 +1,25 @@
+{
+  "transferSucceeded": true,
+  "route": "create_library_file(file=existing Windows absolute path)",
+  "files": [
+    {
+      "file_name": "reference-original.png",
+      "library_file_id": "libfile_468d66b8e1cc819189c09c3a1f56a5c5",
+      "file_id": "file_0000000063f882069a98a7aae0a11bc8",
+      "path": "/reference-original.png",
+      "current_version_number": 0,
+      "file_size_bytes": 1773113
+    },
+    {
+      "file_name": "reference-composite.png",
+      "library_file_id": "libfile_55c59aa72fa88191bf92c31078fa8f91",
+      "file_id": "file_00000000cda48206a8e4b5a653a8bc28",
+      "path": "/reference-composite.png",
+      "current_version_number": 0,
+      "file_size_bytes": 1119082
+    }
+  ],
+  "imageGenerationStillPending": true,
+  "errorClassification": "The earlier image_gen error occurred parsing a Windows absolute referenced_image_paths value, before image generation started. Library upload from the same host succeeded; no access-denied or authentication error was returned.",
+  "localXattrsApplied": false
+}

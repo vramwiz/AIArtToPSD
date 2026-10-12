@@ -1,0 +1,85 @@
+﻿{
+  "scope": "keyboard-stage1",
+  "referenceSceneExpected": "立った既存キャラが手前のキーボードを自然に演奏",
+  "localResponsibilities": [
+    "完成画像を原寸・元座標で切抜き",
+    "本体とスタンドは原画画素を保持し、変形・角度変更なし",
+    "親から受けた補完済み人物を別データとして取込",
+    "後で左右腕を独立して扱える階層",
+    "再合成を完成画像と照合",
+    "新規名保存・再読込・レイヤーRGBA検証"
+  ],
+  "outOfScope": [
+    "こちらでの画像生成",
+    "腕手の演奏差分",
+    "鍵盤連動動作",
+    "他属性制作",
+    "開始終了ポーズ"
+  ],
+  "acceptedLocalFormat": "PNG 8bit RGBA sRGB, common actual canvas size, original pixel coordinates, no scale/rotation",
+  "existingTools": [
+    "Tools/Send-ArtCommand.ps1",
+    "export/result.json/import add_group/add_layer/replace_layer",
+    "sourceBounds/resample=false/trimTransparent",
+    "document/save new destination"
+  ],
+  "hierarchy": {
+    "fixedLiteral": "楽器名",
+    "dependency": "仕様書の固定リテラル。現行MusicStudio Sourceに楽器名・Instrument検索コードはない。PSD登録自体未実装。",
+    "newUserHierarchy": "楽器名レイヤー（例キーボード）→楽器属性レイヤー→本当の楽器名レイヤー→実画像群",
+    "requiresLabelDecision": true,
+    "pixelPreparationIndependent": true
+  },
+  "libraryReceiveProbe": {
+    "libraryFileId": "libfile_55c59aa72fa88191bf92c31078fa8f91",
+    "prepareMaterializeSucceeded": true,
+    "workspacePathReturned": false,
+    "signedTransferReturned": true,
+    "bytesDownloaded": false,
+    "blocker": "既存Codex付属Python 3.12.14は実行可能。正規ヘルパーを試験コピーへapply-xattrsしたところ、Windowsのos.setxattr未実装によりAttributeError。新規Python不足ではない。既存WSLは未導入。メタデータ保持を迂回するダウンロード、インストール、ヘルパー改変は行わず、受信・組立は停止。",
+    "pythonRuntime": "C:\\Users\\zan12\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "pythonVersion": "3.12.14",
+    "helperError": "AttributeError: module 'os' has no attribute 'setxattr'",
+    "wslInstalled": false
+  },
+  "sourcePsd": "C:\\Users\\zan12\\Documents\\SYNC_MusicStudio\\Characters\\PSD\\東北きりたん_立ち絵.psd",
+  "sourceSha256": "AA539ACDA6B21C01A9686E5928ED61499397B36CEC20B8AD00C26407096D0D5F",
+  "codeChangesRequiredAtPreparation": false,
+  "finalPsdPath": "C:\\Users\\zan12\\Documents\\SYNC_MusicStudio\\Characters\\PSD\\東北きりたん_キーボード.psd",
+  "existingSameNameAtPreparation": false,
+  "pendingInputLibraryFiles": [
+    {
+      "role": "完成基本画像",
+      "library_file_id": "libfile_04d9f54f18cc8191952d00cb4f0a10be",
+      "localBytesReceived": false,
+      "file_name": "exec-6d5246e6-3272-42e6-b6bf-e95269ebbcba.png"
+    },
+    {
+      "role": "人物補完画像",
+      "library_file_id": "libfile_85ff226e719c81919eedbe0870d4f076",
+      "localBytesReceived": false,
+      "file_name": "exec-634f0576-1f7b-407d-8ebe-d385eb972f56.png"
+    }
+  ],
+  "plannedActualHierarchy": [
+    "キーボード",
+    "鍵盤",
+    "キーボード",
+    "本体/スタンド"
+  ],
+  "userManualSaveRequired": false,
+  "localChunkReceive": {
+    "implemented": true,
+    "verified": true,
+    "commands": [
+      "image-begin",
+      "image-chunk",
+      "image-status",
+      "image-commit",
+      "image-abort"
+    ],
+    "documentation": "../../パイプ画像分割受信.md",
+    "cloudToWizConnected": false,
+    "generatedPngBytesReceived": false
+  }
+}

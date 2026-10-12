@@ -11,6 +11,8 @@ uses System.JSON, System.Math, System.Types, System.SysUtils, System.Classes, Sy
   ArtUndo in '..\Source\Editor\ArtUndo.pas',
   ArtPipeBridge in '..\Source\Integrations\Pipe\ArtPipeBridge.pas',
   ArtPipeProtocol in '..\Source\Integrations\Pipe\ArtPipeProtocol.pas',
+  ArtPipeInspection in '..\Source\Integrations\Pipe\ArtPipeInspection.pas',
+  ArtPipeImages in '..\Source\Integrations\Pipe\ArtPipeImages.pas',
   ArtExchange in '..\Source\Integrations\AIExchange\ArtExchange.pas',
   ArtParts in '..\Source\Core\ArtParts.pas',
   DarkComboBox in '..\Source\Lib\UI\DarkComboBox\DarkComboBox.pas',
@@ -100,7 +102,7 @@ begin
 end;
 function JobArgs(const Extra: string=''): string;
 begin Result := '{"jobId":"'+JobId+'"'+Extra+'}'; end;
-procedure WriteResult;
+procedure WriteResult(SelectResult: Boolean = True);
 begin
   Request := TJSONObject.ParseJSONValue(TFile.ReadAllText(TPath.Combine(JobPath,'request.json'))) as TJSONObject;
   Manifest := TJSONObject.Create;
@@ -108,6 +110,9 @@ begin
     for var Key in ['schemaVersion','requestId','jobId','documentId','ifRevision'] do Manifest.AddPair(Key,Request.GetValue(Key).Clone as TJSONValue);
     Manifest.AddPair('assets',TJSONArray.Create); Ops := TJSONArray.Create; Manifest.AddPair('operations',Ops);
     Op := TJSONObject.Create; Ops.AddElement(Op); Op.AddPair('op','rename_layer'); Op.AddPair('layerId',F.Document.Roots[0].Id); Op.AddPair('name','*AI結果:flipx');
+    if SelectResult then begin
+      Op := TJSONObject.Create; Ops.AddElement(Op); Op.AddPair('op','select_part'); Op.AddPair('layerId',F.Document.Roots[0].Id);
+    end;
     TFile.WriteAllText(TPath.Combine(JobPath,'result.json'),Manifest.ToJSON,TEncoding.UTF8);
   finally Request.Free; Manifest.Free; end;
 end;
@@ -242,6 +247,19 @@ begin
       Reply := SendRaw(StringOfChar(' ',30001)); try Check(not Reply.GetValue<Boolean>('ok'),'Oversize command accepted'); finally Reply.Free; end;
       Reply := Send('status','{}'); Reply.Free;
       F.CreateGroup('表情',False); F.ImportPngFile(TPath.Combine(Output,'replacement.png'));
+      // A rename can introduce a second visible * sibling. Reject the whole pipe
+      // import before history/document/job commit, then recover a valid explicit selection.
+      ExportJob; WriteResult(False); Before := F.Document; Rev := F.Document.Revision;
+      var UndoBefore := F.CanUndo; var RedoBefore := F.CanRedo; var ModifiedBefore := F.Modified;
+      Reply := Send('import',JobArgs,False);
+      try Check(Pos('Exclusive selection conflict:',Reply.GetValue<TJSONObject>('error').GetValue<string>('message'))>0,'Wrong exclusive pipe rejection');
+      finally Reply.Free; end;
+      Check((F.Document=Before) and (F.Document.Revision=Rev),'Rejected exclusive import replaced document/revision');
+      Check((F.Document.Roots[0].Name='表情') and F.Document.Roots[0].Visible and F.Document.Roots[1].Visible,'Rejected exclusive import changed attributes');
+      Check((F.CanUndo=UndoBefore) and (F.CanRedo=RedoBefore) and (F.Modified=ModifiedBefore) and not F.Busy,'Rejected exclusive import changed history/busy state');
+      Reply := Send('status',JobArgs);
+      try Check(Reply.GetValue<TJSONObject>('data').GetValue<TJSONObject>('job').GetValue<string>('state')='queued','Rejected exclusive import committed job');
+      finally Reply.Free; end;
       ExportJob; WriteResult; RecoveryPath := JobPath; RecoveryId := F.Document.Roots[0].Id; OldPipe := F.PipeName;
       F.Show; Application.ProcessMessages; B := F.GetFormImage;
       try B.SaveToFile(TPath.Combine(Output,'stage14_ui.bmp')); finally B.Free; end;
@@ -266,6 +284,7 @@ begin
       try Check(Reply.GetValue<string>('pipeName')=F.PipeName,'Recovery worker endpoint not updated'); finally Reply.Free; end;
       F.ImportAiResult(TPath.Combine(RecoveryPath,'result.json'));
       Check(F.Document.Roots[0].Name='*AI結果:flipx','Recovered result rejected');
+      Check(F.Document.Roots[0].Visible and not F.Document.Roots[1].Visible,'Recovered explicit root selection lost');
       F.Undo; Check(F.Document.Roots[0].Name='表情','Recovery undo'); F.Redo;
       F.SavePsdFile(TPath.Combine(Output,'recovered.psd')); Check(not F.Modified,'Recovery save');
       // Tampered metadata must preserve the open document and clear the busy state.

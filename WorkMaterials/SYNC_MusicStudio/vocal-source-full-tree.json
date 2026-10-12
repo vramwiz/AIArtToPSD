@@ -1,0 +1,1192 @@
+{
+  "sourcePsd": "C:\\Users\\zan12\\Documents\\SYNC_MusicStudio\\Characters\\PSD\\東北きりたん_立ち絵.psd",
+  "sourceSha256": "AA539ACDA6B21C01A9686E5928ED61499397B36CEC20B8AD00C26407096D0D5F",
+  "sourceUnchanged": true,
+  "inspectionEvidence": "D:\\DelphiProg\\AIArtToPSD\\Win64\\Validation\\PipeAutomation\\Release-20261007T232116Z-e71a3203\\document-before.json",
+  "width": 1024,
+  "height": 1536,
+  "logicalLayers": 63,
+  "imageLayers": 56,
+  "groups": 7,
+  "layerOrder": "topmost-first-depth-first",
+  "layerIdsAreInspectionSessionOnly": true,
+  "layers": [
+    {
+      "layerId": "{266E10B3-B26D-4583-B24E-5CD8AE6DA75F}",
+      "parentId": "",
+      "name": "記号",
+      "index": 0,
+      "kind": "group",
+      "visible": true,
+      "opacity": 255,
+      "bounds": {
+        "left": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "hasMask": false
+    },
+    {
+      "layerId": "{6D223A6B-379C-4E47-AEE4-7C6C4018D361}",
+      "parentId": "{266E10B3-B26D-4583-B24E-5CD8AE6DA75F}",
+      "name": "*なし",
+      "index": 0,
+      "kind": "image",
+      "visible": true,
+      "opacity": 255,
+      "bounds": {
+        "left": 0,
+        "top": 0,
+        "right": 1,
+        "bottom": 1
+      },
+      "hasMask": false,
+      "pixelSha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+    },
+    {
+      "layerId": "{BDB6B208-59CB-41A1-A777-ED0AF9BA85F2}",
+      "parentId": "{266E10B3-B26D-4583-B24E-5CD8AE6DA75F}",
+      "name": "*！",
+      "index": 1,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 106,
+        "top": 177,
+        "right": 158,
+        "bottom": 299
+      },
+      "hasMask": false,
+      "pixelSha256": "5d65c8f49bbc5bbf6b37bf7cf83629f7b31ee42524ddf0c1396427b48398b562"
+    },
+    {
+      "layerId": "{BABE3212-1080-49AD-BBEA-546CDEFBF893}",
+      "parentId": "{266E10B3-B26D-4583-B24E-5CD8AE6DA75F}",
+      "name": "*？",
+      "index": 2,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 102,
+        "top": 181,
+        "right": 191,
+        "bottom": 305
+      },
+      "hasMask": false,
+      "pixelSha256": "7e12b0b37dbfb0138c5cd50d5f913685b5d89a98e0e26aba5b4c1dd3a6cc8251"
+    },
+    {
+      "layerId": "{DB122414-A482-489C-ACF3-6F3AD05FF8BA}",
+      "parentId": "{266E10B3-B26D-4583-B24E-5CD8AE6DA75F}",
+      "name": "*！？",
+      "index": 3,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 56,
+        "top": 173,
+        "right": 201,
+        "bottom": 305
+      },
+      "hasMask": false,
+      "pixelSha256": "38800329cd559046e289e657deb10e8fe590d0030af60268dc760fc1a83bcdb1"
+    },
+    {
+      "layerId": "{28E5C3F8-5FC4-43A9-B233-7444251B0A39}",
+      "parentId": "{266E10B3-B26D-4583-B24E-5CD8AE6DA75F}",
+      "name": "*ビックリ",
+      "index": 4,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 100,
+        "top": 261,
+        "right": 183,
+        "bottom": 359
+      },
+      "hasMask": false,
+      "pixelSha256": "558d54edb99468a91145ea75e56c6380eb0862cc5a2c8b77e2383aac7a1b89e1"
+    },
+    {
+      "layerId": "{30B7D714-89E4-4590-AF66-18FF55C2E0CA}",
+      "parentId": "{266E10B3-B26D-4583-B24E-5CD8AE6DA75F}",
+      "name": "*怒り",
+      "index": 5,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 673,
+        "top": 284,
+        "right": 761,
+        "bottom": 371
+      },
+      "hasMask": false,
+      "pixelSha256": "7b7f08a4d997640af45843b976e6e6242c4e9abc57d273a7a579a42baf91aa37"
+    },
+    {
+      "layerId": "{A289DBB6-2BDF-4710-AF4E-F18C3E68AED2}",
+      "parentId": "{266E10B3-B26D-4583-B24E-5CD8AE6DA75F}",
+      "name": "*汗",
+      "index": 6,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 624,
+        "top": 468,
+        "right": 670,
+        "bottom": 543
+      },
+      "hasMask": false,
+      "pixelSha256": "ffd8da22917465f9ec98b919a84a8845056fc3154631bfb31dfd6faca3912a32"
+    },
+    {
+      "layerId": "{B20A0064-CA72-4180-8F78-17B56B6496D2}",
+      "parentId": "{266E10B3-B26D-4583-B24E-5CD8AE6DA75F}",
+      "name": "*喜び（キラキラ）",
+      "index": 7,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 81,
+        "top": 400,
+        "right": 210,
+        "bottom": 524
+      },
+      "hasMask": false,
+      "pixelSha256": "7ade201d03c8ffc6f7cdaad05c2b47ac78c48f87b987454715b853c450250f4d"
+    },
+    {
+      "layerId": "{513CEDDB-2A68-41CD-84D9-873FDFDB27B9}",
+      "parentId": "{266E10B3-B26D-4583-B24E-5CD8AE6DA75F}",
+      "name": "*哀しみ（涙）",
+      "index": 8,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 396,
+        "top": 477,
+        "right": 617,
+        "bottom": 549
+      },
+      "hasMask": false,
+      "pixelSha256": "121092a9aeef29c943c1ab77a085350dc9eeeed813fb25117aa9666d2464b3ba"
+    },
+    {
+      "layerId": "{F376B94C-21CF-4A0C-8776-684AFC587CDE}",
+      "parentId": "{266E10B3-B26D-4583-B24E-5CD8AE6DA75F}",
+      "name": "*音符",
+      "index": 9,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 93,
+        "top": 322,
+        "right": 199,
+        "bottom": 455
+      },
+      "hasMask": false,
+      "pixelSha256": "660c25babdf08e578190e8ecfb6091909791c7ac1129b2b8de3311f8f2334c44"
+    },
+    {
+      "layerId": "{DDD8AF08-9D67-44ED-8925-7B1294A79520}",
+      "parentId": "",
+      "name": "髪（前）",
+      "index": 1,
+      "kind": "group",
+      "visible": true,
+      "opacity": 255,
+      "bounds": {
+        "left": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "hasMask": false
+    },
+    {
+      "layerId": "{98C3900E-5AA4-469C-BCDC-7B8990889E02}",
+      "parentId": "{DDD8AF08-9D67-44ED-8925-7B1294A79520}",
+      "name": "髪飾り 画面左",
+      "index": 0,
+      "kind": "image",
+      "visible": true,
+      "opacity": 255,
+      "bounds": {
+        "left": 203,
+        "top": 94,
+        "right": 338,
+        "bottom": 296
+      },
+      "hasMask": false,
+      "pixelSha256": "6bf6580a1e4961e03461f3cf9c852f4c8bd17b44af593894fedc2bc9a0eeb22b"
+    },
+    {
+      "layerId": "{39B5FC69-67EA-44DC-A6D9-833B1066F9DD}",
+      "parentId": "{DDD8AF08-9D67-44ED-8925-7B1294A79520}",
+      "name": "髪飾り 画面右",
+      "index": 1,
+      "kind": "image",
+      "visible": true,
+      "opacity": 255,
+      "bounds": {
+        "left": 689,
+        "top": 85,
+        "right": 818,
+        "bottom": 299
+      },
+      "hasMask": false,
+      "pixelSha256": "15e6ce160f10056c21594fbb2d2200a81f28980fcf3df796f79a88ffa4281488"
+    },
+    {
+      "layerId": "{A286DF5C-86AA-4986-B708-505673FAE19B}",
+      "parentId": "{DDD8AF08-9D67-44ED-8925-7B1294A79520}",
+      "name": "アホ毛",
+      "index": 2,
+      "kind": "image",
+      "visible": true,
+      "opacity": 255,
+      "bounds": {
+        "left": 399,
+        "top": 8,
+        "right": 534,
+        "bottom": 129
+      },
+      "hasMask": false,
+      "pixelSha256": "3adc765dca520d26a4b0aed7304237f2cec0fdb246b80b838593f215e66faec9"
+    },
+    {
+      "layerId": "{4C0BB1F2-A94F-42A7-9BD0-88519F155D54}",
+      "parentId": "{DDD8AF08-9D67-44ED-8925-7B1294A79520}",
+      "name": "前髪",
+      "index": 3,
+      "kind": "image",
+      "visible": true,
+      "opacity": 255,
+      "bounds": {
+        "left": 334,
+        "top": 99,
+        "right": 691,
+        "bottom": 418
+      },
+      "hasMask": false,
+      "pixelSha256": "041959d80f692901b520f2ee6ce5e13ceffa0ab491c97833551325bd1df1553c"
+    },
+    {
+      "layerId": "{C433F677-C768-4D47-AAE0-0DC34DE19B03}",
+      "parentId": "{DDD8AF08-9D67-44ED-8925-7B1294A79520}",
+      "name": "横髪 画面左",
+      "index": 4,
+      "kind": "image",
+      "visible": true,
+      "opacity": 255,
+      "bounds": {
+        "left": 250,
+        "top": 157,
+        "right": 388,
+        "bottom": 628
+      },
+      "hasMask": false,
+      "pixelSha256": "bd1779c2fb9fe20306089dca4813117b8746a8a97b6be33a59196aaf770d3868"
+    },
+    {
+      "layerId": "{9B8C5E3A-4794-4DBB-94D2-6E5222A0567B}",
+      "parentId": "{DDD8AF08-9D67-44ED-8925-7B1294A79520}",
+      "name": "横髪 画面右",
+      "index": 5,
+      "kind": "image",
+      "visible": true,
+      "opacity": 255,
+      "bounds": {
+        "left": 631,
+        "top": 158,
+        "right": 762,
+        "bottom": 626
+      },
+      "hasMask": false,
+      "pixelSha256": "b039a6aa6fe5db279a3ee96332fccc744b0ebff1e8fd0349fbe23720d3aeb9d3"
+    },
+    {
+      "layerId": "{D0409AF9-EF2D-4714-BCEE-003EDFB0A4F6}",
+      "parentId": "",
+      "name": "目",
+      "index": 2,
+      "kind": "group",
+      "visible": true,
+      "opacity": 255,
+      "bounds": {
+        "left": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "hasMask": false
+    },
+    {
+      "layerId": "{F45C644D-C367-4D50-8142-2D7B071646CF}",
+      "parentId": "{D0409AF9-EF2D-4714-BCEE-003EDFB0A4F6}",
+      "name": "*通常",
+      "index": 0,
+      "kind": "image",
+      "visible": true,
+      "opacity": 255,
+      "bounds": {
+        "left": 323,
+        "top": 381,
+        "right": 678,
+        "bottom": 499
+      },
+      "hasMask": false,
+      "pixelSha256": "d6094f39abed105ba4ef90d7ca923fcc7d12c3010203f9f18ecc4feabb0f2580"
+    },
+    {
+      "layerId": "{11A919CE-667C-41FB-B1DC-CEE627533DF1}",
+      "parentId": "{D0409AF9-EF2D-4714-BCEE-003EDFB0A4F6}",
+      "name": "*閉じ",
+      "index": 1,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 341,
+        "top": 424,
+        "right": 673,
+        "bottom": 472
+      },
+      "hasMask": false,
+      "pixelSha256": "97ffd39535554d4623237e23fcf042d691ab6cdee9cb624a7953a9d843f05dd8"
+    },
+    {
+      "layerId": "{71FA2622-8FF2-4FE2-800C-AA0B6162B1F6}",
+      "parentId": "{D0409AF9-EF2D-4714-BCEE-003EDFB0A4F6}",
+      "name": "*やや閉じ",
+      "index": 2,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 339,
+        "top": 397,
+        "right": 674,
+        "bottom": 497
+      },
+      "hasMask": false,
+      "pixelSha256": "738427c8dbe4ace956d15f00fac0055950849134bf259ab8765a5711bdc87dda"
+    },
+    {
+      "layerId": "{B9034E03-4C6D-470F-8383-CFEED765242A}",
+      "parentId": "{D0409AF9-EF2D-4714-BCEE-003EDFB0A4F6}",
+      "name": "*笑顔閉じ",
+      "index": 3,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 342,
+        "top": 418,
+        "right": 671,
+        "bottom": 471
+      },
+      "hasMask": false,
+      "pixelSha256": "60b6dbb934599f0ab268bb3f4ddd4365bd869e1440a0a25854f3a16071cc9e6d"
+    },
+    {
+      "layerId": "{B425670F-8EA7-449C-982C-F68FFE74DB25}",
+      "parentId": "{D0409AF9-EF2D-4714-BCEE-003EDFB0A4F6}",
+      "name": "*半開き",
+      "index": 4,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 340,
+        "top": 418,
+        "right": 673,
+        "bottom": 475
+      },
+      "hasMask": false,
+      "pixelSha256": "d66a30d7e7fc5c0da076bfbca067174cf8b7dbf8abd653e331de0dbca6837536"
+    },
+    {
+      "layerId": "{DA8F0176-3E5E-4128-A865-BE0BC45C9602}",
+      "parentId": "{D0409AF9-EF2D-4714-BCEE-003EDFB0A4F6}",
+      "name": "*やさしい目",
+      "index": 5,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 340,
+        "top": 409,
+        "right": 672,
+        "bottom": 494
+      },
+      "hasMask": false,
+      "pixelSha256": "0bbb30a3b6436f8c05e81d51d6bc2dcf6943ae0cc637ba687b0c6e8c7a4b96eb"
+    },
+    {
+      "layerId": "{A3B942F0-C0BA-4656-97AE-882D9828BF2A}",
+      "parentId": "",
+      "name": "眉",
+      "index": 3,
+      "kind": "group",
+      "visible": true,
+      "opacity": 255,
+      "bounds": {
+        "left": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "hasMask": false
+    },
+    {
+      "layerId": "{F9884C48-9726-4A35-9080-62EFA98526D9}",
+      "parentId": "{A3B942F0-C0BA-4656-97AE-882D9828BF2A}",
+      "name": "*通常",
+      "index": 0,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 378,
+        "top": 336,
+        "right": 624,
+        "bottom": 354
+      },
+      "hasMask": false,
+      "pixelSha256": "4322eb639ac7c9283e9f6df6f04da9c35e0b396552f8218106d9f982246f45c5"
+    },
+    {
+      "layerId": "{236C4701-A48D-407E-B32A-E8E3137313AA}",
+      "parentId": "{A3B942F0-C0BA-4656-97AE-882D9828BF2A}",
+      "name": "*喜",
+      "index": 1,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 360,
+        "top": 323,
+        "right": 619,
+        "bottom": 358
+      },
+      "hasMask": false,
+      "pixelSha256": "4bda6a8e8675cd150dc88c5103590cef030984114956b955831e97da1a1acd19"
+    },
+    {
+      "layerId": "{0E0855DA-AFF0-4A4C-B43F-BD3E8E3ADFEC}",
+      "parentId": "{A3B942F0-C0BA-4656-97AE-882D9828BF2A}",
+      "name": "*怒",
+      "index": 2,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 403,
+        "top": 331,
+        "right": 618,
+        "bottom": 365
+      },
+      "hasMask": false,
+      "pixelSha256": "b182dcc876f7f944fd07d6421b2b41983bad1bb3e9fdea071d20e8fec6f11034"
+    },
+    {
+      "layerId": "{53153500-7576-4A68-AB11-FC7309B4C6BF}",
+      "parentId": "{A3B942F0-C0BA-4656-97AE-882D9828BF2A}",
+      "name": "*哀",
+      "index": 3,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 360,
+        "top": 326,
+        "right": 622,
+        "bottom": 365
+      },
+      "hasMask": false,
+      "pixelSha256": "ffa5d1d27881886af901ddb84fc25f780ed030b76ee2143e661e036e846d883f"
+    },
+    {
+      "layerId": "{AD2CA987-ED95-40B1-A469-A239EA6C2ECA}",
+      "parentId": "{A3B942F0-C0BA-4656-97AE-882D9828BF2A}",
+      "name": "*楽",
+      "index": 4,
+      "kind": "image",
+      "visible": true,
+      "opacity": 255,
+      "bounds": {
+        "left": 361,
+        "top": 340,
+        "right": 621,
+        "bottom": 358
+      },
+      "hasMask": false,
+      "pixelSha256": "89ea402399b9c0b0aea6d516a969dc58bb57f084c6fa50d31cef803967312635"
+    },
+    {
+      "layerId": "{8BE8D479-9A86-425A-B06D-97CBA7C551D6}",
+      "parentId": "{A3B942F0-C0BA-4656-97AE-882D9828BF2A}",
+      "name": "*困る",
+      "index": 5,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 360,
+        "top": 326,
+        "right": 622,
+        "bottom": 366
+      },
+      "hasMask": false,
+      "pixelSha256": "916cd2fe357fc839b2b69daf4901edec031c9039cb4354e30f71559e8df8596b"
+    },
+    {
+      "layerId": "{240137E2-5798-4A76-9D78-5C395D216240}",
+      "parentId": "{A3B942F0-C0BA-4656-97AE-882D9828BF2A}",
+      "name": "*画面左上げ",
+      "index": 6,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 362,
+        "top": 318,
+        "right": 623,
+        "bottom": 363
+      },
+      "hasMask": false,
+      "pixelSha256": "30f444701e542060bd554d51d9408d54404bdea80ed0f39ba84615560e353676"
+    },
+    {
+      "layerId": "{C35BE300-2B17-4057-8DFB-619ACF8E6FDB}",
+      "parentId": "{A3B942F0-C0BA-4656-97AE-882D9828BF2A}",
+      "name": "*画面右上げ",
+      "index": 7,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 360,
+        "top": 327,
+        "right": 619,
+        "bottom": 360
+      },
+      "hasMask": false,
+      "pixelSha256": "eb1140386745bfe8b9dca5015c5af56793f21ff4793500dda518db67f8ce58d0"
+    },
+    {
+      "layerId": "{2064BB22-8A87-4585-A4CE-06A4D64184FB}",
+      "parentId": "",
+      "name": "口",
+      "index": 4,
+      "kind": "group",
+      "visible": true,
+      "opacity": 255,
+      "bounds": {
+        "left": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "hasMask": false
+    },
+    {
+      "layerId": "{4ECCBDC2-5DC0-4FEF-896A-364CA455F108}",
+      "parentId": "{2064BB22-8A87-4585-A4CE-06A4D64184FB}",
+      "name": "*通常",
+      "index": 0,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 488,
+        "top": 539,
+        "right": 539,
+        "bottom": 551
+      },
+      "hasMask": false,
+      "pixelSha256": "eebad97656f4c159659f0cde59905698f0b3b4e8f876c14d9e6dc1ef6f5c240e"
+    },
+    {
+      "layerId": "{7AA9F8E4-0250-4128-9AF7-731CCB30306B}",
+      "parentId": "{2064BB22-8A87-4585-A4CE-06A4D64184FB}",
+      "name": "*閉じ",
+      "index": 1,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 488,
+        "top": 539,
+        "right": 540,
+        "bottom": 551
+      },
+      "hasMask": false,
+      "pixelSha256": "fe7a637241e86b3ab5a2844dc1ae8f2c128587eb26126aab89a434992d0fe2fd"
+    },
+    {
+      "layerId": "{20D3831C-774A-4C31-9E80-D6A9778225BA}",
+      "parentId": "{2064BB22-8A87-4585-A4CE-06A4D64184FB}",
+      "name": "*半開き",
+      "index": 2,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 493,
+        "top": 536,
+        "right": 534,
+        "bottom": 553
+      },
+      "hasMask": false,
+      "pixelSha256": "21dd0b10c83f8ddf79110b5210f3d2085a071c72b87e9abd419ea65ada9a9dce"
+    },
+    {
+      "layerId": "{40B5004D-8FC7-4A16-A168-DAC653508717}",
+      "parentId": "{2064BB22-8A87-4585-A4CE-06A4D64184FB}",
+      "name": "*開き",
+      "index": 3,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 491,
+        "top": 533,
+        "right": 536,
+        "bottom": 557
+      },
+      "hasMask": false,
+      "pixelSha256": "3562248d7ef2a9e11713225ef4ce6dffeb3d30d3b08454b78f8a1d6f5ccca773"
+    },
+    {
+      "layerId": "{59D7487D-A061-45DC-B657-474841B5C4B9}",
+      "parentId": "{2064BB22-8A87-4585-A4CE-06A4D64184FB}",
+      "name": "*あ",
+      "index": 4,
+      "kind": "image",
+      "visible": true,
+      "opacity": 255,
+      "bounds": {
+        "left": 494,
+        "top": 527,
+        "right": 534,
+        "bottom": 564
+      },
+      "hasMask": false,
+      "pixelSha256": "4c75c7d7500bf1c7fc0e2a4584b85527886dad7aaa6ebd55933d42a091de37d0"
+    },
+    {
+      "layerId": "{CA0DC228-912A-4611-ABD8-7B9C6EFE2454}",
+      "parentId": "{2064BB22-8A87-4585-A4CE-06A4D64184FB}",
+      "name": "*い",
+      "index": 5,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 489,
+        "top": 536,
+        "right": 538,
+        "bottom": 554
+      },
+      "hasMask": false,
+      "pixelSha256": "b7c01810d1697cc894b2111bbc44eefa7cce08017ef716fbe3ca8cd2dca0a4bb"
+    },
+    {
+      "layerId": "{C3CEB852-9AF3-4D3C-B529-F4424CACA97B}",
+      "parentId": "{2064BB22-8A87-4585-A4CE-06A4D64184FB}",
+      "name": "*う",
+      "index": 6,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 502,
+        "top": 532,
+        "right": 526,
+        "bottom": 558
+      },
+      "hasMask": false,
+      "pixelSha256": "0365d1076346475e124a75483a4e139e59a25979513e0f606f918512de86164c"
+    },
+    {
+      "layerId": "{1BC37386-1A88-4B18-AD7B-6DE0DEB72E30}",
+      "parentId": "{2064BB22-8A87-4585-A4CE-06A4D64184FB}",
+      "name": "*え",
+      "index": 7,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 488,
+        "top": 532,
+        "right": 540,
+        "bottom": 558
+      },
+      "hasMask": false,
+      "pixelSha256": "6bb366ea45c1ed1338386456e94b87948c9ed7d82a76f050d501cee8390c6898"
+    },
+    {
+      "layerId": "{810191BC-658E-4EEB-8A69-66A3FD3755CE}",
+      "parentId": "{2064BB22-8A87-4585-A4CE-06A4D64184FB}",
+      "name": "*お",
+      "index": 8,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 498,
+        "top": 528,
+        "right": 528,
+        "bottom": 562
+      },
+      "hasMask": false,
+      "pixelSha256": "52cd085ba2350f0d4f5959aab83b58545234c0f94388a51a590e777afd3b8d6d"
+    },
+    {
+      "layerId": "{514E624D-292D-4BEA-91F8-3C35F2EDC8A8}",
+      "parentId": "{2064BB22-8A87-4585-A4CE-06A4D64184FB}",
+      "name": "*ん",
+      "index": 9,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 490,
+        "top": 544,
+        "right": 538,
+        "bottom": 547
+      },
+      "hasMask": false,
+      "pixelSha256": "86808eca66e0df414536e8784ece11197db6c3f924860f8feb829e752ee132a6"
+    },
+    {
+      "layerId": "{CD324973-5852-4E43-9F38-FBA4D2FA83A7}",
+      "parentId": "",
+      "name": "顔色",
+      "index": 5,
+      "kind": "group",
+      "visible": true,
+      "opacity": 255,
+      "bounds": {
+        "left": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "hasMask": false
+    },
+    {
+      "layerId": "{B3F31A82-5EBB-4B20-985D-E820343034E9}",
+      "parentId": "{CD324973-5852-4E43-9F38-FBA4D2FA83A7}",
+      "name": "*なし",
+      "index": 0,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 0,
+        "top": 0,
+        "right": 1,
+        "bottom": 1
+      },
+      "hasMask": false,
+      "pixelSha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+    },
+    {
+      "layerId": "{72DA97A2-A3C8-4A18-9776-7D2FC2349986}",
+      "parentId": "{CD324973-5852-4E43-9F38-FBA4D2FA83A7}",
+      "name": "*青ざめ",
+      "index": 1,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 321,
+        "top": 206,
+        "right": 694,
+        "bottom": 522
+      },
+      "hasMask": false,
+      "pixelSha256": "86a32f68e82b301d7dc422593972b7760f43b2664525e613a9fde8b6e2c32c81"
+    },
+    {
+      "layerId": "{6A1A6C00-4E28-4D9B-B4CD-D3D46979650A}",
+      "parentId": "{CD324973-5852-4E43-9F38-FBA4D2FA83A7}",
+      "name": "*黒い影",
+      "index": 2,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 321,
+        "top": 206,
+        "right": 694,
+        "bottom": 511
+      },
+      "hasMask": false,
+      "pixelSha256": "01980faf7c9f01874fe49eca65adcff1c799fd9d59df9fc4ddae017742b7cf55"
+    },
+    {
+      "layerId": "{D6E055CD-7EF8-4DF9-8C19-ED2C2A95E25F}",
+      "parentId": "{CD324973-5852-4E43-9F38-FBA4D2FA83A7}",
+      "name": "*赤い顔",
+      "index": 3,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 321,
+        "top": 209,
+        "right": 694,
+        "bottom": 597
+      },
+      "hasMask": false,
+      "pixelSha256": "6a2c27f341a5a00f5b4b6b9ab5f66ef0d04c05f5b27c4ded9f8c00fbf838d5e1"
+    },
+    {
+      "layerId": "{E29C3907-9604-44E6-90CD-D0E3BC164F09}",
+      "parentId": "{CD324973-5852-4E43-9F38-FBA4D2FA83A7}",
+      "name": "*照れ",
+      "index": 4,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 321,
+        "top": 436,
+        "right": 694,
+        "bottom": 588
+      },
+      "hasMask": false,
+      "pixelSha256": "6216f08b7e5ade7bad285923f209beff2b9b820ae894df0754b2f453a5e07c82"
+    },
+    {
+      "layerId": "{A3534C20-6D03-41C4-91D0-0A9D11462065}",
+      "parentId": "{CD324973-5852-4E43-9F38-FBA4D2FA83A7}",
+      "name": "*汗",
+      "index": 5,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 633,
+        "top": 471,
+        "right": 666,
+        "bottom": 537
+      },
+      "hasMask": false,
+      "pixelSha256": "fe626ff362896d60ad5ce6db352d337709af6fa13bd3619663239de9c49ed64f"
+    },
+    {
+      "layerId": "{162FCA7C-A857-4F9C-AAA7-EB11726B8B80}",
+      "parentId": "{CD324973-5852-4E43-9F38-FBA4D2FA83A7}",
+      "name": "*落ち込み（三本線）",
+      "index": 6,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 321,
+        "top": 206,
+        "right": 694,
+        "bottom": 512
+      },
+      "hasMask": false,
+      "pixelSha256": "da66f4ac2ede585492fcd344d8c1d6627d45705ff98c608618ee9c7fbd2aa959"
+    },
+    {
+      "layerId": "{93911D7F-29A4-453E-8829-4FAB8D7D52E4}",
+      "parentId": "",
+      "name": "顔（額・耳の補完）",
+      "index": 6,
+      "kind": "image",
+      "visible": true,
+      "opacity": 255,
+      "bounds": {
+        "left": 316,
+        "top": 204,
+        "right": 700,
+        "bottom": 599
+      },
+      "hasMask": false,
+      "pixelSha256": "1fc5aaee9244f3f9fa5c005fcfab6dd9b36a256b6cc7cfd9f1ee4b45a575cdd8"
+    },
+    {
+      "layerId": "{D0723BE7-CF4B-4583-98CE-5E563B3AD348}",
+      "parentId": "",
+      "name": "体（ポーズ）",
+      "index": 7,
+      "kind": "group",
+      "visible": true,
+      "opacity": 255,
+      "bounds": {
+        "left": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "hasMask": false
+    },
+    {
+      "layerId": "{04A5C8F1-B648-4E1A-9725-EDE8ADAB53A7}",
+      "parentId": "{D0723BE7-CF4B-4583-98CE-5E563B3AD348}",
+      "name": "*通常",
+      "index": 0,
+      "kind": "image",
+      "visible": true,
+      "opacity": 255,
+      "bounds": {
+        "left": 196,
+        "top": 595,
+        "right": 840,
+        "bottom": 1525
+      },
+      "hasMask": false,
+      "pixelSha256": "f9339acb1646323c7004f3936e3680768549eddf1922c91ce259332facf50c81"
+    },
+    {
+      "layerId": "{5EB094C5-CC57-4B8F-AD20-1BAD2AE77CC1}",
+      "parentId": "{D0723BE7-CF4B-4583-98CE-5E563B3AD348}",
+      "name": "*左上を指さす",
+      "index": 1,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 85,
+        "top": 320,
+        "right": 837,
+        "bottom": 1525
+      },
+      "hasMask": false,
+      "pixelSha256": "5123294861e4eb2867c3d508478776f2e5477a384b7985db1eed3c34e6b96e5f"
+    },
+    {
+      "layerId": "{575E8782-E413-44DB-9232-1492F9D46818}",
+      "parentId": "{D0723BE7-CF4B-4583-98CE-5E563B3AD348}",
+      "name": "*右上を指さす",
+      "index": 2,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 199,
+        "top": 360,
+        "right": 870,
+        "bottom": 1526
+      },
+      "hasMask": false,
+      "pixelSha256": "76dcf8ab0fed0272e83dda0a9a0d8c5d9b5a282c4f7ef0dcb960c56a3ff6a649"
+    },
+    {
+      "layerId": "{DC7BC4DA-B43D-49A9-96DE-20D107EA1EC7}",
+      "parentId": "{D0723BE7-CF4B-4583-98CE-5E563B3AD348}",
+      "name": "*手のひらで紹介",
+      "index": 3,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 28,
+        "top": 587,
+        "right": 841,
+        "bottom": 1525
+      },
+      "hasMask": false,
+      "pixelSha256": "ddd1d6cf9aa458cc84a1d78455ba845e3201387ba6b2a845a7c4d72c9db35a04"
+    },
+    {
+      "layerId": "{EE7B29C3-A91A-4B7D-A7C3-782CE703E03B}",
+      "parentId": "{D0723BE7-CF4B-4583-98CE-5E563B3AD348}",
+      "name": "*腕組み",
+      "index": 4,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 283,
+        "top": 587,
+        "right": 742,
+        "bottom": 1525
+      },
+      "hasMask": false,
+      "pixelSha256": "58bce9410c941241d0ccfaaf52270f20f7713906a29f75c8c0d6e095f54e81f4"
+    },
+    {
+      "layerId": "{06199907-0276-4C7D-B959-08B9409404A4}",
+      "parentId": "{D0723BE7-CF4B-4583-98CE-5E563B3AD348}",
+      "name": "*胸に手を添える",
+      "index": 5,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 245,
+        "top": 588,
+        "right": 841,
+        "bottom": 1525
+      },
+      "hasMask": false,
+      "pixelSha256": "b633d91c6e4152ee23f78baed24dfa39c81ae0b880919ca94f50fca6f77d6e43"
+    },
+    {
+      "layerId": "{425CD5D2-D43D-485A-AD10-79E17DF0495A}",
+      "parentId": "",
+      "name": "後ろ髪（左右の付け根補完）",
+      "index": 8,
+      "kind": "image",
+      "visible": true,
+      "opacity": 255,
+      "bounds": {
+        "left": 145,
+        "top": 94,
+        "right": 881,
+        "bottom": 631
+      },
+      "hasMask": false,
+      "pixelSha256": "a51db5139489cec02514f23e709ae18d17d2b07aadea42d78e06fe528af8de68"
+    },
+    {
+      "layerId": "{24FFA030-A91C-481E-95B4-69B8BF546154}",
+      "parentId": "",
+      "name": "元画像（比較用・非表示）",
+      "index": 9,
+      "kind": "image",
+      "visible": false,
+      "opacity": 255,
+      "bounds": {
+        "left": 0,
+        "top": 0,
+        "right": 1024,
+        "bottom": 1536
+      },
+      "hasMask": false,
+      "pixelSha256": "eacd19b530a1df458b8ea818cb914d65639038211ab94facd021ce14b06d6d08"
+    }
+  ],
+  "exclusiveGroups": [
+    {
+      "name": "記号",
+      "exclusiveNames": [
+        "*なし",
+        "*！",
+        "*？",
+        "*！？",
+        "*ビックリ",
+        "*怒り",
+        "*汗",
+        "*喜び（キラキラ）",
+        "*哀しみ（涙）",
+        "*音符"
+      ],
+      "exclusiveVisibleCount": 1,
+      "currentNames": [
+        "*なし"
+      ]
+    },
+    {
+      "name": "髪（前）",
+      "exclusiveNames": [
+        null
+      ],
+      "exclusiveVisibleCount": 0,
+      "currentNames": [
+        null
+      ]
+    },
+    {
+      "name": "目",
+      "exclusiveNames": [
+        "*通常",
+        "*閉じ",
+        "*やや閉じ",
+        "*笑顔閉じ",
+        "*半開き",
+        "*やさしい目"
+      ],
+      "exclusiveVisibleCount": 1,
+      "currentNames": [
+        "*通常"
+      ]
+    },
+    {
+      "name": "眉",
+      "exclusiveNames": [
+        "*通常",
+        "*喜",
+        "*怒",
+        "*哀",
+        "*楽",
+        "*困る",
+        "*画面左上げ",
+        "*画面右上げ"
+      ],
+      "exclusiveVisibleCount": 1,
+      "currentNames": [
+        "*楽"
+      ]
+    },
+    {
+      "name": "口",
+      "exclusiveNames": [
+        "*通常",
+        "*閉じ",
+        "*半開き",
+        "*開き",
+        "*あ",
+        "*い",
+        "*う",
+        "*え",
+        "*お",
+        "*ん"
+      ],
+      "exclusiveVisibleCount": 1,
+      "currentNames": [
+        "*あ"
+      ]
+    },
+    {
+      "name": "顔色",
+      "exclusiveNames": [
+        "*なし",
+        "*青ざめ",
+        "*黒い影",
+        "*赤い顔",
+        "*照れ",
+        "*汗",
+        "*落ち込み（三本線）"
+      ],
+      "exclusiveVisibleCount": 0,
+      "currentNames": [
+        null
+      ]
+    },
+    {
+      "name": "体（ポーズ）",
+      "exclusiveNames": [
+        "*通常",
+        "*左上を指さす",
+        "*右上を指さす",
+        "*手のひらで紹介",
+        "*腕組み",
+        "*胸に手を添える"
+      ],
+      "exclusiveVisibleCount": 1,
+      "currentNames": [
+        "*通常"
+      ]
+    }
+  ]
+}
