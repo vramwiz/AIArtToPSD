@@ -1,6 +1,7 @@
 ﻿unit ArtParts;
 interface
 uses System.Generics.Collections, ArtDocument;
+const ART_EXCLUSIVE_SELECTION_VERSION = 2;
 function LayerSiblings(Document: TArtDocument; Layer: TArtLayer): TList<TArtLayer>;
 function IsExclusive(Layer: TArtLayer): Boolean;
 function IsForced(Layer: TArtLayer): Boolean;
@@ -25,11 +26,40 @@ begin
   if Result=nil then raise EArtFormat.Create('文書内のレイヤーを選択してください。');
 end;
 procedure SelectExclusive(Document: TArtDocument; Layer: TArtLayer);
-var L: TArtLayer; List: TList<TArtLayer>;
+var Current,Sibling: TArtLayer; Siblings,Path: TList<TArtLayer>;
+  function FindPath(List: TList<TArtLayer>; Depth: Integer): Boolean;
+  var Item: TArtLayer;
+  begin
+    if Depth>128 then raise EArtFormat.Create('Layer depth limit');
+    for Item in List do begin
+      Path.Add(Item);
+      if Item=Layer then Exit(True);
+      if Item.Children.Count>0 then
+        if FindPath(Item.Children,Depth+1) then Exit(True);
+      Path.Delete(Path.Count-1);
+    end;
+    Result := False;
+  end;
 begin
   if not IsExclusive(Layer) then raise EArtFormat.Create('排他選択 (*) を設定してください。');
-  List := LayerSiblings(Document,Layer);
-  for L in List do if IsExclusive(L) then L.Visible := L=Layer;
+  Path := TList<TArtLayer>.Create;
+  try
+    // Resolve the complete path before changing visibility. A foreign layer or
+    // invalid depth must not partially select its apparent ancestors.
+    if Document=nil then raise EArtFormat.Create('No current document');
+    if not FindPath(Document.Roots,0) then
+      raise EArtFormat.Create('Layer is not in the current document');
+    Siblings := Document.Roots;
+    for Current in Path do begin
+      // Exclusivity is local to the actual parent, never a name-based search.
+      // Nonexclusive containers, fixed siblings and other body parts stay intact.
+      if IsExclusive(Current) then
+        for Sibling in Siblings do
+          if IsExclusive(Sibling) then Sibling.Visible := Sibling=Current;
+      Current.Visible := True;
+      Siblings := Current.Children;
+    end;
+  finally Path.Free; end;
 end;
 procedure ValidateExclusiveSelections(Document: TArtDocument);
   procedure Validate(List: TList<TArtLayer>; const ParentId: string; Depth: Integer);

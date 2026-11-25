@@ -8,11 +8,31 @@ uses System.JSON, ArtDocument;
 // ページ単位で返すため、名前付きパイプのメッセージ上限を超えない。
 function InspectArtDocument(Document: TArtDocument; Args: TJSONObject;
   const FileName, SelectedLayerId: string; CanEdit, Modified: Boolean): TJSONObject;
+procedure ValidateArtInspectionArgs(Args: TJSONObject);
 
 implementation
 
 uses System.SysUtils, System.Classes, System.Hash, System.Generics.Collections,
   ArtPipeProtocol;
+
+procedure ReadInspectionOptions(Args: TJSONObject; out Offset,Limit: Integer;
+  out IncludeHashes: Boolean);
+begin
+  Offset := 0; Limit := 64; IncludeHashes := False;
+  if Args.GetValue('offset')<>nil then Offset := CommandInteger(Args,'offset');
+  if Args.GetValue('limit')<>nil then Limit := CommandInteger(Args,'limit');
+  if (Offset<0) or (Limit<1) or (Limit>64) then
+    raise EArtFormat.Create('offset must be nonnegative; limit must be between 1 and 64');
+  if Args.GetValue('includePixelHashes')<>nil then begin
+    if not (Args.GetValue('includePixelHashes') is TJSONBool) then
+      raise EArtFormat.Create('Boolean required: includePixelHashes');
+    IncludeHashes := TJSONBool(Args.GetValue('includePixelHashes')).AsBoolean;
+  end;
+end;
+
+procedure ValidateArtInspectionArgs(Args: TJSONObject);
+var Offset,Limit: Integer; IncludeHashes: Boolean;
+begin ReadInspectionOptions(Args,Offset,Limit,IncludeHashes); end;
 
 function InspectArtDocument(Document: TArtDocument; Args: TJSONObject;
   const FileName, SelectedLayerId: string; CanEdit, Modified: Boolean): TJSONObject;
@@ -53,16 +73,7 @@ var Layers: TJSONArray; Offset, Limit, Count: Integer; IncludeHashes: Boolean;
   end;
 begin
   if Document = nil then raise EArtFormat.Create('No PSD is open');
-  Offset := 0; Limit := 64; IncludeHashes := False;
-  if Args.GetValue('offset') <> nil then Offset := CommandInteger(Args, 'offset');
-  if Args.GetValue('limit') <> nil then Limit := CommandInteger(Args, 'limit');
-  if (Offset < 0) or (Limit < 1) or (Limit > 64) then
-    raise EArtFormat.Create('offset must be nonnegative; limit must be between 1 and 64');
-  if Args.GetValue('includePixelHashes') <> nil then begin
-    if not (Args.GetValue('includePixelHashes') is TJSONBool) then
-      raise EArtFormat.Create('Boolean required: includePixelHashes');
-    IncludeHashes := TJSONBool(Args.GetValue('includePixelHashes')).AsBoolean;
-  end;
+  ReadInspectionOptions(Args,Offset,Limit,IncludeHashes);
   Result := TJSONObject.Create;
   try
     Result.AddPair('documentId', Document.SessionId);

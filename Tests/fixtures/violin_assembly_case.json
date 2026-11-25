@@ -1,0 +1,99 @@
+{
+  "case": "violin-real-png-assembly",
+  "readyToExecute": false,
+  "waitingFor": "Latest trial completed and saved. Recheck the application and inputs before any separately authorized rerun.",
+  "canvas": {
+    "width": 1024,
+    "height": 1536
+  },
+  "groupsTopToBottom": [
+    "Arm",
+    "Fixed"
+  ],
+  "assets": [
+    {
+      "assetId": "BODY",
+      "fileName": "BODY.png",
+      "fileSha256": "b728fabf757ae5e3be23371db8ccb82150168d8a3c7abb6116b7983b85a73f64",
+      "parent": "Fixed",
+      "layerName": "BODY",
+      "visible": true
+    },
+    {
+      "assetId": "ARM_0",
+      "fileName": "ARM_0.png",
+      "fileSha256": "54dd6e3e68691424ffdd794080807baee2430857c898e95891986f32a455ad98",
+      "parent": "Arm",
+      "layerName": "*ARM_0",
+      "visible": false
+    },
+    {
+      "assetId": "ARM_1",
+      "fileName": "ARM_1.png",
+      "fileSha256": "02e6e6be7e5e6cfa04ad07eb5a191d1e9814f29ddd82bea4e12db7800ab58acc",
+      "parent": "Arm",
+      "layerName": "*ARM_1",
+      "visible": true
+    },
+    {
+      "assetId": "ARM_2",
+      "fileName": "ARM_2.png",
+      "fileSha256": "38792620b1dcf292b4a259e367a037b1344067211d304e58237b32ad9cc27dd3",
+      "parent": "Arm",
+      "layerName": "*ARM_2",
+      "visible": false
+    }
+  ],
+  "layerDefaults": {
+    "opacity": 255,
+    "bounds": {
+      "left": 0,
+      "top": 0,
+      "right": 1024,
+      "bottom": 1536
+    },
+    "resample": false,
+    "trimTransparent": false,
+    "coordinateSpace": "canvas"
+  },
+  "expected": {
+    "imageLayers": 4,
+    "groups": 2,
+    "totalNodes": 6,
+    "visibleImagePaths": [
+      "Arm/*ARM_1",
+      "Fixed/BODY"
+    ]
+  },
+  "preserve": [
+    "original user ZIP",
+    "original PNG bytes",
+    "existing PSD comparison file",
+    "any document already open in the application"
+  ],
+  "successRequires": [
+    "new document created through new-document",
+    "all four PNGs received through image-begin/chunk/commit",
+    "one inline import batch completed",
+    "hierarchy/order/bounds/visibility/opacity match this case",
+    "each image RGBA SHA256 equals independent source PNG RGBA SHA256",
+    "initial preview matches BODY plus ARM_1 composition",
+    "new PSD saved under a unique Tests/output/ArtRoute/violin_<timestamp> directory",
+    "reloaded PSD layers retain all four source RGBA hashes",
+    "reloaded preview equals the pre-save preview"
+  ],
+  "sourceRgbaSha256": {
+    "ARM_1": "4a4e567b2154819c4f0f17c0f3afc17fa0ee380e58e77df2ce5e8c781d56980b",
+    "ARM_0": "5c68d76a42786d073aac199e95561bf3cc1f5b185d33552de896271e2fb5663b",
+    "ARM_2": "3c535720bd1c926595f2870eef94a4ed57b6b6a7b13e6bf9aa0ec1f79dde46db",
+    "BODY": "14916cfd908235650168ca932d9887a5b978bbcd81da4ac186a099dba3060778"
+  },
+  "executionPerformed": true,
+  "latestVerification": "Tests/output/ArtRoute/violin_20261023T104439Z_7c9f66a1/verification.json",
+  "latestExclusiveVerification": "Tests/output/ArtRoute/violin_20261023T104439Z_7c9f66a1/exclusive-verification.json",
+  "latestCorrectionVisibleImagePaths": [
+    "Arm/*ARM_2",
+    "Fixed/BODY"
+  ],
+  "namingRule": "Prefix only explicitly designated difference layer names with *. Keep filenames, asset IDs, BODY and group names unchanged; never auto-prefix every layer in the API."
+}

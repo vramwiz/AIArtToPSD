@@ -16,6 +16,7 @@ uses
   ArtPipeBridge in 'Source\Integrations\Pipe\ArtPipeBridge.pas',
   ArtPipeProtocol in 'Source\Integrations\Pipe\ArtPipeProtocol.pas',
   ArtPipeInspection in 'Source\Integrations\Pipe\ArtPipeInspection.pas',
+  ArtPipeFileOps in 'Source\Integrations\Pipe\ArtPipeFileOps.pas',
   ArtPipeImages in 'Source\Integrations\Pipe\ArtPipeImages.pas',
   ArtExchange in 'Source\Integrations\AIExchange\ArtExchange.pas',
   ArtParts in 'Source\Core\ArtParts.pas',

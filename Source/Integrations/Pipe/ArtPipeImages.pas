@@ -11,6 +11,13 @@ const
   ART_IMAGE_RECEIPTS = 64;
   ART_IMAGE_IDLE_MS = 900000;
 type
+  TArtPreviewReceipt = class
+  public
+    Id,Client,DocumentId,Sha256,PixelSha256: string;
+    Revision,Touched: UInt64;
+    Width,Height: Integer;
+    Bytes: TBytes;
+  end;
   TArtImageReceipt = class
   public
     Id,JobId,FileName,Directory,TempPath,FinalPath,Sha256,State: string;
@@ -24,20 +31,24 @@ type
   TArtPipeImages = class
   private
     FTransfers: TObjectDictionary<string,TArtImageReceipt>;
+    FPreviews: TObjectDictionary<string,TArtPreviewReceipt>;
     procedure Expire;
     function ReceiptJson(Receipt: TArtImageReceipt): TJSONObject;
+    function PreviewJson(Receipt: TArtPreviewReceipt): TJSONObject;
+    function ExecutePreview(const Command: string; Args: TJSONObject;
+      Document: TArtDocument; const Client: string): TJSONObject;
   public
     constructor Create;
     destructor Destroy; override;
     procedure Clear;
     procedure AbortJob(const JobId: string);
     function Execute(const Command: string; Args: TJSONObject;
-      Exchange: TArtExchange; Document: TArtDocument): TJSONObject;
+      Exchange: TArtExchange; Document: TArtDocument; const Client: string = ''): TJSONObject;
   end;
 
 implementation
-uses System.IOUtils, System.Hash, System.NetEncoding,
-  ArtPipeProtocol, ArtPng;
+uses System.IOUtils, System.Hash, System.NetEncoding, System.Math,
+  ArtPipeProtocol, ArtPng, ArtPsd;
 
 procedure CheckPath(const Path: string);
 var Current,Parent: string; Attributes: Cardinal;
@@ -112,11 +123,14 @@ begin
 end;
 
 constructor TArtPipeImages.Create;
-begin inherited; FTransfers := TObjectDictionary<string,TArtImageReceipt>.Create([doOwnsValues]); end;
+begin
+  inherited; FTransfers := TObjectDictionary<string,TArtImageReceipt>.Create([doOwnsValues]);
+  FPreviews := TObjectDictionary<string,TArtPreviewReceipt>.Create([doOwnsValues]);
+end;
 destructor TArtPipeImages.Destroy;
-begin FTransfers.Free; inherited; end;
+begin FPreviews.Free; FTransfers.Free; inherited; end;
 procedure TArtPipeImages.Clear;
-begin FTransfers.Clear; end;
+begin FPreviews.Clear; FTransfers.Clear; end;
 procedure TArtPipeImages.AbortJob(const JobId: string);
 begin
   for var R in FTransfers.Values do
@@ -128,6 +142,69 @@ begin
   NowTick := GetTickCount64; Ids := FTransfers.Keys.ToArray;
   for var Id in Ids do
     if NowTick-FTransfers[Id].Touched>=ART_IMAGE_IDLE_MS then FTransfers.Remove(Id);
+  Ids := FPreviews.Keys.ToArray;
+  for var Id in Ids do
+    if NowTick-FPreviews[Id].Touched>=ART_IMAGE_IDLE_MS then FPreviews.Remove(Id);
+end;
+function TArtPipeImages.PreviewJson(Receipt: TArtPreviewReceipt): TJSONObject;
+begin
+  Result := TJSONObject.Create;
+  Result.AddPair('previewId',Receipt.Id); Result.AddPair('documentId',Receipt.DocumentId);
+  Result.AddPair('revision',UIntToStr(Receipt.Revision)); Result.AddPair('mimeType','image/png');
+  Result.AddPair('width',TJSONNumber.Create(Receipt.Width)); Result.AddPair('height',TJSONNumber.Create(Receipt.Height));
+  Result.AddPair('sizeBytes',TJSONNumber.Create(Length(Receipt.Bytes)));
+  Result.AddPair('sha256',Receipt.Sha256); Result.AddPair('pixelSha256',Receipt.PixelSha256);
+  Result.AddPair('maxChunkBytes',TJSONNumber.Create(ART_IMAGE_CHUNK_BYTES));
+end;
+function TArtPipeImages.ExecutePreview(const Command: string; Args: TJSONObject;
+  Document: TArtDocument; const Client: string): TJSONObject;
+var P,Existing: TArtPreviewReceipt; G: TGUID; Temp,Id: string; Pixels,Chunk: TBytes;
+  Version: UInt64; Total: Int64; Offset,Count: Integer; Encoding: TBase64Encoding;
+  Hash: THashSHA2;
+begin
+  Result := nil;
+  if Command='preview' then begin
+    if Document=nil then raise EArtFormat.Create('No document is open');
+    if CommandString(Args,'documentId')<>Document.SessionId then raise EArtFormat.Create('Stale document');
+    if not TryStrToUInt64(CommandString(Args,'ifRevision'),Version) or (Version<>Document.Revision) then
+      raise EArtFormat.Create('Stale revision');
+    if FPreviews.Count>=8 then raise EArtFormat.Create('Preview receipt count limit');
+    P := TArtPreviewReceipt.Create;
+    try
+      CreateGUID(G); P.Id := GUIDToString(G); P.Client := Client;
+      P.DocumentId := Document.SessionId; P.Revision := Document.Revision;
+      P.Width := Document.Width; P.Height := Document.Height;
+      Pixels := RenderPsdLayers(Document); Hash := THashSHA2.Create; Hash.Update(Pixels);
+      P.PixelSha256 := LowerCase(Hash.HashAsString);
+      Temp := TPath.GetTempFileName;
+      try
+        WriteRgbaPng(Temp,P.Width,P.Height,Pixels); P.Bytes := TFile.ReadAllBytes(Temp);
+      finally if TFile.Exists(Temp) then TFile.Delete(Temp); end;
+      if Length(P.Bytes)>ART_IMAGE_FILE_BYTES then raise EArtFormat.Create('Preview PNG size limit');
+      Total := Length(P.Bytes);
+      for Existing in FPreviews.Values do Inc(Total,Length(Existing.Bytes));
+      if Total>ART_IMAGE_TOTAL_BYTES then raise EArtFormat.Create('Preview total byte limit');
+      Hash := THashSHA2.Create; Hash.Update(P.Bytes); P.Sha256 := LowerCase(Hash.HashAsString);
+      P.Touched := GetTickCount64;
+      Result := PreviewJson(P); FPreviews.Add(P.Id,P);
+    except Result.Free; P.Free; raise; end;
+    Exit;
+  end;
+  try Id := GUIDToString(StringToGUID(CommandString(Args,'previewId')));
+  except on EConvertError do raise EArtFormat.Create('GUID previewId required'); end;
+  if not FPreviews.TryGetValue(Id,P) then raise EArtFormat.Create('Unknown or expired previewId');
+  if P.Client<>Client then raise EArtFormat.Create('Preview belongs to another client');
+  Offset := CommandInteger(Args,'offset'); Count := CommandInteger(Args,'count');
+  if (Offset<0) or (Offset>Length(P.Bytes)) or (Count<1) or (Count>ART_IMAGE_CHUNK_BYTES) then
+    raise EArtFormat.Create('Invalid preview offset/count');
+  Count := Min(Count,Length(P.Bytes)-Offset); Chunk := Copy(P.Bytes,Offset,Count);
+  P.Touched := GetTickCount64; Result := PreviewJson(P);
+  Encoding := TBase64Encoding.Create(0);
+  try
+    Result.AddPair('offset',TJSONNumber.Create(Offset)); Result.AddPair('count',TJSONNumber.Create(Count));
+    Result.AddPair('eof',TJSONBool.Create(Offset+Count=Length(P.Bytes)));
+    Result.AddPair('dataBase64',Encoding.EncodeBytesToString(Chunk));
+  finally Encoding.Free; end;
 end;
 function TArtPipeImages.ReceiptJson(Receipt: TArtImageReceipt): TJSONObject;
 begin
@@ -142,7 +219,7 @@ begin
 end;
 
 function TArtPipeImages.Execute(const Command: string; Args: TJSONObject;
-  Exchange: TArtExchange; Document: TArtDocument): TJSONObject;
+  Exchange: TArtExchange; Document: TArtDocument; const Client: string): TJSONObject;
 var Id,Name,Hash,JobId,Directory: string; R,Existing: TArtImageReceipt;
   Job: TArtExchangeJob; Size,Width,Height,Offset,Active: Integer; Total: Int64;
   Bytes,Previous: TBytes; G: TGUID; Handle: THandle; Image: TArtPngData;
@@ -150,12 +227,15 @@ var Id,Name,Hash,JobId,Directory: string; R,Existing: TArtImageReceipt;
   procedure CheckJob;
   begin
     Job := Exchange.FindJob(JobId);
+    Exchange.CheckJobClient(Job,Client);
     if (Job.State='cancelled') or (Job.State='completed') or
       (Document=nil) or (Document.SessionId<>Job.DocumentId) or (Document.Revision<>Job.Revision) then
       raise EArtFormat.Create('Image transfer job is cancelled, completed or stale');
   end;
 begin
-  Expire; Id := TransferId(Args); R := nil;
+  Expire;
+  if (Command='preview') or (Command='preview-read') then Exit(ExecutePreview(Command,Args,Document,Client));
+  Id := TransferId(Args); R := nil;
   if Command='image-begin' then begin
     JobId := CommandString(Args,'jobId'); CheckJob;
     Name := CommandString(Args,'fileName'); ValidateName(Name);
@@ -198,6 +278,7 @@ begin
     Exit(ReceiptJson(R));
   end;
   if not FTransfers.TryGetValue(Id,R) then raise EArtFormat.Create('Unknown or expired transferId');
+  Exchange.CheckJobClient(Exchange.FindJob(R.JobId),Client);
   R.Touched := GetTickCount64;
   if Command='image-status' then Exit(ReceiptJson(R));
   if Command='image-abort' then begin

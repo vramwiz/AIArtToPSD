@@ -52,6 +52,11 @@ begin
   try
     Info.AddPair('schemaVersion',TJSONNumber.Create(1)); Info.AddPair('pid',TJSONNumber.Create(GetCurrentProcessId));
     Info.AddPair('pipeName',FName);
+    Info.AddPair('executablePath',TPath.GetFullPath(ParamStr(0)));
+    Info.AddPair('clientRoutingVersion',TJSONNumber.Create(1));
+    Info.AddPair('assemblyVersion',TJSONNumber.Create(1));
+    Info.AddPair('fileOperationsVersion',TJSONNumber.Create(1));
+    Info.AddPair('supportedClients',TJSONArray.Create('codex','dot'));
     TFile.WriteAllText(FConnectionFile+'.tmp',Info.ToJSON,TEncoding.UTF8);
     TFile.Move(FConnectionFile+'.tmp',FConnectionFile);
   finally Info.Free; end;

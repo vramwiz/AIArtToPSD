@@ -452,6 +452,13 @@ var Snapshot: TArtDocument; Reason: string;
     end;
   end;
 begin
+  // A newly created empty canvas has no imported merged image to preserve.
+  // Imported layerless PSDs retain the existing unsupported/fallback behavior.
+  if (Document.Roots.Count=0) and (Length(Document.SourceBytes)=0) then begin
+    if (Document.Width<1) or (Document.Height<1) or (Document.Width>30000) or (Document.Height>30000) then
+      raise EArtFormat.Create('Invalid blank canvas');
+    SetLength(Result,PixelByteCount(Document.Width,Document.Height,4)); Exit;
+  end;
   for Reason in Document.Unsupported do
     if (Reason<>'Image resources retained in source archive') and
        (Reason<>'Additional info retained in archive: lspf') and
@@ -574,6 +581,16 @@ begin
   finally E.Free; end;
 end;
 
+procedure SaveCompatiblePsdBytes(const Data: TBytes; const FileName: string); forward;
+
+procedure SaveCompatiblePsdStream(Output: TWriter; const FileName: string);
+var Data: TBytes;
+begin
+  SetLength(Data,Output.Size);
+  if Output.Size>0 then Move(Output.Memory^,Data[0],Output.Size);
+  SaveCompatiblePsdBytes(Data,FileName);
+end;
+
 procedure WriteNewPsd(Document: TArtDocument; const FileName: string;
   Compression: TPsdCompression);
 var Output, Info, LayerMask: TWriter;
@@ -646,7 +663,7 @@ begin
     end;
     Destination := TPath.GetFullPath(FileName);
     CreateGUID(G); TempName := Destination + '.' + GUIDToString(G) + '.tmp';
-    Output.SaveToFile(TempName);
+    SaveCompatiblePsdStream(Output,TempName);
     Check := ReadPsd(TempName);
     try
       if (Check.Width <> Document.Width) or (Check.Height <> Document.Height) or
@@ -690,7 +707,7 @@ begin
   Destination := TPath.GetFullPath(FileName);
   CreateGUID(G); TempName := Destination+'.'+GUIDToString(G)+'.tmp';
   try
-    TFile.WriteAllBytes(TempName,Document.SourceBytes);
+    SaveCompatiblePsdBytes(Document.SourceBytes,TempName);
     Original := ReadPsd(TempName);
     try
       if (Document.Width<>Original.Width) or (Document.Height<>Original.Height) or
@@ -750,6 +767,60 @@ begin
     finally B.Free; end;
     Merged := R.Bytes(R.Limit-R.Position);
   finally R.Free; end;
+end;
+
+procedure SaveCompatiblePsdBytes(const Data: TBytes; const FileName: string);
+var Parsed: TArtDocument; Records: TArchiveRecords;
+    Prefix,Tail,Channels,Merged: TBytes;
+    R: TReader; V: Cardinal; I,J,Offset,Size,FixCount: Integer;
+    Info,LayerMask,Output,ChannelOutput: TWriter;
+begin
+  // Some readers, including CLIP STUDIO PAINT, reject folder/divider records
+  // with no channels. Keep their metadata and give them empty raw RGBA planes.
+  // Apply this to every save path, including unchanged archives from old builds.
+  R := TReader.Create(Data,0,Length(Data));
+  try
+    R.Skip(26); V := R.U32; R.Skip(V); V := R.U32; R.Skip(V);
+    V := R.U32;
+    if (V=0) or (R.U32=0) then begin
+      TFile.WriteAllBytes(FileName,Data); Exit;
+    end;
+  finally R.Free; end;
+  Parsed := TArtDocument.Create;
+  Info := TWriter.Create; LayerMask := TWriter.Create;
+  Output := TWriter.Create; ChannelOutput := TWriter.Create;
+  try
+    SplitArchive(Data,Prefix,Tail,Channels,Merged,Records,Parsed);
+    FixCount := 0;
+    for I := 0 to High(Records) do
+      if (Records[I].Layer.Kind in [alkGroup,alkDivider]) and
+         (Length(Records[I].Channels)=0) then Inc(FixCount);
+    if FixCount=0 then begin TFile.WriteAllBytes(FileName,Data); Exit; end;
+    // Preserve the signed layer count and all existing image/channel bytes.
+    Info.Bytes(Copy(Data,Length(Prefix)+8,2)); Offset := 0;
+    for I := 0 to High(Records) do begin
+      if (Records[I].Layer.Kind in [alkGroup,alkDivider]) and
+         (Length(Records[I].Channels)=0) then begin
+        Info.Bytes(Copy(Records[I].Header,0,16)); Info.U16(4);
+        Info.U16($FFFF); Info.U32(2); // Transparency first, then RGB.
+        for J := 0 to 2 do begin Info.U16(J); Info.U32(2); end;
+        Info.Bytes(Copy(Records[I].Header,18,Length(Records[I].Header)-18));
+        for J := 0 to 3 do ChannelOutput.U16(0); // Raw, zero-sized planes.
+      end else begin
+        Info.Bytes(Records[I].Header);
+        Size := 0;
+        for J := 0 to High(Records[I].Channels) do Inc(Size,Records[I].Channels[J].Size);
+        ChannelOutput.Bytes(Copy(Channels,Offset,Size)); Inc(Offset,Size);
+      end;
+      Info.U32(Length(Records[I].Extra)); Info.Bytes(Records[I].Extra);
+    end;
+    Info.CopyFrom(ChannelOutput,0); Info.Pad(2,0);
+    LayerMask.Block(Info); LayerMask.Bytes(Tail);
+    Output.Bytes(Prefix); Output.Block(LayerMask); Output.Bytes(Merged);
+    Output.SaveToFile(FileName);
+  finally
+    ChannelOutput.Free; Output.Free; LayerMask.Free; Info.Free; Parsed.Free;
+  end;
 end;
 
 function UpdatedExtra(const Original: TBytes; const Name: string; Changed: Boolean): TBytes;
@@ -922,7 +993,7 @@ begin
     Info.CopyFrom(Data,0); Info.Pad(2,0);
     LayerMask.Block(Info); LayerMask.Bytes(Tail);
     Prefix[12] := 0; Prefix[13] := 4;
-    Output.Bytes(Prefix); Output.Block(LayerMask); Output.Bytes(NM); Output.SaveToFile(TempName);
+    Output.Bytes(Prefix); Output.Block(LayerMask); Output.Bytes(NM); SaveCompatiblePsdStream(Output,TempName);
     ParsedNew.Free; ParsedNew := ReadPsd(GeneratedTemp);
     Checked := ReadPsd(TempName);
     try Verify(Document.Roots,Checked.Roots);
@@ -1021,7 +1092,7 @@ begin
       Offset := 2+Document.Height*2;
       if Length(Planes[C])>Offset then Output.WriteBuffer(Planes[C][Offset],Length(Planes[C])-Offset);
     end;
-    Output.SaveToFile(TempName); Checked := ReadPsd(TempName);
+    SaveCompatiblePsdStream(Output,TempName); Checked := ReadPsd(TempName);
     try
       CheckTree(Document.Roots,Checked.Roots,True,0);
       if (Checked.Width<>Document.Width) or (Checked.Height<>Document.Height) or
@@ -1168,8 +1239,17 @@ begin
             ((J=3) and (OldRecords[I].Channels[J].Id<>-1)) then
             raise EArtFormat.Create('Image channel order not yet supported for edited save');
         if (OldRecords[I].Flags and 16)<>0 then raise EArtFormat.Create('Pixel-irrelevant image record not editable');
-      end else if Length(OldRecords[I].Channels)<>0 then
-        raise EArtFormat.Create('Group channels not yet supported for edited save');
+      end else if Length(OldRecords[I].Channels)<>0 then begin
+        // Accept only the empty raw channels emitted by compatibility saves.
+        if (Length(OldRecords[I].Channels)<>4) or
+           (OldRecords[I].Layer.Bounds.Width<>0) or (OldRecords[I].Layer.Bounds.Height<>0) then
+          raise EArtFormat.Create('Group channels not yet supported for edited save');
+        for J := 0 to 3 do
+          if (OldRecords[I].Channels[J].Size<>2) or
+             ((J=0) and (OldRecords[I].Channels[J].Id<>-1)) or
+             ((J>0) and (OldRecords[I].Channels[J].Id<>J-1)) then
+            raise EArtFormat.Create('Nonempty group channels block edited save');
+      end;
     end;
     WriteNewPsd(Editable,GeneratedTemp,Compression); Generated := TFile.ReadAllBytes(GeneratedTemp);
     ParsedNew := TArtDocument.Create;
@@ -1195,7 +1275,7 @@ begin
     Info.Bytes(NewChannels); Info.Pad(2,0);
     LayerMask.Block(Info); LayerMask.Bytes(Tail);
     Output.Bytes(Prefix); Output.Block(LayerMask); Output.Bytes(NewMerged);
-    Output.SaveToFile(TempName); Checked := ReadPsd(TempName);
+    SaveCompatiblePsdStream(Output,TempName); Checked := ReadPsd(TempName);
     try
       VerifyTree(Document.Roots,Checked.Roots);
       ParsedNew.Width := Document.Width; ParsedNew.Height := Document.Height;

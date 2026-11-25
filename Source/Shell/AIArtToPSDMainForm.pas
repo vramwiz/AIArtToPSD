@@ -14,11 +14,12 @@ type
     FUndo: TArtUndo;
     FPipe: TArtPipeBridge;
     FProtocol: TArtPipeProtocol;
-    FCurrentJobId,FOperation: string;
+    FCurrentJobId,FOperation,FCodexJobId,FDotJobId: string;
     FBusy: Boolean;
     FDropFile: TDropFile;
     FOpeningDrop: Boolean;
     FActivity: TLabel;
+    FConnection: TLabel;
     FCancelAi: TButton;
     FUndoItem,FRedoItem: TMenuItem;
     FPrompt: TMemo;
@@ -53,6 +54,11 @@ type
     function DispatchCommand(const Command: string; Args: TJSONObject): TJSONObject;
     function DocumentJson(Args: TJSONObject): TJSONObject;
     function JobJson(Job: TArtExchangeJob): TJSONObject;
+    function CurrentAiClient: string;
+    function CurrentAiClientName: string;
+    procedure CheckDocumentVersion(Args: TJSONObject; AllowNoDocument: Boolean = False);
+    procedure NewBlankCanvas(Width,Height: Integer);
+    procedure AiClientActivity(Sender: TObject);
     procedure UpdateActivity;
     procedure BeginOperation(const Name: string);
     procedure EndOperation;
@@ -123,7 +129,8 @@ type
     procedure ReplaceSelectedPng(const FileName: string);
     procedure MoveSelectedLayer(X,Y: Integer);
     procedure OpenPsdFile(const FileName: string);
-    procedure SavePsdFile(const FileName: string);
+    procedure SavePsdFile(const FileName: string; NewOnly: Boolean = False;
+      const ExpectedFileSha256: string = '');
     procedure ApplySelectedLayer(const Name: string; Visible: Boolean; Opacity: Byte);
     property OpenDialog: TOpenDialog read FOpenDialog;
     property SaveDialog: TSaveDialog read FSaveDialog;
@@ -139,7 +146,7 @@ var MainForm: TMainForm;
 
 implementation
 
-uses System.Math, System.IOUtils, System.UITypes, Winapi.Windows, ArtPsd, ArtPng, ArtLayerName, ArtParts, ArtPipeInspection;
+uses System.Math, System.IOUtils, System.UITypes, Winapi.Windows, ArtPsd, ArtPng, ArtLayerName, ArtParts, ArtPipeInspection, ArtPipeFileOps;
 
 {$R *.dfm}
 type
@@ -206,6 +213,60 @@ begin
 end;
 procedure TMainForm.EndOperation;
 begin FBusy := False; FOperation := ''; Screen.Cursor := crDefault; UpdateActivity; end;
+function TMainForm.CurrentAiClient: string;
+begin
+  Result := 'codex';
+  if (FProtocol<>nil) and FProtocol.Handling then Result := FProtocol.CurrentClient;
+end;
+function TMainForm.CurrentAiClientName: string;
+begin
+  if CurrentAiClient='dot' then Result := 'dot' else Result := 'Codex';
+end;
+procedure TMainForm.CheckDocumentVersion(Args: TJSONObject; AllowNoDocument: Boolean);
+var Id,Revision: string; Version: UInt64;
+begin
+  Id := CommandString(Args,'documentId'); Revision := CommandString(Args,'ifRevision');
+  if FDocument=nil then begin
+    if AllowNoDocument and (Id='') and (Revision='0') then Exit;
+    raise EArtFormat.Create('No matching document is open');
+  end;
+  if Id<>FDocument.SessionId then raise EArtFormat.Create('Stale document');
+  if not TryStrToUInt64(Revision,Version) or (Version<>FDocument.Revision) then
+    raise EArtFormat.Create('Stale revision');
+end;
+procedure TMainForm.NewBlankCanvas(Width,Height: Integer);
+var Candidate,Old: TArtDocument; Pixels: TBytes;
+begin
+  if FModified then raise EArtFormat.Create('Save the current document before creating a new canvas');
+  if (Width<1) or (Height<1) or (Width>30000) or (Height>30000) then
+    raise EArtFormat.Create('Invalid canvas dimensions');
+  PixelByteCount(Width,Height,4);
+  BeginOperation('新規キャンバス作成中');
+  try
+    Candidate := TArtDocument.Create;
+    try
+      Candidate.Width := Width; Candidate.Height := Height; Pixels := RenderPsdLayers(Candidate);
+      Candidate.Changed;
+    except Candidate.Free; raise; end;
+    Old := FDocument; FDocument := Candidate;
+    try SetPreview(Pixels); except FDocument := Old; Candidate.Free; raise; end;
+    FUndo.Clear; ResetAiJobs; FTree.SetRoots(nil); Old.Free;
+    FFileName := ''; FModified := True; FCanEdit := True;
+    FZoom := 1; FPanX := 0; FPanY := 0;
+    FSave.Enabled := True; FSaveAs.Enabled := True; FClose.Enabled := True;
+    RebuildTree; UpdateStatus;
+  finally EndOperation; end;
+end;
+procedure TMainForm.AiClientActivity(Sender: TObject);
+begin
+  if (FConnection=nil) or (FProtocol=nil) then Exit;
+  FConnection.Caption := 'Codex / dot 受付中（共通パイプ）'+sLineBreak+
+    'Codex: '+FProtocol.ContactText('codex')+' | dot: '+FProtocol.ContactText('dot');
+  FConnection.Hint := '接続先: \\.\pipe\'+PipeName+sLineBreak+
+    '最終要求: '+FProtocol.CurrentClient+' / '+FProtocol.CurrentRequestId;
+  if FPipe<>nil then FConnection.Hint := FConnection.Hint+sLineBreak+'接続情報: '+FPipe.ConnectionFile;
+  FConnection.ShowHint := True;
+end;
 procedure TMainForm.UpdateActivity;
 var Job: TArtExchangeJob; StateText: string;
 begin
@@ -222,7 +283,7 @@ begin
     else if Job.State='cancelled' then StateText := 'AI処理を中止しました'
     else StateText := '取込完了';
     if (Job.State<>'completed') and (Job.State<>'cancelled') and (FDocument<>nil) and (FDocument.Revision<>Job.Revision) then StateText := '文書が変更されています・新しいAIジョブを書き出してください';
-    StateText := StateText+Format(' (%d%%) %s',[Job.Progress,Job.MessageText]);
+    StateText := Job.Client+': '+StateText+Format(' (%d%%) %s',[Job.Progress,Job.MessageText]);
   end;
   if (FPrompt<>nil) and (FActivity.Caption<>StateText) then FPrompt.Lines.Add('AI: '+StateText);
   FActivity.Caption := StateText;
@@ -252,6 +313,7 @@ function TMainForm.JobJson(Job: TArtExchangeJob): TJSONObject;
 begin
   Result := TJSONObject.Create;
   Result.AddPair('jobId',Job.Id); Result.AddPair('directory',Job.Directory); Result.AddPair('state',Job.State);
+  Result.AddPair('client',Job.Client);
   Result.AddPair('progress',TJSONNumber.Create(Job.Progress)); Result.AddPair('message',Job.MessageText);
   Result.AddPair('documentId',Job.DocumentId); Result.AddPair('ifRevision',UIntToStr(Job.Revision));
   Result.AddPair('stale',TJSONBool.Create((Job.State<>'completed') and ((FDocument=nil) or (FDocument.SessionId<>Job.DocumentId) or (FDocument.Revision<>Job.Revision))));
@@ -264,15 +326,40 @@ begin
   Result := InspectArtDocument(FDocument,Args,FFileName,SelectedId,FCanEdit,FModified);
 end;
 function TMainForm.DispatchCommand(const Command: string; Args: TJSONObject): TJSONObject;
-var Id,Path: string; Job: TArtExchangeJob; Version: UInt64; Commands: TJSONArray;
+var Id,Path,ExpectedHash: string; Job: TArtExchangeJob; Version: UInt64;
+    Commands: TJSONArray; Overwrite: Boolean;
 begin
   if FBusy then raise EArtFormat.Create('Application is busy');
+  if (Command='open') or (Command='save') then begin
+    if Application.ModalLevel>0 then raise EArtFormat.Create('Close the active application dialog before pipe file operations');
+    if FTree.NameEditor.Visible then raise EArtFormat.Create('Finish the current layer name edit before pipe file operations');
+  end;
+  if Command='open' then begin
+    CheckDocumentVersion(Args,True);
+    if FModified then raise EArtFormat.Create('Save the current document before opening a PSD');
+    ValidateArtInspectionArgs(Args);
+    Path := TPath.GetFullPath(CommandString(Args,'fileName'));
+    if not SameText(ExtractFileExt(Path),'.psd') then raise EArtFormat.Create('PSD source required');
+    if not TFile.Exists(Path) then raise EArtFormat.Create('PSD source does not exist');
+    OpenPsdFile(Path);
+    Result := DocumentJson(Args);
+    Result.AddPair('fileSha256',ArtPipeDocumentSha256(FDocument));
+    Exit;
+  end;
+  if Command='new-document' then begin
+    CheckDocumentVersion(Args,True);
+    NewBlankCanvas(CommandInteger(Args,'width'),CommandInteger(Args,'height'));
+    Exit(DocumentJson(Args));
+  end;
   if (Command='image-begin') or (Command='image-chunk') or (Command='image-status') or
-    (Command='image-commit') or (Command='image-abort') then
-    Exit(FImages.Execute(Command,Args,FExchange,FDocument));
+    (Command='image-commit') or (Command='image-abort') or
+    (Command='preview') or (Command='preview-read') then
+    Exit(FImages.Execute(Command,Args,FExchange,FDocument,CurrentAiClient));
   if Command='document' then Exit(DocumentJson(Args));
   if Command='save' then begin
+    ValidateArtInspectionArgs(Args);
     if FDocument=nil then raise EArtFormat.Create('No PSD is open');
+    if FDocument.Roots.Count=0 then raise EArtFormat.Create('Register at least one layer before PSD save');
     if CommandString(Args,'documentId')<>FDocument.SessionId then
       raise EArtFormat.Create('Stale document');
     if not TryStrToUInt64(CommandString(Args,'ifRevision'),Version) or
@@ -280,22 +367,44 @@ begin
     Path := TPath.GetFullPath(CommandString(Args,'fileName'));
     if not SameText(ExtractFileExt(Path),'.psd') then raise EArtFormat.Create('PSD destination required');
     if not TDirectory.Exists(ExtractFilePath(Path)) then raise EArtFormat.Create('Destination directory is missing');
-    // パイプ保存は新しい名前への保存だけを許し、元PSD・既存ファイルを上書きしない。
-    if TFile.Exists(Path) then raise EArtFormat.Create('Destination already exists; choose a new PSD path');
+    Overwrite := False; ExpectedHash := '';
+    if Args.GetValue('overwrite')<>nil then begin
+      if not (Args.GetValue('overwrite') is TJSONBool) then raise EArtFormat.Create('Boolean required: overwrite');
+      Overwrite := TJSONBool(Args.GetValue('overwrite')).AsBoolean;
+    end;
+    if Overwrite then begin
+      ExpectedHash := CommandString(Args,'expectedFileSha256');
+      if ExpectedHash='' then raise EArtFormat.Create('expectedFileSha256 is required for overwrite');
+    end else begin
+      if Args.GetValue('expectedFileSha256')<>nil then raise EArtFormat.Create('expectedFileSha256 requires overwrite=true');
+      if TFile.Exists(Path) then raise EArtFormat.Create('Destination already exists; choose a new PSD path');
+    end;
     if FModified and not FCanEdit then raise EArtFormat.Create('This document cannot be edited');
-    SavePsdFile(Path); Exit(DocumentJson(Args));
+    SavePsdFile(Path,not Overwrite,ExpectedHash);
+    Result := DocumentJson(Args); Result.AddPair('fileSha256',ArtPipeDocumentSha256(FDocument));
+    Exit;
   end;
   if Command='status' then begin
     Result := TJSONObject.Create;
     Result.AddPair('pipeName',PipeName); Result.AddPair('busy',TJSONBool.Create(FBusy));
+    Result.AddPair('processId',TJSONNumber.Create(GetCurrentProcessId));
+    Result.AddPair('executablePath',TPath.GetFullPath(ParamStr(0)));
     Result.AddPair('fileName',FFileName);
+    Result.AddPair('clientRoutingVersion',TJSONNumber.Create(1));
+    Result.AddPair('assemblyVersion',TJSONNumber.Create(1));
+    Result.AddPair('fileOperationsVersion',TJSONNumber.Create(1));
+    Result.AddPair('exclusiveSelectionVersion',TJSONNumber.Create(ART_EXCLUSIVE_SELECTION_VERSION));
+    Result.AddPair('requestReplayWindow',TJSONNumber.Create(64));
+    Result.AddPair('supportedClients',TJSONArray.Create('codex','dot'));
+    Result.AddPair('clients',FProtocol.ClientsJson);
     Commands := TJSONArray.Create; Result.AddPair('commands',Commands);
-    for var Supported in ['status','document','save','export','import','progress','cancel','undo','redo','recover',
+    for var Supported in ['status','document','new-document','open','preview','preview-read','save','export','import','progress','cancel','undo','redo','recover',
       'image-begin','image-chunk','image-status','image-commit','image-abort'] do Commands.Add(Supported);
     Result.AddPair('canUndo',TJSONBool.Create(CanUndo)); Result.AddPair('canRedo',TJSONBool.Create(CanRedo));
     Result.AddPair('modified',TJSONBool.Create(FModified)); Result.AddPair('canEdit',TJSONBool.Create(FCanEdit));
     if FDocument<>nil then begin Result.AddPair('documentId',FDocument.SessionId); Result.AddPair('revision',UIntToStr(FDocument.Revision)); end;
-    Id := FCurrentJobId; if Args.GetValue('jobId')<>nil then Id := CommandString(Args,'jobId');
+    if CurrentAiClient='dot' then Id := FDotJobId else Id := FCodexJobId;
+    if Args.GetValue('jobId')<>nil then Id := CommandString(Args,'jobId');
     if Id<>'' then begin
       try Result.AddPair('job',JobJson(FExchange.FindJob(Id)));
       except Result.Free; raise; end;
@@ -310,13 +419,32 @@ begin
     Exit(JobJson(FExchange.FindJob(ExtractFileName(Path))));
   end;
   if Command='recover' then begin
+    if CurrentAiClient='dot' then CheckDocumentVersion(Args,True);
     if FModified then raise EArtFormat.Create('Save or discard the current document before recovery');
     RecoverAiJob(CommandString(Args,'directory')); Exit(JobJson(FExchange.FindJob(FCurrentJobId)));
+  end;
+  // New dot history operations must refer to the state the caller inspected.
+  // Legacy Codex's empty undo/redo arguments retain their existing behavior.
+  if ((Command='undo') or (Command='redo')) and
+    ((CurrentAiClient='dot') or (Args.GetValue('ifRevision')<>nil) or (Args.GetValue('documentId')<>nil)) then begin
+    if (FDocument=nil) or (CommandString(Args,'documentId')<>FDocument.SessionId) then
+      raise EArtFormat.Create('Stale document');
+    if not TryStrToUInt64(CommandString(Args,'ifRevision'),Version) or (Version<>FDocument.Revision) then
+      raise EArtFormat.Create('Stale revision');
   end;
   if Command='undo' then begin Undo; Exit(TJSONObject.Create); end;
   if Command='redo' then begin Redo; Exit(TJSONObject.Create); end;
   Id := CommandString(Args,'jobId'); Job := FExchange.FindJob(Id);
-  if Command='import' then ImportAiResult(TPath.Combine(Job.Directory,'result.json'))
+  FExchange.CheckJobClient(Job,CurrentAiClient);
+  if Command='import' then begin
+    if Args.GetValue('result')<>nil then begin
+      if not (Args.GetValue('result') is TJSONObject) then raise EArtFormat.Create('result object required');
+      if (Job.AppliedHash='') and ((FDocument=nil) or (FDocument.SessionId<>Job.DocumentId) or
+        (FDocument.Revision<>Job.Revision)) then raise EArtFormat.Create('Stale import job');
+      FExchange.PublishResult(Job,TJSONObject(Args.GetValue('result')));
+    end;
+    ImportAiResult(TPath.Combine(Job.Directory,'result.json'));
+  end
   else if Command='progress' then FExchange.NotifyJob(FDocument,Id,CommandString(Args,'state'),CommandString(Args,'message'),CommandInteger(Args,'progress'))
   else if Command='cancel' then CancelAiJob(Id)
   else raise EArtFormat.Create('Unknown command: '+Command);
@@ -368,12 +496,15 @@ begin
   AiPanel := TPanel.Create(Self); AiPanel.Parent := Self; AiPanel.Align := alBottom; AiPanel.Height := 148;
   FJobPath := TEdit.Create(Self);  FJobPath.Align := alBottom; FJobPath.ReadOnly := True; FJobPath.Text := 'AIジョブのフォルダーがここに表示されます。';
   LabelControl := TLabel.Create(Self); LabelControl.Parent := AiPanel; LabelControl.Align := alTop; LabelControl.Caption := 'AIとのやりとり';
+  FConnection := TLabel.Create(Self); FConnection.Parent := AiPanel; FConnection.Align := alTop;
+  FConnection.AutoSize := False; FConnection.Height := 38; FConnection.WordWrap := True;
+  FActivity.Parent := AiPanel; FActivity.Align := alBottom;
   AiButtons := TPanel.Create(Self); AiButtons.Parent := Self; AiButtons.Visible := False;  AiButtons.Align := alNone; AiButtons.Width := 194;
   FExportAi := TButton.Create(Self); FExportAi.Parent := AiButtons; FExportAi.SetBounds(8,6,176,28); FExportAi.Caption := 'AI向けに書き出す'; FExportAi.OnClick := ExportAiClick; FExportAi.Enabled := False;
   FImportAi := TButton.Create(Self); FImportAi.Parent := AiButtons; FImportAi.SetBounds(8,40,176,28); FImportAi.Caption := '生成結果を取り込む'; FImportAi.OnClick := ImportAiClick; FImportAi.Enabled := False;
   FCancelAi := TButton.Create(Self); FCancelAi.Parent := AiButtons; FCancelAi.SetBounds(8,74,176,28); FCancelAi.Caption := 'AI処理を中止'; FCancelAi.OnClick := CancelAiClick; FCancelAi.Enabled := False;
   FPrompt := TMemo.Create(Self); FPrompt.Parent := AiPanel; FPrompt.Align := alClient; FPrompt.ScrollBars := ssVertical; FPrompt.MaxLength := 16000;
-  FPrompt.ReadOnly := True; FPrompt.Text := 'Codexからの指示を待っています。';
+  FPrompt.ReadOnly := True; FPrompt.Text := 'Codex / dot からの指示を待っています。';
   RightPanel := TPanel.Create(Self); RightPanel.Parent := Self; RightPanel.Align := alRight; RightPanel.Left := ClientWidth-420; RightPanel.Width := 420;
   PositionPanel := TPanel.Create(Self); PositionPanel.Parent := Self; PositionPanel.Visible := False;  PositionPanel.Align := alNone; PositionPanel.Height := 58;
   LabelControl := TLabel.Create(Self); LabelControl.Parent := PositionPanel; LabelControl.SetBounds(8,7,30,18); LabelControl.Caption := 'X';
@@ -408,6 +539,7 @@ begin
   OnCloseQuery := CheckClose;
   FImages := TArtPipeImages.Create;
   FProtocol := TArtPipeProtocol.Create(DispatchCommand); FPipe := TArtPipeBridge.Create(FProtocol.Handle);
+  FProtocol.OnActivity := AiClientActivity; AiClientActivity(FProtocol);
   FExchange.PipeName := FPipe.Name; UpdateActivity;
   FDropFile := TDropFile.Create;
   FDropFile.Attach(Self,DropFiles);
@@ -574,6 +706,8 @@ begin
       end; end;
       SetPreview(RGBA);
     except FDocument := OldDoc; NewDoc.Free; raise; end;
+    // The new document/preview is now committed, even if later UI/history refresh fails.
+    if (FProtocol<>nil) and FProtocol.Handling then FProtocol.MarkCommitted;
     // Nodes hold document pointers: clear them before releasing the previous document.
     FUndo.Clear; ResetAiJobs; FTree.SetRoots(nil); OldDoc.Free; FFileName := TPath.GetFullPath(FileName);
     FCanEdit := NewCanEdit; FModified := False; FSave.Enabled := True; FSaveAs.Enabled := True; FClose.Enabled := True;
@@ -687,14 +821,18 @@ begin
   BeginOperation('AIジョブの再開中');
   try
     Candidate := FExchange.LoadRecovery(ExcludeTrailingPathDelimiter(Directory),Job);
-    try Pixels := RenderPsdLayers(Candidate); FExchange.WriteJobConnection(Job); except Candidate.Free; Job.Free; raise; end;
+    try
+      if (FProtocol<>nil) and FProtocol.Handling then FExchange.CheckJobClient(Job,CurrentAiClient);
+      Pixels := RenderPsdLayers(Candidate); FExchange.WriteJobConnection(Job);
+    except Candidate.Free; Job.Free; raise; end;
     Old := FDocument; FDocument := Candidate;
     try SetPreview(Pixels); except FDocument := Old; Candidate.Free; Job.Free; raise; end;
     FUndo.Clear; ResetAiJobs; FTree.SetRoots(nil); Old.Free;
     FZoom := 1; FPanX := 0; FPanY := 0; FPaint.Invalidate;
     FExchange.RegisterRecovered(Job); FCurrentJobId := Job.Id; FJobPath.Text := Job.Directory;
+    if Job.Client='dot' then FDotJobId := Job.Id else FCodexJobId := Job.Id;
     FJobPath.Hint := Job.Directory; FJobPath.ShowHint := True;
-    FPrompt.Lines.Add('Codex: '+Job.PromptText); FFileName := ''; FModified := True; FCanEdit := True;
+    FPrompt.Lines.Add(Job.Client+': '+Job.PromptText); FFileName := ''; FModified := True; FCanEdit := True;
     FSave.Enabled := True; FSaveAs.Enabled := True; FClose.Enabled := True;
     RebuildTree; UpdateStatus;
   finally EndOperation; end;
@@ -703,15 +841,17 @@ procedure TMainForm.ResetAiJobs;
 begin
   FImages.Clear;
   FCurrentJobId := ''; FExchange.ClearJobs; FJobPath.Text := 'AIジョブのフォルダーがここに表示されます。';
+  FCodexJobId := ''; FDotJobId := '';
   FJobPath.Hint := ''; FJobPath.ShowHint := False; UpdateActivity;
 end;
 
 function TMainForm.ExportAiJob(const Prompt,Root: string; Workspace: TJSONObject): string;
 begin
   if not FCanEdit then raise EArtFormat.Create('編集対応文書を開いてください。');
-  FPrompt.Lines.Add('Codex: '+Prompt);
+  FPrompt.Lines.Add(CurrentAiClientName+': '+Prompt);
   FTree.FinishRename(True); BeginOperation('AI向け書出し中');
-  try Result := FExchange.ExportJob(FDocument,Prompt,Root,Workspace); FCurrentJobId := ExtractFileName(Result);
+  try Result := FExchange.ExportJob(FDocument,Prompt,Root,Workspace,CurrentAiClient); FCurrentJobId := ExtractFileName(Result);
+    if CurrentAiClient='dot' then FDotJobId := FCurrentJobId else FCodexJobId := FCurrentJobId;
   finally EndOperation; end;
   FJobPath.Text := Result; FJobPath.Hint := Result; FJobPath.ShowHint := True;
 end;
@@ -776,20 +916,35 @@ begin
   finally FUpdatingParts := False; end;
 end;
 procedure TMainForm.PartGroupChange(Sender: TObject);
-var Parent,L: TArtLayer; List: TList<TArtLayer>; Active,VisibleCount: Integer;
+var Parent,L: TArtLayer; List: TList<TArtLayer>; Active,VisibleCount: Integer; ParentVisible: Boolean;
+  function ParentPathVisible(Items: TList<TArtLayer>; AncestorsVisible: Boolean; Depth: Integer): Boolean;
+  var Item: TArtLayer;
+  begin
+    Result := False;
+    if Depth>128 then Exit;
+    for Item in Items do begin
+      if Item=Parent then Exit(AncestorsVisible and Item.Visible);
+      if Item.Children.Count>0 then
+        if ParentPathVisible(Item.Children,AncestorsVisible and Item.Visible,Depth+1) then Exit(True);
+    end;
+  end;
 begin
   FPartChoice.Items.Clear; Active := -1; VisibleCount := 0;
   if (FDocument<>nil) and (FPartGroup.ItemIndex>=0) then begin
     Parent := TArtLayer(FPartGroup.Items.Objects[FPartGroup.ItemIndex]);
     if Parent=nil then List := FDocument.Roots else List := Parent.Children;
+    ParentVisible := Parent=nil;
+    if Parent<>nil then ParentVisible := ParentPathVisible(FDocument.Roots,True,0);
     for L in List do if IsExclusive(L) then begin
       FPartChoice.Items.AddObject(ParseLayerName(L.Name).DisplayName,L);
-      if L.Visible then begin Active := FPartChoice.Items.Count-1; Inc(VisibleCount); end;
+      // A stored ON child under a hidden parent is not the active visible choice.
+      // Leave the combo unselected so choosing that same child fires a selection.
+      if L.Visible and ParentVisible then begin Active := FPartChoice.Items.Count-1; Inc(VisibleCount); end;
     end;
   end;
   if VisibleCount<>1 then Active := -1;
   FPartChoice.ItemIndex := Active; FPartChoice.Enabled := FCanEdit and (FPartChoice.Items.Count>0);
-  FPartChoice.Hint := '選択すると同じ親の * パーツを1つだけ表示します。親が非表示なら目アイコンで表示してください。'; FPartChoice.ShowHint := True;
+  FPartChoice.Hint := '選択した層と祖先を表示し、各階層で同じ親の * 兄弟を非表示にします。他の部位や固定層は保持します。'; FPartChoice.ShowHint := True;
 end;
 procedure TMainForm.PartChoiceChange(Sender: TObject);
 var L: TArtLayer;
@@ -839,7 +994,8 @@ begin
   FStatus.Hint := FStatus.Caption; FStatus.ShowHint := True; UpdateActivity;
 end;
 
-procedure TMainForm.SavePsdFile(const FileName: string);
+procedure TMainForm.SavePsdFile(const FileName: string; NewOnly: Boolean;
+  const ExpectedFileSha256: string);
 var Path: TArray<Integer>; Selected: TArtLayer; List: TList<TArtLayer>; Index: Integer;
   function FindPath(List: TList<TArtLayer>): Boolean;
   var I: Integer;
@@ -856,16 +1012,24 @@ begin
   FTree.FinishRename(True); Selected := FTree.Selected; FindPath(FDocument.Roots);
   Screen.Cursor := crHourGlass;
   try
-    if Length(FDocument.SourceBytes)=0 then WriteNewPsd(FDocument,FileName,pcRle)
+    if NewOnly or (ExpectedFileSha256<>'') then
+      SaveArtPipePsd(FDocument,FileName,FFileName,FModified,ExpectedFileSha256)
+    else if Length(FDocument.SourceBytes)=0 then WriteNewPsd(FDocument,FileName,pcRle)
     else if FModified then begin
       try SaveLayerPropertiesPsd(FDocument,FileName);
       except on E: EArtFormat do SaveImageCompositionPsd(FDocument,FileName); end;
     end
     else SaveUnchangedPsd(FDocument,FileName);
-  finally Screen.Cursor := crDefault; end;
+    if (FProtocol<>nil) and FProtocol.Handling then FProtocol.MarkCommitted;
+  finally
+    Screen.Cursor := crDefault;
+  end;
   // Reload the successful save to establish the new source baseline.
   FLoadingSaved := True;
-  try OpenPsdFile(FileName); finally FLoadingSaved := False; end;
+  try
+    try OpenPsdFile(FileName);
+    except on E: Exception do raise EArtFormat.Create('PSD published to '+FileName+' but reload failed: '+E.Message); end;
+  finally FLoadingSaved := False; end;
   Selected := nil; List := FDocument.Roots;
   for Index in Path do begin
     if (Index<0) or (Index>=List.Count) then begin Selected := nil; Break; end;

@@ -1,0 +1,18 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{A527796E-FF63-48CF-AAD3-B5D57A126CBA}</ProjectGuid>
+    <ProjectVersion>20.4</ProjectVersion>
+    <MainSource>PsdCompatibilitySmoke.dpr</MainSource>
+    <AppType>Console</AppType>
+    <Config Condition="'$(Config)'==''">Debug</Config>
+    <Platform>Win64</Platform>
+    <DCC_Namespace>System;Winapi</DCC_Namespace>
+    <DCC_UnitSearchPath>..\Source\Core;..\Source\Persistence\PSD;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+    <DCC_DcuOutput>Win64\$(Config)</DCC_DcuOutput>
+    <DCC_ExeOutput>Win64\$(Config)</DCC_ExeOutput>
+    <DCC_RangeChecking>true</DCC_RangeChecking>
+    <DCC_OverflowChecking>true</DCC_OverflowChecking>
+  </PropertyGroup>
+  <ItemGroup><DelphiCompile Include="$(MainSource)"><MainSource>MainSource</MainSource></DelphiCompile></ItemGroup>
+  <Import Project="$(BDS)\Bin\CodeGear.Delphi.Targets"/>
+</Project>

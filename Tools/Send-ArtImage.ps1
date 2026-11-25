@@ -4,15 +4,18 @@ param(
     [Parameter(Mandatory=$true)][string]$JobId,
     [Parameter(Mandatory=$true)][string]$InputPng,
     [string]$FileName,
-    [guid]$TransferId=[guid]::NewGuid()
+    [guid]$TransferId=[guid]::NewGuid(),
+    [ValidateSet('codex','dot')][string]$Client
 )
 $ErrorActionPreference='Stop'
 Add-Type -AssemblyName System.Drawing
 $source=[IO.Path]::GetFullPath($InputPng)
 $sender=Join-Path $PSScriptRoot 'Send-ArtCommand.ps1'
 if(-not $FileName){$FileName='received-'+$TransferId.ToString('N')+'.png'}
+$clientArguments=@{}
+if($PSBoundParameters.ContainsKey('Client')){$clientArguments.Client=$Client}
 function Send-ImageCommand([string]$Command,[hashtable]$Arguments) {
-    $response=& $sender -PipeName $PipeName -Command $Command -ArgsJson ($Arguments|ConvertTo-Json -Compress -Depth 16) -TimeoutMs 30000
+    $response=& $sender -PipeName $PipeName -Command $Command -ArgsJson ($Arguments|ConvertTo-Json -Compress -Depth 16) -TimeoutMs 30000 @clientArguments
     $reply=$response|ConvertFrom-Json
     if(-not $reply.ok){throw $reply.error.message}
     $reply.data
